@@ -1,0 +1,112 @@
+<!doctype html>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>PPFD Live Leaderboards</title>
+<style>
+  :root{ --bg:#0b0d10; --panel:#151a20; --text:#e5e7eb; --muted:#9ca3af; --red:#cf1020; --gold:#ffc107; --smoke:#374151; --accent:#ff7043; }
+  *{box-sizing:border-box}
+  html,body{height:100%; width:100%;}
+  body{margin:0; background:linear-gradient(180deg, #0b0d10, #0e1216); color:var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;}
+  .wrap{display:grid; grid-template-rows:auto 1fr; height:100vh; width:100vw; padding:8px 10px;}
+  .toolbar{display:flex; align-items:center; gap:12px; margin:4px 0 8px;}
+  .pill{background:#1f2937; padding:6px 10px; border-radius:999px; color:var(--muted); font-size:13px}
+  .btn{background:#1f2937; border:1px solid #111722; color:var(--text); padding:8px 10px; border-radius:8px; cursor:pointer}
+  .btn:hover{background:#223047}
+  .canvas{position:relative; height:100%; width:100%;}
+  .panel{position:absolute; background:var(--panel); border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,.35); overflow:hidden; border:1px solid #111722; display:flex; flex-direction:column; min-height:60px; min-width:120px}
+  .panel .hdr{display:flex; align-items:center; gap:10px; padding:10px 12px; font-weight:600; letter-spacing:.3px; text-transform:uppercase; font-size:13px; flex:0 0 auto;}
+  .panel .hdr .dot{width:10px; height:10px; border-radius:50%}
+  .panel .hdr .sub{margin-left:auto; color:var(--muted); font-weight:500}
+  .panel pre{margin:0; padding:14px; white-space:pre-wrap; font: 14px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color:#e5e7eb}
+  .grip{position:absolute; right:6px; bottom:6px; width:16px; height:16px; color:#728090; opacity:.35}
+  .grid{display:none}
+  .timestamp{margin-left:auto; color:var(--muted); font-size:12px}
+  .footer{position:absolute; left:10px; bottom:8px; color:var(--muted); font-size:12px}
+  .panel .hdr .dot.today{background:var(--gold)}
+  .panel .hdr .dot.prior{background:var(--accent)}
+  .panel .hdr .dot.week{background:var(--smoke)}
+</style>
+<div class="wrap">
+  <div class="toolbar">
+    <div class="pill">PPFD Leaderboards</div>
+    <div class="pill">Auto refresh
+      <label style="margin-left:4px"><input id="auto" type="checkbox" checked></label>
+    </div>
+    <button id="refresh" class="btn">Refresh now</button>
+    <div id="ts" class="timestamp">—</div>
+  </div>
+  <div class="canvas">
+    <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:46vw; height:84vh">
+      <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">—</span></div>
+      <pre id="board-today">Loading…</pre>
+      <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
+    </div>
+    <div class="panel" id="panel-prior" style="left:50vw; top:8vh; width:46vw; height:40vh">
+      <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">—</span></div>
+      <pre id="board-prior">Loading…</pre>
+      <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
+    </div>
+    <div class="panel" id="panel-week" style="left:50vw; top:52vh; width:46vw; height:40vh">
+      <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">—</span></div>
+      <pre id="board-week">Loading…</pre>
+      <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
+    </div>
+    <div class="footer">Updated <span id="updated">—</span></div>
+  </div>
+</div>
+<script>
+  const el = {
+    today: document.getElementById('board-today'),
+    prior: document.getElementById('board-prior'),
+    week: document.getElementById('board-week'),
+    hdrToday: document.getElementById('hdr-today'),
+    hdrPrior: document.getElementById('hdr-prior'),
+    hdrWeek: document.getElementById('hdr-week'),
+    ts: document.getElementById('ts'),
+    upd: document.getElementById('updated'),
+    auto: document.getElementById('auto'),
+    refresh: document.getElementById('refresh')
+  };
+
+  function fitPre(pre, min=12, max=36){
+    const isToday = pre.id==='board-today';
+    if(isToday) max=44;
+    let low=min, high=max, best=min;
+    for(let i=0;i<12;i++){
+      const mid=Math.floor((low+high)/2);
+      pre.style.fontSize=mid+'px';
+      const fitsH=pre.scrollHeight<=pre.clientHeight;
+      const fitsW=pre.scrollWidth<=pre.clientWidth;
+      if(fitsH&&fitsW){best=mid;low=mid+1;} else {high=mid-1;}
+    }
+    pre.style.fontSize=Math.max(best,min)+'px';
+  }
+  function fitAll(){ fitPre(el.today); fitPre(el.prior); fitPre(el.week); }
+
+  function apply(data){
+    if(data.today){ el.today.textContent=data.today.text; el.hdrToday.textContent=new Date(data.today.updated).toLocaleTimeString(); }
+    if(data.prior){ el.prior.textContent=data.prior.text; el.hdrPrior.textContent=new Date(data.prior.updated).toLocaleTimeString(); }
+    if(data.week){ el.week.textContent=data.week.text; el.hdrWeek.textContent=new Date(data.week.updated).toLocaleTimeString(); }
+    el.ts.textContent='Fetched '+new Date().toLocaleTimeString();
+    el.upd.textContent=new Date().toLocaleString();
+    fitAll();
+  }
+
+  async function fetchOnce(){
+    try{
+      const r = await fetch('data.json', {cache:'no-cache'});
+      const j = await r.json();
+      apply(j);
+    }catch(e){ console.error('fetch error', e); }
+  }
+
+  let interval = null;
+  function startAuto(){ stopAuto(); interval = setInterval(fetchOnce, 60000); }
+  function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
+  el.auto.onchange=()=>{ if(el.auto.checked) startAuto(); else stopAuto(); };
+  el.refresh.onclick=()=> fetchOnce();
+  window.addEventListener('resize', fitAll);
+
+  // initial
+  fetchOnce(); startAuto();
+</script>
+
