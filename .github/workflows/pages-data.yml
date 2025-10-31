@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate leaderboard data
+        continue-on-error: true
         env:
           SHIFT_STATS_DIR: ${{ vars.SHIFT_STATS_DIR }}
         run: |
