@@ -93,7 +93,7 @@
 
   async function fetchOnce(){
     try{
-      const r = await fetch('data.json', {cache:'no-cache'});
+      const r = await fetch('data.json?t='+Date.now(), {cache:'no-cache'});
       const j = await r.json();
       apply(j);
     }catch(e){ console.error('fetch error', e); }
@@ -109,4 +109,3 @@
   // initial
   fetchOnce(); startAuto();
 </script>
-
