@@ -1,0 +1,46 @@
+name: Publish leaderboard data
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate leaderboard data
+        env:
+          SHIFT_STATS_DIR: ${{ vars.SHIFT_STATS_DIR }}
+        run: |
+          if (-not $env:SHIFT_STATS_DIR -or -not (Test-Path $env:SHIFT_STATS_DIR)) {
+            Write-Host "SHIFT_STATS_DIR not set or not found. Set a repo variable named SHIFT_STATS_DIR to the directory containing shift_stats_*.json (e.g., C:\\Users\\County\\python alerts)."
+          }
+          python scripts/generate_leaderboard.py --stats-dir "$env:SHIFT_STATS_DIR" --out docs/data.json
+
+      - name: Commit and push (if changed)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data.json
+          if (git diff --cached --quiet) {
+            Write-Host "No changes to commit"
+          } else {
+            git commit -m "Update leaderboard data [skip ci]"
+            git push
+          }
+
