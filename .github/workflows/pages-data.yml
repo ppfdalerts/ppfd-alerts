@@ -46,7 +46,7 @@ jobs:
           } else {
             # Ensure push uses token auth
             git remote set-url origin "https://x-access-token:${env:GITHUB_TOKEN}@github.com/${env:GITHUB_REPOSITORY}.git"
-            git pull --ff-only
+            git status
             git commit -m "Update leaderboard data [skip ci]"
             git push origin HEAD:main
           }
