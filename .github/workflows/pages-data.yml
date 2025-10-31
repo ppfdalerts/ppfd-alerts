@@ -22,19 +22,16 @@ jobs:
         env:
           SHIFT_STATS_DIR: ${{ vars.SHIFT_STATS_DIR }}
         run: |
+          $ErrorActionPreference = 'Continue'
           if (-not $env:SHIFT_STATS_DIR -or -not (Test-Path $env:SHIFT_STATS_DIR)) {
             Write-Host "SHIFT_STATS_DIR not set or not found. Set a repo variable named SHIFT_STATS_DIR to the directory containing shift_stats_*.json (e.g., C:\\Users\\County\\python alerts)."
             exit 0
           }
           Write-Host "Using SHIFT_STATS_DIR=$env:SHIFT_STATS_DIR"
           Get-ChildItem -Path "$env:SHIFT_STATS_DIR" -Filter 'shift_stats_*.json' | Select-Object -First 3 | ForEach-Object { Write-Host "Found stats:" $_.FullName }
-          try {
-            python --version
-            python scripts/generate_leaderboard.py --stats-dir "$env:SHIFT_STATS_DIR" --out docs/data.json
-          } catch {
-            Write-Host "Generator failed: $($_.Exception.Message)"
-            exit 0
-          }
+          python --version
+          python scripts/generate_leaderboard.py --stats-dir "$env:SHIFT_STATS_DIR" --out docs/data.json
+          if ($LASTEXITCODE -ne 0) { Write-Host "Generator returned non-zero ($LASTEXITCODE). Continuing without failure."; exit 0 }
 
       - name: Commit and push (if changed)
         run: |
