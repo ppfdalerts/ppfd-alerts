@@ -16,7 +16,15 @@
   .panel .hdr{display:flex; align-items:center; gap:10px; padding:10px 12px; font-weight:600; letter-spacing:.3px; text-transform:uppercase; font-size:13px; flex:0 0 auto;}
   .panel .hdr .dot{width:10px; height:10px; border-radius:50%}
   .panel .hdr .sub{margin-left:auto; color:var(--muted); font-weight:500}
-  .panel pre{margin:0; padding:14px; white-space:pre-wrap; font: 14px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color:#e5e7eb}
+  .panel .body{margin:0; padding:0 12px 12px}
+  table{width:100%; border-collapse:collapse; font-size:14px}
+  thead th{position:sticky; top:0; background:#0f141a; color:#9ca3af; text-align:left; font-weight:600; padding:8px 6px; border-bottom:1px solid #1f2937}
+  tbody td{padding:8px 6px; border-bottom:1px dashed #1f2732}
+  tbody tr:hover{background:#111722}
+  .col-unit{width:25%}
+  .col-calls{width:20%}
+  .col-avg{width:25%}
+  .col-after{width:30%}
   .grip{position:absolute; right:6px; bottom:6px; width:16px; height:16px; color:#728090; opacity:.35}
   .grid{display:none}
   .timestamp{margin-left:auto; color:var(--muted); font-size:12px}
@@ -37,17 +45,17 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:46vw; height:84vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">—</span></div>
-      <pre id="board-today">Loading…</pre>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:50vw; top:8vh; width:46vw; height:40vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">—</span></div>
-      <pre id="board-prior">Loading…</pre>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:50vw; top:52vh; width:46vw; height:40vh">
       <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">—</span></div>
-      <pre id="board-week">Loading…</pre>
+      <div class="body"><table id="board-week"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="footer">Updated <span id="updated">—</span></div>
@@ -67,28 +75,29 @@
     refresh: document.getElementById('refresh')
   };
 
-  function fitPre(pre, min=12, max=36){
-    const isToday = pre.id==='board-today';
-    if(isToday) max=44;
-    let low=min, high=max, best=min;
-    for(let i=0;i<12;i++){
-      const mid=Math.floor((low+high)/2);
-      pre.style.fontSize=mid+'px';
-      const fitsH=pre.scrollHeight<=pre.clientHeight;
-      const fitsW=pre.scrollWidth<=pre.clientWidth;
-      if(fitsH&&fitsW){best=mid;low=mid+1;} else {high=mid-1;}
+  function renderTable(table, data){
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = '';
+    if(!data || !Array.isArray(data.rows) || data.rows.length===0){
+      const tr=document.createElement('tr');
+      const td=document.createElement('td'); td.colSpan=4; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
-    pre.style.fontSize=Math.max(best,min)+'px';
+    for(const r of data.rows){
+      const tr=document.createElement('tr');
+      const tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
+      const tdC=document.createElement('td'); tdC.textContent=r.calls; tdC.className='col-calls'; tr.appendChild(tdC);
+      const tdA=document.createElement('td'); tdA.textContent=r.avg_min.toFixed(1); tdA.className='col-avg'; tr.appendChild(tdA);
+      const tdM=document.createElement('td'); tdM.textContent=r.after_0000; tdM.className='col-after'; tr.appendChild(tdM);
+      tbody.appendChild(tr);
+    }
   }
-  function fitAll(){ fitPre(el.today); fitPre(el.prior); fitPre(el.week); }
 
   function apply(data){
-    if(data.today){ el.today.textContent=data.today.text; el.hdrToday.textContent=new Date(data.today.updated).toLocaleTimeString(); }
-    if(data.prior){ el.prior.textContent=data.prior.text; el.hdrPrior.textContent=new Date(data.prior.updated).toLocaleTimeString(); }
-    if(data.week){ el.week.textContent=data.week.text; el.hdrWeek.textContent=new Date(data.week.updated).toLocaleTimeString(); }
+    if(data.today){ renderTable(el.today, data.today); el.hdrToday.textContent=new Date(data.today.updated||Date.now()).toLocaleTimeString(); }
+    if(data.prior){ renderTable(el.prior, data.prior); el.hdrPrior.textContent=new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }
+    if(data.week){ renderTable(el.week, data.week); el.hdrWeek.textContent=new Date(data.week.updated||Date.now()).toLocaleTimeString(); }
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString();
     el.upd.textContent=new Date().toLocaleString();
-    fitAll();
   }
 
   async function fetchOnce(){
