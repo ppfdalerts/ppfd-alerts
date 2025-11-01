@@ -192,7 +192,18 @@
   </div>
 </div>
 <script>
-  \n    status: document.getElementById('status'),
+  const el = {
+    today: document.getElementById('board-today'),
+    prior: document.getElementById('board-prior'),
+    week: document.getElementById('board-week'),
+    month: document.getElementById('board-month'),
+    hdrToday: document.getElementById('hdr-today'),
+    hdrPrior: document.getElementById('hdr-prior'),
+    hdrWeek: document.getElementById('hdr-week'),
+    hdrMonth: document.getElementById('hdr-month'),
+    ts: document.getElementById('ts'),
+    upd: document.getElementById('updated'),
+    status: document.getElementById('status'),
     auto: document.getElementById('auto'),
     edit: document.getElementById('edit'),
     resetLayout: document.getElementById('resetLayout'),
@@ -337,6 +348,5 @@
   attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month');
   el.edit.onchange = ()=> { enableEditing(el.edit.checked); updateFlowMode(); };
   el.resetLayout.onclick = ()=>{ layoutState.current = {...defaultLayout}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); };
-</script>
-
   window.addEventListener('resize', updateFlowMode);
+</script>
