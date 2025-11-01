@@ -39,9 +39,10 @@ def load_stats(fp: Path):
                 defaultdict(int, j.get("calls", {})),
                 defaultdict(int, j.get("dur_sec", {})),
                 defaultdict(int, j.get("after_0000", {})),
+                defaultdict(int, j.get("max_sec", {})),
             )
     except Exception:
-        return defaultdict(int), defaultdict(int), defaultdict(int)
+        return defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int)
 
 
 def aggregate_timeframe_stats(stats_dir: Path, period_key: str, now: datetime.datetime | None = None):
@@ -54,8 +55,9 @@ def aggregate_timeframe_stats(stats_dir: Path, period_key: str, now: datetime.da
     calls = defaultdict(int)
     dur = defaultdict(int)
     after_midnight = defaultdict(int)
+    max_sec = defaultdict(int)
     if not stats_dir.exists():
-        return dict(calls), dict(dur), dict(after_midnight)
+        return dict(calls), dict(dur), dict(after_midnight), dict(max_sec)
     for name in os.listdir(stats_dir):
         m = STATS_FILENAME_RE.fullmatch(name)
         if not m:
@@ -66,7 +68,7 @@ def aggregate_timeframe_stats(stats_dir: Path, period_key: str, now: datetime.da
             continue
         if cutoff_date and file_date < cutoff_date:
             continue
-        file_calls, file_dur, file_after = load_stats(stats_dir / name)
+        file_calls, file_dur, file_after, file_max = load_stats(stats_dir / name)
         for unit, count in file_calls.items():
             if unit in WATCH_SET:
                 calls[unit] += int(count)
@@ -76,7 +78,103 @@ def aggregate_timeframe_stats(stats_dir: Path, period_key: str, now: datetime.da
         for unit, count in file_after.items():
             if unit in WATCH_SET:
                 after_midnight[unit] += int(count)
-    return dict(calls), dict(dur), dict(after_midnight)
+        for unit, mx in file_max.items():
+            if unit in WATCH_SET:
+                if int(mx) > max_sec[unit]:
+                    max_sec[unit] = int(mx)
+    return dict(calls), dict(dur), dict(after_midnight), dict(max_sec)
+
+
+def _date_range_for_period(now: datetime.datetime, period_key: str) -> tuple[datetime.date, datetime.date]:
+    end_date = shift_start(now).date()
+    days = TIMEFRAME_LENGTHS[period_key]
+    start_date = end_date - datetime.timedelta(days=days - 1)
+    return start_date, end_date
+
+
+def compute_shift_breakdown(stats_dir: Path, period_key: str, now: datetime.datetime) -> list[dict]:
+    start_date, end_date = _date_range_for_period(now, period_key)
+    # unit -> letter -> aggregates
+    letters = ['A', 'B', 'C']
+    sum_calls: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
+    max_calls: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
+    sum_dur: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})  # seconds
+    sum_dur_calls: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
+    max_dur: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})  # seconds
+    sum_after: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
+    max_after: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
+
+    for name in os.listdir(stats_dir):
+        m = STATS_FILENAME_RE.fullmatch(name)
+        if not m:
+            continue
+        try:
+            d = datetime.datetime.strptime(m.group(1), "%Y-%m-%d").date()
+        except Exception:
+            continue
+        if not (start_date <= d <= end_date):
+            continue
+        letter = _shift_letter_for(d)
+        file_calls, file_dur, file_after, file_max = load_stats(stats_dir / name)
+        for unit in list(file_calls.keys()) + list(file_dur.keys()) + list(file_after.keys()) + list(file_max.keys()):
+            if unit not in WATCH_SET:
+                continue
+            c = int(file_calls.get(unit, 0))
+            s = int(file_dur.get(unit, 0))
+            a = int(file_after.get(unit, 0))
+            mx = int(file_max.get(unit, 0))
+            sum_calls[unit][letter] += c
+            if c > max_calls[unit][letter]:
+                max_calls[unit][letter] = c
+            sum_dur[unit][letter] += s
+            sum_dur_calls[unit][letter] += c
+            if mx > max_dur[unit][letter]:
+                max_dur[unit][letter] = mx
+            sum_after[unit][letter] += a
+            if a > max_after[unit][letter]:
+                max_after[unit][letter] = a
+
+    rows = []
+    units = sorted(set(list(sum_calls.keys()) + list(sum_dur.keys()) + list(sum_after.keys())))
+    for unit in units:
+        calls_abc = [int(sum_calls[unit][l]) for l in letters]
+        calls_max_abc = [int(max_calls[unit][l]) for l in letters]
+        avg_min_abc = []
+        for l in letters:
+            denom = sum_dur_calls[unit][l]
+            avg_min_abc.append(round((sum_dur[unit][l] / denom) / 60.0, 1) if denom else 0.0)
+        max_min_abc = [round(max_dur[unit][l] / 60.0, 1) if max_dur[unit][l] else 0.0 for l in letters]
+        after_abc = [int(sum_after[unit][l]) for l in letters]
+        after_max_abc = [int(max_after[unit][l]) for l in letters]
+        rows.append({
+            "unit": unit,
+            "calls_abc": calls_abc,
+            "calls_max_abc": calls_max_abc,
+            "avg_min_abc": avg_min_abc,
+            "max_min_abc": max_min_abc,
+            "after_abc": after_abc,
+            "after_max_abc": after_max_abc,
+            "total_calls": sum(calls_abc),
+        })
+    # Sort by total calls desc then unit
+    rows.sort(key=lambda r: (-r.get("total_calls", 0), r["unit"]))
+    return rows
+
+
+def _rows_from(calls: dict, dur: dict, after_midnight: dict, max_sec: dict | None = None):
+    rows = []
+    for unit, count in sorted(calls.items(), key=lambda kv: (-kv[1], kv[0])):
+        avg_min = (dur.get(unit, 0) / count) / 60 if count else 0.0
+        r = {
+            "unit": unit,
+            "calls": int(count),
+            "avg_min": round(avg_min, 1),
+            "after_0000": int(after_midnight.get(unit, 0)),
+        }
+        if max_sec is not None:
+            r["max_min"] = round(int(max_sec.get(unit, 0)) / 60.0, 1)
+        rows.append(r)
+    return rows
 
 
 def format_leaderboard_body(label: str, period_key: str, calls: dict, dur: dict, after_midnight: dict, now: datetime.datetime) -> str:
@@ -94,10 +192,26 @@ def format_leaderboard_body(label: str, period_key: str, calls: dict, dur: dict,
     if not calls:
         lines.append("No runs recorded.")
     else:
-        for unit, count in sorted(calls.items(), key=lambda kv: (-kv[1], kv[0])):
-            avg_min = (dur.get(unit, 0) / count) / 60 if count else 0
-            lines.append(f"{unit}: {count}  |  avg {avg_min:.1f} min  |  after 00:00: {after_midnight.get(unit, 0)}")
+        for r in _rows_from(calls, dur, after_midnight):
+            lines.append(f"{r['unit']}: {r['calls']}  |  avg {r['avg_min']:.1f} min  |  after 00:00: {r['after_0000']}")
     return "\n".join(lines)
+
+
+def _shift_letter_for(d: datetime.date) -> str:
+    # Allow override via env. Defaults set so that 2025-10-31 = C, 2025-11-01 = A.
+    anchor_str = os.environ.get('SHIFT_ANCHOR_DATE', '2025-11-01')
+    anchor_letter = os.environ.get('SHIFT_ANCHOR_LETTER', 'A').upper()
+    try:
+        anchor = datetime.datetime.strptime(anchor_str, '%Y-%m-%d').date()
+    except Exception:
+        anchor = datetime.date(2025, 1, 1)
+    letters = ['A', 'B', 'C']
+    try:
+        idx0 = letters.index(anchor_letter)
+    except ValueError:
+        idx0 = 0
+    delta = (d - anchor).days
+    return letters[(idx0 + (delta % 3)) % 3]
 
 
 def compute_period(stats_dir: Path, period_key: str):
@@ -105,21 +219,52 @@ def compute_period(stats_dir: Path, period_key: str):
     label = {
         "day": "Daily", "week": "Weekly", "month": "Monthly", "year": "Yearly", "alltime": "All-time"
     }.get(period_key, "Daily")
-    calls, dur, after = aggregate_timeframe_stats(stats_dir, period_key, now)
+    calls, dur, after, max_sec = aggregate_timeframe_stats(stats_dir, period_key, now)
     text = format_leaderboard_body(label, period_key, calls, dur, after, now)
-    return {"text": text, "updated": datetime.datetime.utcnow().isoformat() + "Z"}
+    if period_key in ("week", "month"):
+        rows = compute_shift_breakdown(stats_dir, period_key, now)
+    else:
+        rows = _rows_from(calls, dur, after, max_sec)
+    meta = {}
+    if period_key == 'day':
+        sd = shift_start(now).date()
+        meta['shift_date'] = f"{_shift_letter_for(sd)}-Shift {sd:%m/%d/%y}"
+    elif period_key == 'week':
+        sd = shift_start(now).date()
+        start_date = sd - datetime.timedelta(days=TIMEFRAME_LENGTHS['week'] - 1)
+        meta['range'] = f"{start_date:%b %d} - {sd:%b %d}"
+    elif period_key == 'month':
+        sd = shift_start(now).date()
+        start_date = sd - datetime.timedelta(days=TIMEFRAME_LENGTHS['month'] - 1)
+        meta['range'] = f"{start_date:%b %d} - {sd:%b %d}"
+    return {
+        "label": label,
+        "period": period_key,
+        "text": text,
+        "rows": rows,
+        "meta": meta,
+        "updated": datetime.datetime.utcnow().isoformat() + "Z",
+    }
 
 
 def compute_prior(stats_dir: Path):
     now = datetime.datetime.now()
     prev_date = (shift_start(now) - datetime.timedelta(days=1)).date()
     fn = stats_dir / f"shift_stats_{prev_date:%Y-%m-%d}.json"
-    calls, dur, after = load_stats(fn)
+    calls, dur, after, max_sec = load_stats(fn)
     calls = {k: int(v) for k, v in calls.items() if k in WATCH_SET}
     dur = {k: int(v) for k, v in dur.items() if k in WATCH_SET}
     after = {k: int(v) for k, v in after.items() if k in WATCH_SET}
     text = format_leaderboard_body("Daily", "day", calls, dur, after, now)
-    return {"text": text, "updated": datetime.datetime.utcnow().isoformat() + "Z"}
+    rows = _rows_from(calls, dur, after, max_sec)
+    return {
+        "label": "Daily",
+        "period": "day",
+        "text": text,
+        "rows": rows,
+        "meta": {"shift_date": f"{_shift_letter_for(prev_date)}-Shift {prev_date:%m/%d/%y}"},
+        "updated": datetime.datetime.utcnow().isoformat() + "Z",
+    }
 
 
 def main():
@@ -136,6 +281,7 @@ def main():
         "today": compute_period(stats_dir, "day"),
         "prior": compute_prior(stats_dir),
         "week": compute_period(stats_dir, "week"),
+        "month": compute_period(stats_dir, "month"),
     }
 
     tmp = out_path.with_suffix('.json.tmp')
@@ -146,4 +292,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
