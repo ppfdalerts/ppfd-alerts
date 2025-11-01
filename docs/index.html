@@ -191,8 +191,7 @@
     <div class="footer">Updated <span id="updated">—</span></div>
   </div>
 </div>
-<script>
-  const el = {
+<script>  const el = {
     today: document.getElementById('board-today'),
     prior: document.getElementById('board-prior'),
     week: document.getElementById('board-week'),
@@ -212,64 +211,47 @@
 
   function renderTable(table, data){
     const tbody = table.querySelector('tbody');
-    tbody.innerHTML = '';
+    tbody.innerHTML='';
     if(!data || !Array.isArray(data.rows) || data.rows.length===0){
       const tr=document.createElement('tr');
-      const td=document.createElement('td'); td.colSpan=(table.querySelectorAll("thead th").length||4); td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
+      const td=document.createElement('td');
+      td.colSpan=(table.querySelectorAll('thead th').length||4);
+      td.textContent='No runs recorded.'; td.style.color='#9ca3af';
+      tr.appendChild(td); tbody.appendChild(tr); return;
     }
-    const rows = data.rows;
-    const maxC = Math.max(...rows.map(r=>r.calls));
-    const minC = Math.min(...rows.map(r=>r.calls));
-    const callsHeat = (c)=>{
-      const n = maxC===minC? 0.7 : (c-minC)/(maxC-minC);
-      const hue = 200 - Math.round(n*160); // teal->gold spectrum
-      const alpha = 0.22 + 0.28*n;
-      return `background: hsla(${hue}, 85%, 52%, ${alpha}); color: #0b0d10; font-weight:700; border-radius:6px; padding:2px 8px; display:inline-block;`;
-    };
-    rows.forEach((r, idx)=>{
+    const rows=data.rows;
+    const maxC=Math.max(...rows.map(r=>r.calls||0));
+    const minC=Math.min(...rows.map(r=>r.calls||0));
+    const callsHeat=(c)=>{ const n=maxC===minC?0.7:(c-minC)/(maxC-minC); const hue=200-Math.round(n*160); const alpha=0.22+0.28*n; return ackground: hsla(,85%,52%,); color:#0b0d10; font-weight:700; border-radius:6px; padding:2px 8px; display:inline-block;; };
+    rows.forEach((r,idx)=>{
       const tr=document.createElement('tr');
-      if(idx===0) tr.classList.add('rank-1');
-      if(idx===1) tr.classList.add('rank-2');
-      if(idx===2) tr.classList.add('rank-3');
+      if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
       const tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
-      const tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML = `<span class="pill-badge calls-badge" style="${callsHeat(r.calls)}">${r.calls}</span>`; tr.appendChild(tdC);
-      const tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML = `<span class="pill-badge avg-badge">${r.avg_min.toFixed(1)}</span>`; tr.appendChild(tdA);
-      const thCount = table.querySelectorAll('thead th').length;
-      if(thCount >= 5){
-        const tdX=document.createElement('td'); tdX.className='col-max';
-        const show = (r.max_min && r.max_min>0) ? r.max_min.toFixed(1) : '--';
-        tdX.innerHTML = `<span class="pill-badge avg-badge">${show}</span>`;
-        tr.appendChild(tdX);
+      const tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML=<span class="pill-badge calls-badge" style=""></span>; tr.appendChild(tdC);
+      const tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML=<span class="pill-badge avg-badge"></span>; tr.appendChild(tdA);
+      const thCount=table.querySelectorAll('thead th').length;
+      if(thCount>=5){
+        const tdX=document.createElement('td'); tdX.className='col-max'; const show=(r.max_min&&r.max_min>0)? r.max_min.toFixed(1):'--'; tdX.innerHTML=<span class="pill-badge avg-badge"></span>; tr.appendChild(tdX);
       }
       const tdM=document.createElement('td'); tdM.className='col-after';
-      if((r.after_0000||0)>0){ tdM.innerHTML = `<span class="pill-badge after-badge">${r.after_0000}</span>`; }
-      else { tdM.textContent = '0'; tdM.style.color = '#9ca3af'; }
+      const after=r.after_0000||0; if(after>0){ tdM.innerHTML=<span class="pill-badge after-badge"></script>
+</span>; } else { tdM.textContent='0'; tdM.style.color='#9ca3af'; }
       tr.appendChild(tdM);
       tbody.appendChild(tr);
     });
   }
 
   function renderWeekMonth(table, data){
-    const tbody = table.querySelector('tbody');
-    tbody.innerHTML = '';
-    const thCount = 19; // Unit + 6 metric groups * 3 subcolumns
-    if(!data || !Array.isArray(data.rows) || data.rows.length === 0){
-      const tr = document.createElement('tr');
-      const td = document.createElement('td');
-      td.colSpan = thCount;
-      td.textContent = 'No runs recorded.';
-      td.style.color = '#9ca3af';
-      tr.appendChild(td);
-      tbody.appendChild(tr);
-      return;
+    const tbody=table.querySelector('tbody');
+    tbody.innerHTML='';
+    const thCount=19; // Unit + 6 metric groups * 3 subcolumns
+    if(!data || !Array.isArray(data.rows) || data.rows.length===0){
+      const tr=document.createElement('tr'); const td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
-    const fnum = (v, isFloat=false)=> isFloat ? (Number.isFinite(v)? Number(v).toFixed(1) : '0.0') : (v||0);
-    data.rows.forEach((r, idx)=>{
-      const tr = document.createElement('tr');
-      if(idx===0) tr.classList.add('rank-1');
-      if(idx===1) tr.classList.add('rank-2');
-      if(idx===2) tr.classList.add('rank-3');
-      const tdU = document.createElement('td'); tdU.textContent = r.unit; tr.appendChild(tdU);
+    const fnum=(v,isFloat=false)=> isFloat ? (Number.isFinite(v)? Number(v).toFixed(1):'0.0') : (v||0);
+    data.rows.forEach((r,idx)=>{
+      const tr=document.createElement('tr'); if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
+      const tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.calls_abc||[])[i]||0,false); tr.appendChild(td); });
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.calls_max_abc||[])[i]||0,false); tr.appendChild(td); });
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.avg_min_abc||[])[i]||0,true); tr.appendChild(td); });
@@ -280,74 +262,48 @@
     });
   }
 
+  function setPanelShift(panelId, letter){ const p=document.getElementById(panelId); if(!p||!letter) return; p.classList.remove('shift-a','shift-b','shift-c'); const l=(letter+"").toUpperCase(); if(l==='A') p.classList.add('shift-a'); if(l==='B') p.classList.add('shift-b'); if(l==='C') p.classList.add('shift-c'); }
+  function letterFromMeta(meta){ if(!meta||!meta.shift_date) return ''; const m=/^([ABC])\-Shift\s/.exec(meta.shift_date.trim()); return m? m[1]:''; }
+
   function apply(data){
-  const errors=[];
-  function safe(label, fn){ try{ fn(); } catch(e){ console.error('render error', label, e); errors.push(label); } }
-  if(data.today){ safe('Today', ()=>{ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta && data.today.meta.shift_date) || new Date(data.today.updated||Date.now()).toLocaleTimeString(); }); }
-  if(data.prior){ safe('Prior', ()=>{ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta && data.prior.meta.shift_date) || new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }); }
-  if(data.week){ safe('Week', ()=>{ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta && data.week.meta.range) || new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
-  if(data.month){ safe('Month', ()=>{ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta && data.month.meta.range) || new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
-  el.ts.textContent='Fetched '+new Date().toLocaleTimeString();
-  el.upd.textContent=new Date().toLocaleString();
-  // Update status banner
-  if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; }
-  else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
-}async function fetchOnce(){\n    try{\n      const r = await fetch('data.json?t='+Date.now(), {cache:'no-cache'});\n      if(!r.ok){\n        el.status.style.display='inline-block';\n        el.status.textContent='Fetch error: '+r.status+' '+r.statusText;\n        return;\n      }\n      const j = await r.json();\n      if(!j || (!j.today && !j.week && !j.prior && !j.month)){\n        el.status.style.display='inline-block';\n        el.status.textContent='No data in payload';\n        return;\n      }\n      apply(j);\n    }catch(e){\n      console.error('fetch error', e);\n      el.status.style.display='inline-block';\n      el.status.textContent='Fetch error (network/parse)';\n    }\n  }\n  function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v1', JSON.stringify(l)); }catch(e){} }
-  function isDefaultLayout(l){
-    const tol = 0.001;
-    for(const k of Object.keys(defaultLayout)){
-      const a = l[k]||defaultLayout[k], b = defaultLayout[k];
-      for(const key of ['left','top','width','height']){
-        if(Math.abs((a[key]??0) - (b[key]??0)) > tol) return false;
-      }
-    }
-    return true;
+    const errors=[]; const safe=(label,fn)=>{ try{ fn(); } catch(e){ console.error('render error',label,e); errors.push(label); } };
+    if(data.today){ safe('Today', ()=>{ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta&&data.today.meta.shift_date)||new Date(data.today.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-today', letterFromMeta(data.today.meta)); }); }
+    if(data.prior){ safe('Prior', ()=>{ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta&&data.prior.meta.shift_date)||new Date(data.prior.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-prior', letterFromMeta(data.prior.meta)); }); }
+    if(data.week){ safe('Week', ()=>{ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta&&data.week.meta.range)||new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
+    if(data.month){ safe('Month', ()=>{ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta&&data.month.meta.range)||new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
+    el.ts.textContent='Fetched '+new Date().toLocaleTimeString(); el.upd.textContent=new Date().toLocaleString();
+    if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; } else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
   }
-  function applyLayout(l){
-    for(const k of Object.keys(panels)){
-      const p = panels[k]; const r = l[k]||defaultLayout[k];
-      p.style.left = r.left+'vw'; p.style.top = r.top+'vh'; p.style.width = r.width+'vw'; p.style.height = r.height+'vh';
-    }
+
+  async function fetchOnce(){
+    try{
+      const r=await fetch('data.json?t='+Date.now(), {cache:'no-cache'});
+      if(!r.ok){ el.status.style.display='inline-block'; el.status.textContent='Fetch error: '+r.status+' '+r.statusText; return; }
+      const j=await r.json(); if(!j || (!j.today && !j.week && !j.prior && !j.month)){ el.status.style.display='inline-block'; el.status.textContent='No data in payload'; return; }
+      apply(j);
+    }catch(e){ console.error('fetch error', e); el.status.style.display='inline-block'; el.status.textContent='Fetch error (network/parse)'; }
   }
+
+  let interval=null; function startAuto(){ stopAuto(); interval=setInterval(fetchOnce, 60000); } function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
+  el.auto.onchange=()=>{ if(el.auto.checked) startAuto(); else stopAuto(); };
+  el.refresh.onclick=()=> fetchOnce();
+
+  const panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month') };
+  const defaultLayout={ today:{left:2,top:8,width:46,height:60}, prior:{left:2,top:70,width:46,height:28}, week:{left:50,top:8,width:48,height:40}, month:{left:50,top:50,width:48,height:48} };
+  function loadLayout(){ try{ const j=JSON.parse(localStorage.getItem('ppfd_layout_v1')||'{}'); return {...defaultLayout, ...j}; }catch(e){ return {...defaultLayout}; } }
+  function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v1', JSON.stringify(l)); }catch(e){} }
+  function isDefaultLayout(l){ const tol=0.001; for(const k of Object.keys(defaultLayout)){ const a=l[k]||defaultLayout[k], b=defaultLayout[k]; for(const key of ['left','top','width','height']){ if(Math.abs((a[key]??0)-(b[key]??0))>tol) return false; } } return true; }
+  function applyLayout(l){ for(const k of Object.keys(panels)){ const p=panels[k]; const r=l[k]||defaultLayout[k]; p.style.left=r.left+'vw'; p.style.top=r.top+'vh'; p.style.width=r.width+'vw'; p.style.height=r.height+'vh'; } }
   function enableEditing(on){ document.body.classList.toggle('edit-on', !!on); }
-  const layoutState = { current: loadLayout() };
-  applyLayout(layoutState.current);
-  enableEditing(false);
-
-  // Toggle flow layout automatically when using unedited default layout and not in edit mode (desktop only)
-  function updateFlowMode(){
-    const isMobile = window.matchMedia('(max-width: 900px)').matches;
-    const canvas = document.querySelector('.canvas');
-    if(!canvas) return;
-    if(!el.edit.checked && isDefaultLayout(layoutState.current) && !isMobile){
-      canvas.classList.add('flow');
-      // clear inline sizes so panels grow to fit tables
-      for(const k of Object.keys(panels)){
-        const p = panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height='';
-      }
-    }else{
-      canvas.classList.remove('flow');
-      applyLayout(layoutState.current);
-    }
-  }
+  const layoutState={ current: loadLayout() };
+  applyLayout(layoutState.current); enableEditing(false);
+  function updateFlowMode(){ const isMobile=window.matchMedia('(max-width: 900px)').matches; const canvas=document.querySelector('.canvas'); if(!canvas) return; if(!el.edit.checked && isDefaultLayout(layoutState.current) && !isMobile){ canvas.classList.add('flow'); for(const k of Object.keys(panels)){ const p=panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height=''; } } else { canvas.classList.remove('flow'); applyLayout(layoutState.current); } }
   updateFlowMode();
-
-  function attachDragResize(key){
-    const node = panels[key];
-    const handle = node.querySelector('.hdr');
-    const grip = node.querySelector('.grip');
-    const state = {drag:false, size:false, sx:0, sy:0, start:null};
-    function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; const r = layoutState.current[key]||defaultLayout[key]; state.start={...r}; e.preventDefault(); }
-    function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; const r = layoutState.current[key]||defaultLayout[key]; state.start={...r}; e.preventDefault(); }
-    function move(e){ if(!(state.drag||state.size)) return; const vw=innerWidth, vh=innerHeight; const dx=(e.clientX-state.sx)/vw*100; const dy=(e.clientY-state.sy)/vh*100; const r = layoutState.current[key]||(layoutState.current[key]={...defaultLayout[key]}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); }
-    function up(){ if(!(state.drag||state.size)) return; state.drag=state.size=false; saveLayout(layoutState.current); }
-    // mouse
-    handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
-    // touch
-    handle.addEventListener('touchstart', (ev)=>downDrag(ev.touches[0])); grip.addEventListener('touchstart', (ev)=>downSize(ev.touches[0])); window.addEventListener('touchmove', (ev)=>move(ev.touches[0])); window.addEventListener('touchend', up);
-  }
+  function attachDragResize(key){ const node=panels[key]; const handle=node.querySelector('.hdr'); const grip=node.querySelector('.grip'); const state={drag:false,size:false,sx:0,sy:0,start:null}; function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; const r=layoutState.current[key]||defaultLayout[key]; state.start={...r}; e.preventDefault(); } function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; const r=layoutState.current[key]||defaultLayout[key]; state.start={...r}; e.preventDefault(); } function move(e){ if(!(state.drag||state.size)) return; const vw=innerWidth, vh=innerHeight; const dx=(e.clientX-state.sx)/vw*100; const dy=(e.clientY-state.sy)/vh*100; const r=layoutState.current[key]||(layoutState.current[key]={...defaultLayout[key]}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); } function up(){ if(!(state.drag||state.size)) return; state.drag=false; state.size=false; saveLayout(layoutState.current); } handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up); handle.addEventListener('touchstart', (ev)=>downDrag(ev.touches[0])); grip.addEventListener('touchstart', (ev)=>downSize(ev.touches[0])); window.addEventListener('touchmove', (ev)=>move(ev.touches[0])); window.addEventListener('touchend', up); }
   attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month');
-  el.edit.onchange = ()=> { enableEditing(el.edit.checked); updateFlowMode(); };
-  el.resetLayout.onclick = ()=>{ layoutState.current = {...defaultLayout}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); };
+  el.edit.onchange=()=>{ enableEditing(el.edit.checked); updateFlowMode(); };
+  el.resetLayout.onclick=()=>{ layoutState.current={...defaultLayout}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); };
   window.addEventListener('resize', updateFlowMode);
-</script>
+
+  // Kick off
+  fetchOnce(); startAuto();</script>
