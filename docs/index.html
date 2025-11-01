@@ -209,21 +209,33 @@
   function renderWeekMonth(table, data){
     const tbody = table.querySelector('tbody');
     tbody.innerHTML = '';
-    if(!data || !Array.isArray(data.rows) || data.rows.length===0){
-      const tr=document.createElement('tr');
-      const td=document.createElement('td'); td.colSpan=(table.querySelectorAll('thead th').length||21); td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
+    const thCount = table.querySelectorAll('thead th').length || 21;
+    if(!data || !Array.isArray(data.rows) || data.rows.length === 0){
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = thCount;
+      td.textContent = 'No runs recorded.';
+      td.style.color = '#9ca3af';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+      return;
     }
-    const abc = (arr, isFloat=false)=>{
-      const f = (v)=> isFloat ? (Number.isFinite(v)? v.toFixed(1):'0.0') : (v||0);
-      return `${f(arr[0]||0)}|${f(arr[1]||0)}|${f(arr[2]||0)}`;
-    };
+    const fnum = (v, isFloat=false)=> isFloat ? (Number.isFinite(v)? Number(v).toFixed(1) : '0.0') : (v||0);
     data.rows.forEach((r, idx)=>{
-      const tr=document.createElement('tr');
+      const tr = document.createElement('tr');
       if(idx===0) tr.classList.add('rank-1');
       if(idx===1) tr.classList.add('rank-2');
       if(idx===2) tr.classList.add('rank-3');
-      const tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
-      const tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);\n      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.calls_abc||[])[i]||0,false); tr.appendChild(td); });\n      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.calls_max_abc||[])[i]||0,false); tr.appendChild(td); });\n      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.avg_min_abc||[])[i]||0,true); tr.appendChild(td); });\n      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.max_min_abc||[])[i]||0,true); tr.appendChild(td); });\n      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_abc||[])[i]||0,false); tr.appendChild(td); });\n      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_max_abc||[])[i]||0,false); tr.appendChild(td); });\n      const tdTot=document.createElement('td'); tdTot.textContent=fnum(r.total_calls||0,false); tr.appendChild(tdTot);\n      const tdAfter=document.createElement('td'); tdAfter.textContent=fnum(r.total_after||0,false); tr.appendChild(tdAfter);\n      tbody.appendChild(tr);
+      const tdU = document.createElement('td'); tdU.textContent = r.unit; tr.appendChild(tdU);
+      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.calls_abc||[])[i]||0,false); tr.appendChild(td); });
+      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.calls_max_abc||[])[i]||0,false); tr.appendChild(td); });
+      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.avg_min_abc||[])[i]||0,true); tr.appendChild(td); });
+      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.max_min_abc||[])[i]||0,true); tr.appendChild(td); });
+      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_abc||[])[i]||0,false); tr.appendChild(td); });
+      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_max_abc||[])[i]||0,false); tr.appendChild(td); });
+      const tdTot = document.createElement('td'); tdTot.textContent = fnum(r.total_calls||0,false); tr.appendChild(tdTot);
+      const tdAfter = document.createElement('td'); tdAfter.textContent = fnum(r.total_after||0,false); tr.appendChild(tdAfter);
+      tbody.appendChild(tr);
     });
   }
 
