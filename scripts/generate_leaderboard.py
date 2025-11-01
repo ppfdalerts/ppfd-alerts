@@ -155,6 +155,7 @@ def compute_shift_breakdown(stats_dir: Path, period_key: str, now: datetime.date
             "after_abc": after_abc,
             "after_max_abc": after_max_abc,
             "total_calls": sum(calls_abc),
+            "total_after": sum(after_abc),
         })
     # Sort by total calls desc then unit
     rows.sort(key=lambda r: (-r.get("total_calls", 0), r["unit"]))
