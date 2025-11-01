@@ -16,21 +16,47 @@ log("PPFD Telegram alert service started")
 
 # --- Minimal .env loader (no external deps) ---
 def _load_dotenv(path: str = ".env"):
+    # Load from current working dir first, then alongside this script as a fallback.
     try:
-        if not os.path.exists(path):
-            return
-        with open(path, 'r', encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith('#'):
+        candidates = []
+        try:
+            candidates.append(path)
+        except Exception:
+            pass
+        try:
+            here = os.path.dirname(os.path.abspath(__file__))
+            candidates.append(os.path.join(here, ".env"))
+        except Exception:
+            pass
+        loaded_any = False
+        for fp in candidates:
+            try:
+                if not fp or not os.path.exists(fp):
                     continue
-                if '=' in line:
-                    k, v = line.split('=', 1)
-                    k = k.strip()
-                    v = v.strip().strip('"').strip("'")
-                    os.environ.setdefault(k, v)
-    except Exception:
-        pass
+                with open(fp, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line or line.startswith('#'):
+                            continue
+                        if '=' in line:
+                            k, v = line.split('=', 1)
+                            k = k.strip()
+                            v = v.strip().strip('"').strip("'")
+                            # If the var is missing OR empty, set from .env
+                            if (k not in os.environ) or (not os.environ.get(k)):
+                                os.environ[k] = v
+                loaded_any = True
+                log(f"Loaded .env from {fp}")
+            except Exception as e:
+                # Keep going to next candidate
+                log(f".env load error from {fp}: {e}")
+        if not loaded_any:
+            log("No .env file found in CWD or script directory")
+    except Exception as e:
+        try:
+            log(f".env load wrapper error: {e}")
+        except Exception:
+            pass
 
 _load_dotenv()
 
