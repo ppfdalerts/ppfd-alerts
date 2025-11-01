@@ -40,6 +40,9 @@
   .after-badge{background:rgba(239,68,68,.15); color:#fecaca; border:1px solid rgba(239,68,68,.35)}
   .calls-badge{background:rgba(34,197,94,.16); color:#bbf7d0; border:1px solid rgba(34,197,94,.35)}
   .avg-badge{background:rgba(59,130,246,.16); color:#bfdbfe; border:1px solid rgba(59,130,246,.35)}
+  /* Winner marker */
+  .win{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:6px;background:currentColor;border:1px solid currentColor;vertical-align:middle}
+  body:not(.winners-on) .win{display:none}
   .grip{position:absolute; right:6px; bottom:6px; width:16px; height:16px; color:#728090; opacity:.35}
   .panel .hdr{cursor:default}
   body.edit-on .panel .hdr{cursor:move}
@@ -67,6 +70,9 @@
   .valC{ color: var(--green); font-weight:600 }
   #board-week thead th[rowspan], #board-month thead th[rowspan]{ position: sticky; left: 0; z-index: 4; background:#0f141a; box-shadow: 2px 0 0 #0b1016; }
   #board-week tbody td:first-child, #board-month tbody td:first-child{ position: sticky; left: 0; z-index: 3; background: var(--panel); box-shadow: 2px 0 0 #0b1016; }
+  /* Remove rank row backgrounds for week/month */
+  #board-week tr.rank-1 td, #board-week tr.rank-2 td, #board-week tr.rank-3 td,
+  #board-month tr.rank-1 td, #board-month tr.rank-2 td, #board-month tr.rank-3 td{ background:none }
   #board-week th, #board-week td, #board-month th, #board-month td{ border-right:1px solid #1f2937; }
   #board-week th:nth-child(1), #board-week td:nth-child(1),
   #board-week th:nth-child(4), #board-week td:nth-child(4),
@@ -101,9 +107,8 @@
     <div class="pill">Auto refresh
       <label style="margin-left:4px"><input id="auto" type="checkbox" checked></label>
     </div>
-    <div class="pill">Edit layout
-      <label style="margin-left:4px"><input id="edit" type="checkbox"></label>
-    </div>
+    <div class="pill">Edit layout<label style="margin-left:4px"><input id="edit" type="checkbox"></label></div>
+    <div class="pill">Winners <label style="margin-left:4px"><input id="winners" type="checkbox" checked></label></div>
     <button id="resetLayout" class="btn">Reset layout</button>
     <button id="refresh" class="btn">Refresh now</button>
     <div id="status" class="status"></div><div id="ts" class="timestamp">—</div>
@@ -184,8 +189,7 @@
     auto: document.getElementById('auto'),
     edit: document.getElementById('edit'),
     resetLayout: document.getElementById('resetLayout'),
-    refresh: document.getElementById('refresh')
-  };
+    refresh: document.getElementById('refresh'),\n    winners: document.getElementById('winners')\n  };
 
   function renderTable(table, data){
     var tbody = table.querySelector('tbody');
@@ -274,6 +278,7 @@
   var interval=null; function startAuto(){ stopAuto(); interval=setInterval(fetchOnce, 60000); } function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
   el.auto.onchange=function(){ if(el.auto.checked) startAuto(); else stopAuto(); };
   el.refresh.onclick=function(){ fetchOnce(); };
+el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.winners.checked); };
 
   var panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month') };
   var defaultLayout={ today:{left:2,top:8,width:46,height:60}, prior:{left:2,top:70,width:46,height:28}, week:{left:50,top:8,width:48,height:40}, month:{left:50,top:50,width:48,height:48} };
@@ -283,7 +288,7 @@
   function applyLayout(l){ for(var k in panels){ var p=panels[k]; var r=l[k]||defaultLayout[k]; p.style.left=r.left+'vw'; p.style.top=r.top+'vh'; p.style.width=r.width+'vw'; p.style.height=r.height+'vh'; } }
   function enableEditing(on){ document.body.classList.toggle('edit-on', !!on); }
   var layoutState={ current: loadLayout() };
-  applyLayout(layoutState.current); enableEditing(false);
+  applyLayout\\(layoutState\\.current\\);\\ enableEditing\\(false\\);\\ document\\.body\\.classList\\.toggle\\('winners-on',\\ el\\.winners\\ &&\\ el\\.winners\\.checked\\);
   function updateFlowMode(){ var isMobile=window.matchMedia('(max-width: 900px)').matches; var canvas=document.querySelector('.canvas'); if(!canvas) return; if(!el.edit.checked && isDefaultLayout(layoutState.current) && !isMobile){ canvas.classList.add('flow'); for(var k in panels){ var p=panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height=''; } } else { canvas.classList.remove('flow'); applyLayout(layoutState.current); } }
   updateFlowMode();
   function attachDragResize(key){ var node=panels[key]; var handle=node.querySelector('.hdr'); var grip=node.querySelector('.grip'); var state={drag:false,size:false,sx:0,sy:0,start:null}; function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function move(e){ if(!(state.drag||state.size)) return; var vw=innerWidth, vh=innerHeight; var dx=(e.clientX-state.sx)/vw*100; var dy=(e.clientY-state.sy)/vh*100; var r=layoutState.current[key]||(layoutState.current[key]={left:defaultLayout[key].left,top:defaultLayout[key].top,width:defaultLayout[key].width,height:defaultLayout[key].height}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); } function up(){ if(!(state.drag||state.size)) return; state.drag=false; state.size=false; saveLayout(layoutState.current); } handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up); handle.addEventListener('touchstart', function(ev){downDrag(ev.touches[0])}); grip.addEventListener('touchstart', function(ev){downSize(ev.touches[0])}); window.addEventListener('touchmove', function(ev){move(ev.touches[0])}); window.addEventListener('touchend', up); }
