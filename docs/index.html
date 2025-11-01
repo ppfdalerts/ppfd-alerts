@@ -194,7 +194,7 @@
       const thCount = table.querySelectorAll('thead th').length;
       if(thCount >= 5){
         const tdX=document.createElement('td'); tdX.className='col-max';
-        const show = (r.max_min && r.max_min>0) ? r.max_min.toFixed(1) : '—';
+        const show = (r.max_min && r.max_min>0) ? r.max_min.toFixed(1) : '--';
         tdX.innerHTML = `<span class="pill-badge avg-badge">${show}</span>`;
         tr.appendChild(tdX);
       }
