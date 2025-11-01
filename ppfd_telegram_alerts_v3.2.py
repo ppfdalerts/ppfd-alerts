@@ -114,14 +114,15 @@ def load(fp):
                 j = json.load(f)
                 return (defaultdict(int, j.get("calls", {})),
                         defaultdict(int, j.get("dur_sec", {})),
-                        defaultdict(int, j.get("after_0000", {})))
+                        defaultdict(int, j.get("after_0000", {})),
+                        defaultdict(int, j.get("max_sec", {})))
         except Exception:
             pass
-    return defaultdict(int), defaultdict(int), defaultdict(int)
-def save(fp, calls, dur, after):
+    return defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int)
+def save(fp, calls, dur, after, max_sec):
     try:
         with open(fp + ".tmp", "w") as f:
-            json.dump({"calls": calls, "dur_sec": dur, "after_0000": after}, f)
+            json.dump({"calls": calls, "dur_sec": dur, "after_0000": after, "max_sec": max_sec}, f)
         os.replace(fp + ".tmp", fp)
     except Exception as e:
         log(f"Persist error: {e}")
@@ -134,7 +135,7 @@ if not BOT_TOKEN or not CHAT_ID:
 NOW = datetime.datetime.now(TZ)
 SHIFT_DT = shift_start(NOW)
 STATS_FN = stats_file(SHIFT_DT)
-CALLS, DUR_SEC, AFTER_0000 = load(STATS_FN)
+CALLS, DUR_SEC, AFTER_0000, MAX_SEC = load(STATS_FN)
 
 
 # --- Leaderboard helpers ---
@@ -540,7 +541,7 @@ while True:
                         CALLS[uid] += 1
                         if parse_ts(it.get("Received")).time() < datetime.time(7):
                             AFTER_0000[uid] += 1
-                        save(STATS_FN, CALLS, DUR_SEC, AFTER_0000)
+                        save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC)
                         stats_dirty = True
                 elif status != rec["status"]:
                     rec["status"] = status
@@ -554,8 +555,10 @@ while True:
                     uid = key[1]
                     LAST_FINISHED[uid] = rec["events"]
                     if uid in WATCH_SET:
-                        DUR_SEC[uid] += (rec["events"][-1][1] - rec["events"][0][1]).total_seconds()
-                        save(STATS_FN, CALLS, DUR_SEC, AFTER_0000)
+                        dur_sec = (rec["events"][-1][1] - rec["events"][0][1]).total_seconds()
+                        DUR_SEC[uid] += dur_sec
+                        MAX_SEC[uid] = max(int(MAX_SEC.get(uid, 0)), int(dur_sec))
+                        save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC)
                         stats_dirty = True
 
             # --- ALERT: New Call (One per unit, and once to LOG/ALL UNITS) ---
@@ -690,13 +693,14 @@ while True:
         for tid in THREAD_IDS:
             post(tid, "CALL COUNT", "\n".join(lines))
         log("End-of-shift recap sent")
-        save(STATS_FN, CALLS, DUR_SEC, AFTER_0000)
+        save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC)
         CALLS.clear()
         DUR_SEC.clear()
         AFTER_0000.clear()
+        MAX_SEC.clear()
         SHIFT_DT += datetime.timedelta(days=1)
         STATS_FN = stats_file(SHIFT_DT)
-        save(STATS_FN, CALLS, DUR_SEC, AFTER_0000)
+        save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC)
         next_morning += datetime.timedelta(days=1)
         next_evening += datetime.timedelta(days=1)
     time.sleep(backoff + random.uniform(0, 1))
