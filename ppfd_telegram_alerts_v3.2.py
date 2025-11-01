@@ -17,6 +17,12 @@ def log(msg: str):
     ts = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"{ts}  {msg}", flush=True)
 
+# Verbose debug logging (turn off with DEBUG_VERBOSE=0)
+DEBUG_VERBOSE = 1 if os.environ.get('DEBUG_VERBOSE', '1').strip() not in ('0','false','False') else 0
+def dbg(msg: str):
+    if DEBUG_VERBOSE:
+        log(f"DEBUG: {msg}")
+
 log("PPFD Telegram alert service started")
 
 # --- Minimal .env loader (no external deps) ---
@@ -72,6 +78,13 @@ try:
     CHAT_ID = int(os.environ.get("CHAT_ID", "0"))
 except Exception:
     CHAT_ID = 0
+
+# Startup diagnostics
+try:
+    dbg(f"cwd={os.getcwd()} file={__file__} pid={os.getpid()} py={sys.version.split()[0]}")
+    dbg(f"BOT_TOKEN={'set' if BOT_TOKEN else 'MISSING'} len={len(BOT_TOKEN)} CHAT_ID={CHAT_ID}")
+except Exception:
+    pass
 
 THREAD_IDS = {
     "GENERAL": 1, "R33": 2, "E33": 3, "T33": 4, "33FD": 5, "LR36": 6,
@@ -477,19 +490,30 @@ while True:
     if last_mod: headers["If-Modified-Since"] = last_mod
 
     try:
-        r = sess.get(api_url(), headers=headers, timeout=20)
+        url = api_url()
+        dbg(f"fetch {url}")
+        r = sess.get(url, headers=headers, timeout=20)
         if r.status_code == 304:
+            dbg("feed 304 not modified")
             time.sleep(backoff + random.uniform(0, 1))
             continue
 
         etag, last_mod = r.headers.get("ETag", etag), r.headers.get("Last-Modified", last_mod)
 
-        for it in r.json().get("CallInfo", []):
+        data = r.json()
+        items = data.get("CallInfo", []) if isinstance(data, dict) else []
+        dbg(f"feed 200 items={len(items)}")
+        for it in items:
             iid = str(it.get("IncidentNo") or hashlib.sha1(
                 f"{it.get('Type')}{it.get('Location')}{it.get('Received')}".encode()).hexdigest())
             units = [u.get("ID", "").strip().upper() for u in it.get("Units", [])]
             statuses = {u["ID"].upper(): u.get("Status", "").lower() for u in it.get("Units", [])}
 
+            if any(u in WATCH_SET for u in units):
+                try:
+                    dbg(f"match iid={iid} units={units} statuses={[statuses.get(u,'') for u in units]}")
+                except Exception:
+                    pass
             # --- EARLY ALERT: Pre-dispatch geofence alerts by unit ---
             if EARLY_ALERT_ENABLED and GEOFENCES:
                 grid = (it.get("Grid") or "").strip().upper()
@@ -574,6 +598,10 @@ while True:
                         if parse_ts(it.get("Received")).time() < datetime.time(7):
                             AFTER_0000[uid] += 1
                         save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC)
+                        try:
+                            dbg(f"stats init uid={uid} calls={CALLS.get(uid,0)} after={AFTER_0000.get(uid,0)} file={STATS_FN}")
+                        except Exception:
+                            pass
                         stats_dirty = True
                 elif status != rec["status"]:
                     rec["status"] = status
@@ -591,6 +619,10 @@ while True:
                         DUR_SEC[uid] += dur_sec
                         MAX_SEC[uid] = max(int(MAX_SEC.get(uid, 0)), int(dur_sec))
                         save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC)
+                        try:
+                            dbg(f"stats updated uid={uid} dur+= {int(dur_sec)} file={STATS_FN}")
+                        except Exception:
+                            pass
                         stats_dirty = True
 
             # --- ALERT: New Call (One per unit, and once to LOG/ALL UNITS) ---
@@ -615,6 +647,10 @@ while True:
                 notified = set()
                 for unit in units:
                     if unit in WATCH_SET and unit not in notified:
+                        try:
+                            dbg(f"send unit={unit} iid={iid} title={title}")
+                        except Exception:
+                            pass
                         post(unit, title, body)
                         notified.add(unit)
                 post("LOG", title, body)
