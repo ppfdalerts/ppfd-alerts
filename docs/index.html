@@ -275,7 +275,8 @@
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.avg_min_abc||[])[i]||0,true); tr.appendChild(td); });
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.max_min_abc||[])[i]||0,true); tr.appendChild(td); });
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_abc||[])[i]||0,false); tr.appendChild(td); });
-      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_max_abc||[])[i]||0,false); tr.appendChild(td); });\n      tbody.appendChild(tr);
+      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_max_abc||[])[i]||0,false); tr.appendChild(td); });
+      tbody.appendChild(tr);
     });
   }
 
