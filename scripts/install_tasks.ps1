@@ -31,11 +31,12 @@ $settings = New-ScheduledTaskSettingsSet `
   -RestartInterval (New-TimeSpan -Minutes 1) `
   -MultipleInstances IgnoreNew
 
-# Principal: prefer SYSTEM when running elevated; otherwise current user
+# Principal: prefer SYSTEM when running elevated; otherwise current user (DOMAIN\User)
+$currentUser = try { ([Security.Principal.WindowsIdentity]::GetCurrent()).Name } catch { "$env:USERDOMAIN\$env:USERNAME" }
 if (Test-Admin) {
   $principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
 } else {
-  $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
+  $principal = New-ScheduledTaskPrincipal -UserId $currentUser -LogonType Interactive -RunLevel Highest
 }
 
 # Actions
@@ -52,11 +53,39 @@ $tRepeat    = New-ScheduledTaskTrigger -Once $startNow -RepetitionInterval (New-
 Get-ScheduledTask -TaskName $alertsTaskName -ErrorAction SilentlyContinue | Unregister-ScheduledTask -Confirm:$false
 Get-ScheduledTask -TaskName $updaterTaskName -ErrorAction SilentlyContinue | Unregister-ScheduledTask -Confirm:$false
 
-# Register tasks
-$alertsTask  = New-ScheduledTask -Action $alertsAction  -Trigger @($tAtStartup, $tAtLogon) -Principal $principal -Settings $settings
-Register-ScheduledTask -TaskName $alertsTaskName -InputObject $alertsTask | Out-Null
+# Register tasks (with schtasks.exe fallback if ScheduledTasks registration fails)
+try {
+  $alertsTask  = New-ScheduledTask -Action $alertsAction  -Trigger @($tAtStartup, $tAtLogon) -Principal $principal -Settings $settings
+  Register-ScheduledTask -TaskName $alertsTaskName -InputObject $alertsTask | Out-Null
+} catch {
+  Write-Warning "Register-ScheduledTask failed for '$alertsTaskName': $($_.Exception.Message). Trying schtasks.exe fallback."
+  $cmd = @(
+    '/Create','/F',
+    '/TN', 'PPFD Telegram Alerts',
+    '/TR', "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$alertsWrapper`"",
+    '/RL','HIGHEST','/SC','ONLOGON','/RU', $currentUser
+  )
+  $p = Start-Process -FilePath schtasks.exe -ArgumentList $cmd -PassThru -Wait -NoNewWindow
+  if ($p.ExitCode -ne 0) { throw "schtasks.exe failed for alerts task (exit $($p.ExitCode))" }
+}
 
-$updaterTask = New-ScheduledTask -Action $updaterAction -Trigger @($tAtStartup, $tRepeat) -Principal $principal -Settings $settings
-Register-ScheduledTask -TaskName $updaterTaskName -InputObject $updaterTask | Out-Null
+try {
+  $updaterTask = New-ScheduledTask -Action $updaterAction -Trigger @($tAtStartup, $tRepeat) -Principal $principal -Settings $settings
+  Register-ScheduledTask -TaskName $updaterTaskName -InputObject $updaterTask | Out-Null
+} catch {
+  Write-Warning "Register-ScheduledTask failed for '$updaterTaskName': $($_.Exception.Message). Trying schtasks.exe fallback."
+  $cmd = @(
+    '/Create','/F',
+    '/TN', 'PPFD Pages Updater',
+    '/TR', "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$updaterScript`"",
+    '/RL','HIGHEST','/SC','MINUTE','/MO', [Math]::Max(1,$UpdaterMinutes), '/RU', $currentUser
+  )
+  $p = Start-Process -FilePath schtasks.exe -ArgumentList $cmd -PassThru -Wait -NoNewWindow
+  if ($p.ExitCode -ne 0) { throw "schtasks.exe failed for updater task (exit $($p.ExitCode))" }
+}
+
+# Start tasks now (best-effort)
+try { Start-ScheduledTask -TaskName $alertsTaskName } catch {}
+try { Start-ScheduledTask -TaskName $updaterTaskName } catch {}
 
 Write-Host "Installed tasks: '$alertsTaskName' and '$updaterTaskName' (Updater every $UpdaterMinutes min)."
