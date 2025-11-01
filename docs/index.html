@@ -82,12 +82,28 @@
     </div>
     <div class="panel" id="panel-week" style="left:50vw; top:40vh; width:46vw; height:28vh">
       <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">—</span></div>
-      <div class="body"><table id="board-week"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-week"><thead><tr>
+        <th class="col-unit">Unit</th>
+        <th>Total Calls (A|B|C)</th>
+        <th>Single-Shift Max Calls (A|B|C)</th>
+        <th>Avg. Call Duration (Mins) (A|B|C)</th>
+        <th>Highest Call Duration (Mins) (A|B|C)</th>
+        <th>Total Calls After Midnight (A|B|C)</th>
+        <th>Single-Shift Max After Midnight (A|B|C)</th>
+      </tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-month" style="left:50vw; top:70vh; width:46vw; height:22vh">
       <div class="hdr"><span class="dot month"></span><span>Month</span><span id="hdr-month" class="sub">—</span></div>
-      <div class="body"><table id="board-month"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-month"><thead><tr>
+        <th class="col-unit">Unit</th>
+        <th>Total Calls (A|B|C)</th>
+        <th>Single-Shift Max Calls (A|B|C)</th>
+        <th>Avg. Call Duration (Mins) (A|B|C)</th>
+        <th>Highest Call Duration (Mins) (A|B|C)</th>
+        <th>Total Calls After Midnight (A|B|C)</th>
+        <th>Single-Shift Max After Midnight (A|B|C)</th>
+      </tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="footer">Updated <span id="updated">—</span></div>
@@ -148,11 +164,38 @@
     });
   }
 
+  function renderWeekMonth(table, data){
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = '';
+    if(!data || !Array.isArray(data.rows) || data.rows.length===0){
+      const tr=document.createElement('tr');
+      const td=document.createElement('td'); td.colSpan=(table.querySelectorAll('thead th').length||7); td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
+    }
+    const abc = (arr, isFloat=false)=>{
+      const f = (v)=> isFloat ? (Number.isFinite(v)? v.toFixed(1):'0.0') : (v||0);
+      return `${f(arr[0]||0)}|${f(arr[1]||0)}|${f(arr[2]||0)}`;
+    };
+    data.rows.forEach((r, idx)=>{
+      const tr=document.createElement('tr');
+      if(idx===0) tr.classList.add('rank-1');
+      if(idx===1) tr.classList.add('rank-2');
+      if(idx===2) tr.classList.add('rank-3');
+      const tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
+      const td1=document.createElement('td'); td1.textContent=abc(r.calls_abc,false); tr.appendChild(td1);
+      const td2=document.createElement('td'); td2.textContent=abc(r.calls_max_abc,false); tr.appendChild(td2);
+      const td3=document.createElement('td'); td3.textContent=abc(r.avg_min_abc,true); tr.appendChild(td3);
+      const td4=document.createElement('td'); td4.textContent=abc(r.max_min_abc,true); tr.appendChild(td4);
+      const td5=document.createElement('td'); td5.textContent=abc(r.after_abc,false); tr.appendChild(td5);
+      const td6=document.createElement('td'); td6.textContent=abc(r.after_max_abc,false); tr.appendChild(td6);
+      tbody.appendChild(tr);
+    });
+  }
+
   function apply(data){
     if(data.today){ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta && data.today.meta.shift_date) || new Date(data.today.updated||Date.now()).toLocaleTimeString(); }
     if(data.prior){ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta && data.prior.meta.shift_date) || new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }
-    if(data.week){ renderTable(el.week, data.week); el.hdrWeek.textContent=(data.week.meta && data.week.meta.range) || new Date(data.week.updated||Date.now()).toLocaleTimeString(); }
-    if(data.month){ renderTable(el.month, data.month); el.hdrMonth.textContent=(data.month.meta && data.month.meta.range) || new Date(data.month.updated||Date.now()).toLocaleTimeString(); }
+    if(data.week){ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta && data.week.meta.range) || new Date(data.week.updated||Date.now()).toLocaleTimeString(); }
+    if(data.month){ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta && data.month.meta.range) || new Date(data.month.updated||Date.now()).toLocaleTimeString(); }
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString();
     el.upd.textContent=new Date().toLocaleString();
   }
