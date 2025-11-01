@@ -280,41 +280,7 @@
   // Update status banner
   if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; }
   else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
-}async function fetchOnce(){
-    try{
-      const r = await fetch('data.json?t='+Date.now(), {cache:'no-cache'});
-      const j = await r.json();
-      apply(j);
-    }catch(e){ console.error('fetch error', e); }
-  }
-
-  let interval = null;
-  function startAuto(){ stopAuto(); interval = setInterval(fetchOnce, 60000); }
-  function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
-  el.auto.onchange=()=>{ if(el.auto.checked) startAuto(); else stopAuto(); };
-  el.refresh.onclick=()=> fetchOnce();
-  // No dynamic font autosize with tables; no resize handler needed
-
-  // initial
-  fetchOnce(); startAuto();
-
-  // --- Layout editing (drag/resize, saved to localStorage) ---
-  const panels = {
-    today: document.getElementById('panel-today'),
-    prior: document.getElementById('panel-prior'),
-    week: document.getElementById('panel-week'),
-    month: document.getElementById('panel-month'),
-  };
-  const defaultLayout = {
-    today: {left:2, top:8, width:46, height:60},
-    prior: {left:2, top:70, width:46, height:28},
-    week:  {left:50, top:8, width:48, height:40},
-    month: {left:50, top:50, width:48, height:48},
-  };
-  function loadLayout(){
-    try{ const j = JSON.parse(localStorage.getItem('ppfd_layout_v1')||'{}'); return {...defaultLayout, ...j}; }catch(e){ return {...defaultLayout}; }
-  }
-  function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v1', JSON.stringify(l)); }catch(e){} }
+}async function fetchOnce(){\n    try{\n      const r = await fetch('data.json?t='+Date.now(), {cache:'no-cache'});\n      if(!r.ok){\n        el.status.style.display='inline-block';\n        el.status.textContent='Fetch error: '+r.status+' '+r.statusText;\n        return;\n      }\n      const j = await r.json();\n      if(!j || (!j.today && !j.week && !j.prior && !j.month)){\n        el.status.style.display='inline-block';\n        el.status.textContent='No data in payload';\n        return;\n      }\n      apply(j);\n    }catch(e){\n      console.error('fetch error', e);\n      el.status.style.display='inline-block';\n      el.status.textContent='Fetch error (network/parse)';\n    }\n  }\n  function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v1', JSON.stringify(l)); }catch(e){} }
   function isDefaultLayout(l){
     const tol = 0.001;
     for(const k of Object.keys(defaultLayout)){
