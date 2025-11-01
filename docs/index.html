@@ -41,6 +41,10 @@
   .calls-badge{background:rgba(34,197,94,.16); color:#bbf7d0; border:1px solid rgba(34,197,94,.35)}
   .avg-badge{background:rgba(59,130,246,.16); color:#bfdbfe; border:1px solid rgba(59,130,246,.35)}
   .grip{position:absolute; right:6px; bottom:6px; width:16px; height:16px; color:#728090; opacity:.35}
+  .panel .hdr{cursor:default}
+  body.edit-on .panel .hdr{cursor:move}
+  body.edit-on .grip{opacity:.8}
+  body.edit-on .panel{outline:1px dashed #2b3442}
   .grid{display:none}
   .timestamp{margin-left:auto; color:var(--muted); font-size:12px}
   .footer{position:absolute; left:10px; bottom:8px; color:var(--muted); font-size:12px}
@@ -72,10 +76,12 @@
     .toolbar{gap:8px}
     .canvas{display:flex; flex-direction:column; gap:10px}
     .panel{position:static; width:100% !important; height:auto !important}
+    body.edit-on .panel{position:absolute !important}
     .panel .hdr{font-size:12px; padding:10px}
     table{font-size:13px}
     thead th, tbody td{padding:8px 6px}
     .grip{display:none}
+    body.edit-on .grip{display:block}
   }
 </style>
 <div class="wrap">
@@ -84,6 +90,10 @@
     <div class="pill">Auto refresh
       <label style="margin-left:4px"><input id="auto" type="checkbox" checked></label>
     </div>
+    <div class="pill">Edit layout
+      <label style="margin-left:4px"><input id="edit" type="checkbox"></label>
+    </div>
+    <button id="resetLayout" class="btn">Reset layout</button>
     <button id="refresh" class="btn">Refresh now</button>
     <div id="ts" class="timestamp">—</div>
   </div>
@@ -164,6 +174,8 @@
     ts: document.getElementById('ts'),
     upd: document.getElementById('updated'),
     auto: document.getElementById('auto'),
+    edit: document.getElementById('edit'),
+    resetLayout: document.getElementById('resetLayout'),
     refresh: document.getElementById('refresh')
   };
 
@@ -265,4 +277,50 @@
 
   // initial
   fetchOnce(); startAuto();
+
+  // --- Layout editing (drag/resize, saved to localStorage) ---
+  const panels = {
+    today: document.getElementById('panel-today'),
+    prior: document.getElementById('panel-prior'),
+    week: document.getElementById('panel-week'),
+    month: document.getElementById('panel-month'),
+  };
+  const defaultLayout = {
+    today: {left:2, top:8, width:46, height:60},
+    prior: {left:2, top:70, width:46, height:28},
+    week:  {left:50, top:8, width:48, height:40},
+    month: {left:50, top:50, width:48, height:48},
+  };
+  function loadLayout(){
+    try{ const j = JSON.parse(localStorage.getItem('ppfd_layout_v1')||'{}'); return {...defaultLayout, ...j}; }catch(e){ return {...defaultLayout}; }
+  }
+  function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v1', JSON.stringify(l)); }catch(e){} }
+  function applyLayout(l){
+    for(const k of Object.keys(panels)){
+      const p = panels[k]; const r = l[k]||defaultLayout[k];
+      p.style.left = r.left+'vw'; p.style.top = r.top+'vh'; p.style.width = r.width+'vw'; p.style.height = r.height+'vh';
+    }
+  }
+  function enableEditing(on){ document.body.classList.toggle('edit-on', !!on); }
+  const layoutState = { current: loadLayout() };
+  applyLayout(layoutState.current);
+  enableEditing(false);
+
+  function attachDragResize(key){
+    const node = panels[key];
+    const handle = node.querySelector('.hdr');
+    const grip = node.querySelector('.grip');
+    const state = {drag:false, size:false, sx:0, sy:0, start:null};
+    function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; const r = layoutState.current[key]||defaultLayout[key]; state.start={...r}; e.preventDefault(); }
+    function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; const r = layoutState.current[key]||defaultLayout[key]; state.start={...r}; e.preventDefault(); }
+    function move(e){ if(!(state.drag||state.size)) return; const vw=innerWidth, vh=innerHeight; const dx=(e.clientX-state.sx)/vw*100; const dy=(e.clientY-state.sy)/vh*100; const r = layoutState.current[key]||(layoutState.current[key]={...defaultLayout[key]}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); }
+    function up(){ if(!(state.drag||state.size)) return; state.drag=state.size=false; saveLayout(layoutState.current); }
+    // mouse
+    handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+    // touch
+    handle.addEventListener('touchstart', (ev)=>downDrag(ev.touches[0])); grip.addEventListener('touchstart', (ev)=>downSize(ev.touches[0])); window.addEventListener('touchmove', (ev)=>move(ev.touches[0])); window.addEventListener('touchend', up);
+  }
+  attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month');
+  el.edit.onchange = ()=> enableEditing(el.edit.checked);
+  el.resetLayout.onclick = ()=>{ layoutState.current = {...defaultLayout}; saveLayout(layoutState.current); applyLayout(layoutState.current); };
 </script>
