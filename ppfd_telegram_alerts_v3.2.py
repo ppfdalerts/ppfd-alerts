@@ -38,14 +38,15 @@ def _load_dotenv(path: str = ".env"):
             try:
                 if not fp or not os.path.exists(fp):
                     continue
-                with open(fp, 'r', encoding='utf-8') as f:
+                # utf-8-sig will strip BOM if present
+                with open(fp, 'r', encoding='utf-8-sig') as f:
                     for line in f:
                         line = line.strip()
                         if not line or line.startswith('#'):
                             continue
                         if '=' in line:
                             k, v = line.split('=', 1)
-                            k = k.strip()
+                            k = k.strip().lstrip('\ufeff')
                             v = v.strip().strip('"').strip("'")
                             # If the var is missing OR empty, set from .env
                             if (k not in os.environ) or (not os.environ.get(k)):
