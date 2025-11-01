@@ -2,7 +2,11 @@
 <meta name=viewport content="width=device-width, initial-scale=1">
 <title>PPFD Live Leaderboards</title>
 <style>
-  :root{ --bg:#0b0d10; --panel:#151a20; --text:#e5e7eb; --muted:#9ca3af; --red:#cf1020; --gold:#ffc107; --smoke:#374151; --accent:#ff7043; }
+  :root{
+    --bg:#0b0d10; --panel:#151a20; --text:#e5e7eb; --muted:#9ca3af;
+    --red:#ef4444; --gold:#f59e0b; --smoke:#374151; --accent:#ff7043;
+    --green:#22c55e; --teal:#14b8a6; --blue:#3b82f6; --indigo:#6366f1;
+  }
   *{box-sizing:border-box}
   html,body{height:100%; width:100%;}
   body{margin:0; background:linear-gradient(180deg, #0b0d10, #0e1216); color:var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;}
@@ -13,18 +17,28 @@
   .btn:hover{background:#223047}
   .canvas{position:relative; height:100%; width:100%;}
   .panel{position:absolute; background:var(--panel); border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,.35); overflow:hidden; border:1px solid #111722; display:flex; flex-direction:column; min-height:60px; min-width:120px}
-  .panel .hdr{display:flex; align-items:center; gap:10px; padding:10px 12px; font-weight:600; letter-spacing:.3px; text-transform:uppercase; font-size:13px; flex:0 0 auto;}
+  .panel .hdr{display:flex; align-items:center; gap:10px; padding:10px 12px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; font-size:13px; flex:0 0 auto; border-bottom:1px solid #0f141a;}
   .panel .hdr .dot{width:10px; height:10px; border-radius:50%}
   .panel .hdr .sub{margin-left:auto; color:var(--muted); font-weight:500}
-  .panel .body{margin:0; padding:0 12px 12px}
+  .panel .body{margin:0; padding:0 12px 12px; overflow:auto}
   table{width:100%; border-collapse:collapse; font-size:14px}
-  thead th{position:sticky; top:0; background:#0f141a; color:#9ca3af; text-align:left; font-weight:600; padding:8px 6px; border-bottom:1px solid #1f2937}
-  tbody td{padding:8px 6px; border-bottom:1px dashed #1f2732}
+  thead th{position:sticky; top:0; background:#0f141a; color:#9ca3af; text-align:left; font-weight:700; padding:10px 6px; border-bottom:1px solid #1f2937}
+  tbody td{padding:10px 6px; border-bottom:1px dashed #1f2732}
+  tbody tr:nth-child(odd){background:rgba(255,255,255,0.015)}
   tbody tr:hover{background:#111722}
   .col-unit{width:25%}
   .col-calls{width:20%}
   .col-avg{width:25%}
   .col-after{width:30%}
+  /* Rank accents */
+  tr.rank-1 td{background:linear-gradient(90deg, rgba(245,158,11,.15), transparent);} /* gold */
+  tr.rank-2 td{background:linear-gradient(90deg, rgba(99,102,241,.12), transparent);} /* indigo */
+  tr.rank-3 td{background:linear-gradient(90deg, rgba(20,184,166,.12), transparent);} /* teal */
+  /* Badges */
+  .pill-badge{display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; line-height:18px}
+  .after-badge{background:rgba(239,68,68,.15); color:#fecaca; border:1px solid rgba(239,68,68,.35)}
+  .calls-badge{background:rgba(34,197,94,.16); color:#bbf7d0; border:1px solid rgba(34,197,94,.35)}
+  .avg-badge{background:rgba(59,130,246,.16); color:#bfdbfe; border:1px solid rgba(59,130,246,.35)}
   .grip{position:absolute; right:6px; bottom:6px; width:16px; height:16px; color:#728090; opacity:.35}
   .grid{display:none}
   .timestamp{margin-left:auto; color:var(--muted); font-size:12px}
@@ -32,6 +46,18 @@
   .panel .hdr .dot.today{background:var(--gold)}
   .panel .hdr .dot.prior{background:var(--accent)}
   .panel .hdr .dot.week{background:var(--smoke)}
+
+  /* Mobile layout */
+  @media (max-width: 900px){
+    .wrap{padding:6px}
+    .toolbar{gap:8px}
+    .canvas{display:flex; flex-direction:column; gap:10px}
+    .panel{position:static; width:100% !important; height:auto !important}
+    .panel .hdr{font-size:12px; padding:10px}
+    table{font-size:13px}
+    thead th, tbody td{padding:8px 6px}
+    .grip{display:none}
+  }
 </style>
 <div class="wrap">
   <div class="toolbar">
@@ -82,14 +108,29 @@
       const tr=document.createElement('tr');
       const td=document.createElement('td'); td.colSpan=4; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
-    for(const r of data.rows){
+    const rows = data.rows;
+    const maxC = Math.max(...rows.map(r=>r.calls));
+    const minC = Math.min(...rows.map(r=>r.calls));
+    const callsHeat = (c)=>{
+      const n = maxC===minC? 0.7 : (c-minC)/(maxC-minC);
+      const hue = 200 - Math.round(n*160); // teal->gold spectrum
+      const alpha = 0.22 + 0.28*n;
+      return `background: hsla(${hue}, 85%, 52%, ${alpha}); color: #0b0d10; font-weight:700; border-radius:6px; padding:2px 8px; display:inline-block;`;
+    };
+    rows.forEach((r, idx)=>{
       const tr=document.createElement('tr');
+      if(idx===0) tr.classList.add('rank-1');
+      if(idx===1) tr.classList.add('rank-2');
+      if(idx===2) tr.classList.add('rank-3');
       const tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
-      const tdC=document.createElement('td'); tdC.textContent=r.calls; tdC.className='col-calls'; tr.appendChild(tdC);
-      const tdA=document.createElement('td'); tdA.textContent=r.avg_min.toFixed(1); tdA.className='col-avg'; tr.appendChild(tdA);
-      const tdM=document.createElement('td'); tdM.textContent=r.after_0000; tdM.className='col-after'; tr.appendChild(tdM);
+      const tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML = `<span class="pill-badge calls-badge" style="${callsHeat(r.calls)}">${r.calls}</span>`; tr.appendChild(tdC);
+      const tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML = `<span class="pill-badge avg-badge">${r.avg_min.toFixed(1)}</span>`; tr.appendChild(tdA);
+      const tdM=document.createElement('td'); tdM.className='col-after';
+      if((r.after_0000||0)>0){ tdM.innerHTML = `<span class="pill-badge after-badge">${r.after_0000}</span>`; }
+      else { tdM.textContent = '0'; tdM.style.color = '#9ca3af'; }
+      tr.appendChild(tdM);
       tbody.appendChild(tr);
-    }
+    });
   }
 
   function apply(data){
@@ -113,7 +154,7 @@
   function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
   el.auto.onchange=()=>{ if(el.auto.checked) startAuto(); else stopAuto(); };
   el.refresh.onclick=()=> fetchOnce();
-  window.addEventListener('resize', fitAll);
+  // No dynamic font autosize with tables; no resize handler needed
 
   // initial
   fetchOnce(); startAuto();
