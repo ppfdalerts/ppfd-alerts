@@ -16,6 +16,9 @@
   .btn{background:#1f2937; border:1px solid #111722; color:var(--text); padding:8px 10px; border-radius:8px; cursor:pointer}
   .btn:hover{background:#223047}
   .canvas{position:relative; height:100%; width:100%;}
+  /* Flow layout (auto-fit heights) when using default, non-edited layout */
+  .canvas.flow{display:grid; grid-template-columns: 1fr 1fr; grid-auto-rows:auto; gap:10px; align-content:start}
+  .canvas.flow .panel{position:static !important; width:auto !important; height:auto !important}
   .panel{position:absolute; background:var(--panel); border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,.35); overflow:hidden; border:1px solid #111722; display:flex; flex-direction:column; min-height:60px; min-width:120px}
   .panel .hdr{display:flex; align-items:center; gap:10px; padding:10px 12px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; font-size:13px; flex:0 0 auto; border-bottom:1px solid #0f141a;}
   .panel .hdr .dot{width:10px; height:10px; border-radius:50%}
@@ -321,6 +324,16 @@
     try{ const j = JSON.parse(localStorage.getItem('ppfd_layout_v1')||'{}'); return {...defaultLayout, ...j}; }catch(e){ return {...defaultLayout}; }
   }
   function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v1', JSON.stringify(l)); }catch(e){} }
+  function isDefaultLayout(l){
+    const tol = 0.001;
+    for(const k of Object.keys(defaultLayout)){
+      const a = l[k]||defaultLayout[k], b = defaultLayout[k];
+      for(const key of ['left','top','width','height']){
+        if(Math.abs((a[key]??0) - (b[key]??0)) > tol) return false;
+      }
+    }
+    return true;
+  }
   function applyLayout(l){
     for(const k of Object.keys(panels)){
       const p = panels[k]; const r = l[k]||defaultLayout[k];
@@ -331,6 +344,24 @@
   const layoutState = { current: loadLayout() };
   applyLayout(layoutState.current);
   enableEditing(false);
+
+  // Toggle flow layout automatically when using unedited default layout and not in edit mode (desktop only)
+  function updateFlowMode(){
+    const isMobile = window.matchMedia('(max-width: 900px)').matches;
+    const canvas = document.querySelector('.canvas');
+    if(!canvas) return;
+    if(!el.edit.checked && isDefaultLayout(layoutState.current) && !isMobile){
+      canvas.classList.add('flow');
+      // clear inline sizes so panels grow to fit tables
+      for(const k of Object.keys(panels)){
+        const p = panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height='';
+      }
+    }else{
+      canvas.classList.remove('flow');
+      applyLayout(layoutState.current);
+    }
+  }
+  updateFlowMode();
 
   function attachDragResize(key){
     const node = panels[key];
@@ -347,6 +378,8 @@
     handle.addEventListener('touchstart', (ev)=>downDrag(ev.touches[0])); grip.addEventListener('touchstart', (ev)=>downSize(ev.touches[0])); window.addEventListener('touchmove', (ev)=>move(ev.touches[0])); window.addEventListener('touchend', up);
   }
   attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month');
-  el.edit.onchange = ()=> enableEditing(el.edit.checked);
-  el.resetLayout.onclick = ()=>{ layoutState.current = {...defaultLayout}; saveLayout(layoutState.current); applyLayout(layoutState.current); };
+  el.edit.onchange = ()=> { enableEditing(el.edit.checked); updateFlowMode(); };
+  el.resetLayout.onclick = ()=>{ layoutState.current = {...defaultLayout}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); };
 </script>
+
+  window.addEventListener('resize', updateFlowMode);
