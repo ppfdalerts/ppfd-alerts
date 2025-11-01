@@ -251,7 +251,7 @@
   function renderWeekMonth(table, data){
     const tbody = table.querySelector('tbody');
     tbody.innerHTML = '';
-    const thCount = table.querySelectorAll('thead th').length || 19;
+    const thCount = 19; // Unit + 6 metric groups * 3 subcolumns
     if(!data || !Array.isArray(data.rows) || data.rows.length === 0){
       const tr = document.createElement('tr');
       const td = document.createElement('td');
@@ -274,9 +274,7 @@
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.avg_min_abc||[])[i]||0,true); tr.appendChild(td); });
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.max_min_abc||[])[i]||0,true); tr.appendChild(td); });
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_abc||[])[i]||0,false); tr.appendChild(td); });
-      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_max_abc||[])[i]||0,false); tr.appendChild(td); });
-       tdAfter.textContent = fnum(r.total_after||0,false); tr.appendChild(tdAfter);
-      tbody.appendChild(tr);
+      ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_max_abc||[])[i]||0,false); tr.appendChild(td); });\n      tbody.appendChild(tr);
     });
   }
 
