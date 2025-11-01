@@ -33,9 +33,10 @@
   .col-avg{width:22%}
   .col-max{width:22%}
   .col-after{width:20%}
-  tr.rank-1 td{background:linear-gradient(90deg, rgba(245,158,11,.15), transparent);} 
-  tr.rank-2 td{background:linear-gradient(90deg, rgba(99,102,241,.12), transparent);} 
-  tr.rank-3 td{background:linear-gradient(90deg, rgba(20,184,166,.12), transparent);} 
+  /* Top 3 rows styling (applies to Today/Prior; Week/Month are suppressed below) */
+  tr.rank-1 td{background:linear-gradient(90deg, rgba(245,158,11,.18), transparent);} /* gold */
+  tr.rank-2 td{background:linear-gradient(90deg, rgba(192,192,192,.20), transparent);} /* silver */
+  tr.rank-3 td{background:linear-gradient(90deg, rgba(205,127,50,.18), transparent);} /* bronze */
   .pill-badge{display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; line-height:18px}
   .after-badge{background:rgba(239,68,68,.15); color:#fecaca; border:1px solid rgba(239,68,68,.35)}
   .calls-badge{background:rgba(34,197,94,.16); color:#bbf7d0; border:1px solid rgba(34,197,94,.35)}
@@ -189,7 +190,8 @@
     auto: document.getElementById('auto'),
     edit: document.getElementById('edit'),
     resetLayout: document.getElementById('resetLayout'),
-    refresh: document.getElementById('refresh'),\n    winners: document.getElementById('winners')\n  };
+    refresh: document.getElementById('refresh'),
+    winners: document.getElementById('winners')\n  };
 
   function renderTable(table, data){
     var tbody = table.querySelector('tbody');
@@ -240,15 +242,40 @@
       var tr=document.createElement('tr'); var td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
     function fnum(v,isFloat){ return isFloat ? ((isFinite(v)? Number(v).toFixed(1):'0.0')) : (v||0); }
+    function winnerIndex(arr, lowest){
+      var bestIdx=-1, bestVal=null;
+      for(var i=0;i<3;i++){
+        var v=Number((arr && arr[i]!=null) ? arr[i] : 0);
+        if(lowest){
+          if(!(v>0)) continue;
+          if(bestIdx===-1 || v<bestVal){ bestVal=v; bestIdx=i; }
+        } else {
+          if(bestIdx===-1 || v>bestVal){ bestVal=v; bestIdx=i; }
+        }
+      }
+      return bestIdx;
+    }
     data.rows.forEach(function(r,idx){
       var tr=document.createElement('tr'); if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
-      ['valA','valB','valC'].forEach(function(cls,i){ var td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.calls_abc||[])[i]||0,false); tr.appendChild(td); });
-      ['valA','valB','valC'].forEach(function(cls,i){ var td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.calls_max_abc||[])[i]||0,false); tr.appendChild(td); });
-      ['valA','valB','valC'].forEach(function(cls,i){ var td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.avg_min_abc||[])[i]||0,true); tr.appendChild(td); });
-      ['valA','valB','valC'].forEach(function(cls,i){ var td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.max_min_abc||[])[i]||0,true); tr.appendChild(td); });
-      ['valA','valB','valC'].forEach(function(cls,i){ var td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_abc||[])[i]||0,false); tr.appendChild(td); });
-      ['valA','valB','valC'].forEach(function(cls,i){ var td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_max_abc||[])[i]||0,false); tr.appendChild(td); });
+      (function(){
+        var classes=['valA','valB','valC'];
+        function renderGroup(arr, isFloat, lowestWins){
+          var wi = winnerIndex(arr, lowestWins);
+          for(var i=0;i<3;i++){
+            var td=document.createElement('td'); td.className=classes[i];
+            var t = fnum(((arr||[])[i]||0), isFloat);
+            if(wi===i){ td.innerHTML = '<span class="win"></span>'+t; } else { td.textContent = t; }
+            tr.appendChild(td);
+          }
+        }
+        renderGroup(r.calls_abc, false, false);
+        renderGroup(r.calls_max_abc, false, false);
+        renderGroup(r.avg_min_abc, true, true);
+        renderGroup(r.max_min_abc, true, true);
+        renderGroup(r.after_abc, false, false);
+        renderGroup(r.after_max_abc, false, false);
+      })();
       tbody.appendChild(tr);
     });
   }
@@ -288,7 +315,7 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   function applyLayout(l){ for(var k in panels){ var p=panels[k]; var r=l[k]||defaultLayout[k]; p.style.left=r.left+'vw'; p.style.top=r.top+'vh'; p.style.width=r.width+'vw'; p.style.height=r.height+'vh'; } }
   function enableEditing(on){ document.body.classList.toggle('edit-on', !!on); }
   var layoutState={ current: loadLayout() };
-  applyLayout\\(layoutState\\.current\\);\\ enableEditing\\(false\\);\\ document\\.body\\.classList\\.toggle\\('winners-on',\\ el\\.winners\\ &&\\ el\\.winners\\.checked\\);
+  applyLayout(layoutState.current); enableEditing(false); document.body.classList.toggle('winners-on', el.winners && el.winners.checked);
   function updateFlowMode(){ var isMobile=window.matchMedia('(max-width: 900px)').matches; var canvas=document.querySelector('.canvas'); if(!canvas) return; if(!el.edit.checked && isDefaultLayout(layoutState.current) && !isMobile){ canvas.classList.add('flow'); for(var k in panels){ var p=panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height=''; } } else { canvas.classList.remove('flow'); applyLayout(layoutState.current); } }
   updateFlowMode();
   function attachDragResize(key){ var node=panels[key]; var handle=node.querySelector('.hdr'); var grip=node.querySelector('.grip'); var state={drag:false,size:false,sx:0,sy:0,start:null}; function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function move(e){ if(!(state.drag||state.size)) return; var vw=innerWidth, vh=innerHeight; var dx=(e.clientX-state.sx)/vw*100; var dy=(e.clientY-state.sy)/vh*100; var r=layoutState.current[key]||(layoutState.current[key]={left:defaultLayout[key].left,top:defaultLayout[key].top,width:defaultLayout[key].width,height:defaultLayout[key].height}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); } function up(){ if(!(state.drag||state.size)) return; state.drag=false; state.size=false; saveLayout(layoutState.current); } handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up); handle.addEventListener('touchstart', function(ev){downDrag(ev.touches[0])}); grip.addEventListener('touchstart', function(ev){downSize(ev.touches[0])}); window.addEventListener('touchmove', function(ev){move(ev.touches[0])}); window.addEventListener('touchend', up); }
