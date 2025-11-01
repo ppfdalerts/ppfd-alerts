@@ -83,7 +83,7 @@
 
   /* Column separators for Week/Month */
   #board-week th, #board-week td, #board-month th, #board-month td{ border-right:1px solid #1f2937; }
-  /* Group boundaries (after each A|B|C set) and totals */
+  /* Group boundaries (after each A|B|C set) */
   #board-week th:nth-child(1), #board-week td:nth-child(1),
   #board-week th:nth-child(4), #board-week td:nth-child(4),
   #board-week th:nth-child(7), #board-week td:nth-child(7),
@@ -91,16 +91,15 @@
   #board-week th:nth-child(13), #board-week td:nth-child(13),
   #board-week th:nth-child(16), #board-week td:nth-child(16),
   #board-week th:nth-child(19), #board-week td:nth-child(19),
-  
-
   #board-month th:nth-child(1), #board-month td:nth-child(1),
   #board-month th:nth-child(4), #board-month td:nth-child(4),
   #board-month th:nth-child(7), #board-month td:nth-child(7),
   #board-month th:nth-child(10), #board-month td:nth-child(10),
   #board-month th:nth-child(13), #board-month td:nth-child(13),
   #board-month th:nth-child(16), #board-month td:nth-child(16),
-  #board-month th:nth-child(19), #board-month td:nth-child(19),
-  
+  #board-month th:nth-child(19), #board-month td:nth-child(19) {
+    border-right:2px solid #223047;
+  }
 
   /* Mobile layout */
   @media (max-width: 900px){
@@ -279,15 +278,14 @@
   }
 
   function apply(data){
-    if(data.today){ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta && data.today.meta.shift_date) || new Date(data.today.updated||Date.now()).toLocaleTimeString(); }
-    if(data.prior){ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta && data.prior.meta.shift_date) || new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }
-    if(data.week){ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta && data.week.meta.range) || new Date(data.week.updated||Date.now()).toLocaleTimeString(); }
-    if(data.month){ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta && data.month.meta.range) || new Date(data.month.updated||Date.now()).toLocaleTimeString(); }
-    el.ts.textContent='Fetched '+new Date().toLocaleTimeString();
-    el.upd.textContent=new Date().toLocaleString();
-  }
-
-  async function fetchOnce(){
+  const safe = (fn)=>{ try{ fn(); } catch(e){ console.error('render error', e); } };
+  if(data.today){ safe(()=>{ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta && data.today.meta.shift_date) || new Date(data.today.updated||Date.now()).toLocaleTimeString(); }); }
+  if(data.prior){ safe(()=>{ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta && data.prior.meta.shift_date) || new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }); }
+  if(data.week){ safe(()=>{ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta && data.week.meta.range) || new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
+  if(data.month){ safe(()=>{ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta && data.month.meta.range) || new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
+  el.ts.textContent='Fetched '+new Date().toLocaleTimeString();
+  el.upd.textContent=new Date().toLocaleString();
+}async function fetchOnce(){
     try{
       const r = await fetch('data.json?t='+Date.now(), {cache:'no-cache'});
       const j = await r.json();
