@@ -46,7 +46,25 @@
   .footer{position:absolute; left:10px; bottom:8px; color:var(--muted); font-size:12px}
   .panel .hdr .dot.today{background:var(--gold)}
   .panel .hdr .dot.prior{background:var(--accent)}
-  .panel .hdr .dot.week{background:var(--smoke)}`n  .panel .hdr .dot.month{background:var(--teal)}
+  .panel .hdr .dot.week{background:var(--smoke)}
+  .panel .hdr .dot.month{background:var(--teal)}
+
+  /* Shift color themes */
+  .panel.shift-a{ border-color: rgba(59,130,246,.35); box-shadow:0 6px 16px rgba(59,130,246,.12); }
+  .panel.shift-a .hdr{ background:rgba(59,130,246,.10); }
+  .panel.shift-a .hdr .dot{ background: var(--blue); }
+  .panel.shift-b{ border-color: rgba(239,68,68,.35); box-shadow:0 6px 16px rgba(239,68,68,.12); }
+  .panel.shift-b .hdr{ background:rgba(239,68,68,.10); }
+  .panel.shift-b .hdr .dot{ background: var(--red); }
+  .panel.shift-c{ border-color: rgba(34,197,94,.35); box-shadow:0 6px 16px rgba(34,197,94,.12); }
+  .panel.shift-c .hdr{ background:rgba(34,197,94,.10); }
+  .panel.shift-c .hdr .dot{ background: var(--green); }
+
+  /* Per-shift value colors for A|B|C text */
+  .valA{ color: var(--blue); font-weight:600 }
+  .valB{ color: var(--red); font-weight:600 }
+  .valC{ color: var(--green); font-weight:600 }
+  .divPipe{ color:#566173; padding:0 4px }
 
   /* Mobile layout */
   @media (max-width: 900px){
