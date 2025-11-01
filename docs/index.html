@@ -191,7 +191,45 @@
     edit: document.getElementById('edit'),
     resetLayout: document.getElementById('resetLayout'),
     refresh: document.getElementById('refresh'),
-    winners: document.getElementById('winners')\n  };
+    winners: document.getElementById('winners')
+  };
+
+  // Heartbeat + robust error surfacing so issues are visible without console
+  (function(){
+    function showStatus(msg, ok){
+      try{
+        if(!el || !el.status) return;
+        el.status.style.display = 'inline-block';
+        el.status.textContent = msg;
+        // Light green for OK heartbeat, red for errors
+        if(ok){
+          el.status.style.background = 'rgba(34,197,94,.15)';
+          el.status.style.color = '#bbf7d0';
+          el.status.style.borderColor = 'rgba(34,197,94,.35)';
+        } else {
+          el.status.style.background = 'rgba(239,68,68,.15)';
+          el.status.style.color = '#fecaca';
+          el.status.style.borderColor = 'rgba(239,68,68,.35)';
+        }
+      }catch(_){/* noop */}
+    }
+    // Show that the JS executed at least up to here
+    showStatus('JS OK (script running)', true);
+    // Global error hooks to surface renderer errors
+    window.addEventListener('error', function(e){
+      var msg = 'JS Error: ' + (e && (e.message || e.error) || 'unknown');
+      if(e && e.filename){
+        var fn = (e.filename||'').split(/[\\\/]/).pop();
+        msg += ' @' + fn + ':' + (e.lineno||'');
+      }
+      showStatus(msg, false);
+    });
+    window.addEventListener('unhandledrejection', function(e){
+      var r = e && e.reason;
+      var m = (r && (r.message || r)) || 'unknown';
+      showStatus('Promise Error: ' + m, false);
+    });
+  })();
 
   function renderTable(table, data){
     var tbody = table.querySelector('tbody');
