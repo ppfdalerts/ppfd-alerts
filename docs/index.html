@@ -50,6 +50,7 @@
   body.edit-on .panel{outline:1px dashed #2b3442}
   .grid{display:none}
   .timestamp{margin-left:auto; color:var(--muted); font-size:12px}
+  .status{display:none; margin-left:8px; font-size:12px; background:rgba(239,68,68,.15); color:#fecaca; border:1px solid rgba(239,68,68,.35); padding:3px 8px; border-radius:999px}
   .footer{position:absolute; left:10px; bottom:8px; color:var(--muted); font-size:12px}
   .panel .hdr .dot.today{background:var(--gold)}
   .panel .hdr .dot.prior{background:var(--accent)}
@@ -126,7 +127,7 @@
     </div>
     <button id="resetLayout" class="btn">Reset layout</button>
     <button id="refresh" class="btn">Refresh now</button>
-    <div id="ts" class="timestamp">—</div>
+    <div id="status" class="status"></div><div id="ts" class="timestamp">—</div>
   </div>
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:46vw; height:84vh">
@@ -191,17 +192,7 @@
   </div>
 </div>
 <script>
-  const el = {
-    today: document.getElementById('board-today'),
-    prior: document.getElementById('board-prior'),
-    week: document.getElementById('board-week'),
-    month: document.getElementById('board-month'),
-    hdrToday: document.getElementById('hdr-today'),
-    hdrPrior: document.getElementById('hdr-prior'),
-    hdrWeek: document.getElementById('hdr-week'),
-    hdrMonth: document.getElementById('hdr-month'),
-    ts: document.getElementById('ts'),
-    upd: document.getElementById('updated'),
+  \n    status: document.getElementById('status'),
     auto: document.getElementById('auto'),
     edit: document.getElementById('edit'),
     resetLayout: document.getElementById('resetLayout'),
@@ -278,13 +269,17 @@
   }
 
   function apply(data){
-  const safe = (fn)=>{ try{ fn(); } catch(e){ console.error('render error', e); } };
-  if(data.today){ safe(()=>{ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta && data.today.meta.shift_date) || new Date(data.today.updated||Date.now()).toLocaleTimeString(); }); }
-  if(data.prior){ safe(()=>{ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta && data.prior.meta.shift_date) || new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }); }
-  if(data.week){ safe(()=>{ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta && data.week.meta.range) || new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
-  if(data.month){ safe(()=>{ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta && data.month.meta.range) || new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
+  const errors=[];
+  function safe(label, fn){ try{ fn(); } catch(e){ console.error('render error', label, e); errors.push(label); } }
+  if(data.today){ safe('Today', ()=>{ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta && data.today.meta.shift_date) || new Date(data.today.updated||Date.now()).toLocaleTimeString(); }); }
+  if(data.prior){ safe('Prior', ()=>{ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta && data.prior.meta.shift_date) || new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }); }
+  if(data.week){ safe('Week', ()=>{ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta && data.week.meta.range) || new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
+  if(data.month){ safe('Month', ()=>{ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta && data.month.meta.range) || new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
   el.ts.textContent='Fetched '+new Date().toLocaleTimeString();
   el.upd.textContent=new Date().toLocaleString();
+  // Update status banner
+  if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; }
+  else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
 }async function fetchOnce(){
     try{
       const r = await fetch('data.json?t='+Date.now(), {cache:'no-cache'});
