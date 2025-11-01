@@ -88,7 +88,7 @@
   #board-week th:nth-child(13), #board-week td:nth-child(13),
   #board-week th:nth-child(16), #board-week td:nth-child(16),
   #board-week th:nth-child(19), #board-week td:nth-child(19),
-  #board-week th:nth-child(20), #board-week td:nth-child(20){ border-right:2px solid #223047; }
+  
 
   #board-month th:nth-child(1), #board-month td:nth-child(1),
   #board-month th:nth-child(4), #board-month td:nth-child(4),
@@ -97,7 +97,7 @@
   #board-month th:nth-child(13), #board-month td:nth-child(13),
   #board-month th:nth-child(16), #board-month td:nth-child(16),
   #board-month th:nth-child(19), #board-month td:nth-child(19),
-  #board-month th:nth-child(20), #board-month td:nth-child(20){ border-right:2px solid #223047; }
+  
 
   /* Mobile layout */
   @media (max-width: 900px){
@@ -148,8 +148,7 @@
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
           <th colspan="3">Single-Shift Max After Midnight</th>
-          <th rowspan="2">Total (All)</th>
-          <th rowspan="2">After Midnight (All)</th>
+          
         </tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -173,8 +172,7 @@
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
           <th colspan="3">Single-Shift Max After Midnight</th>
-          <th rowspan="2">Total (All)</th>
-          <th rowspan="2">After Midnight (All)</th>
+          
         </tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -250,7 +248,7 @@
   function renderWeekMonth(table, data){
     const tbody = table.querySelector('tbody');
     tbody.innerHTML = '';
-    const thCount = table.querySelectorAll('thead th').length || 21;
+    const thCount = table.querySelectorAll('thead th').length || 19;
     if(!data || !Array.isArray(data.rows) || data.rows.length === 0){
       const tr = document.createElement('tr');
       const td = document.createElement('td');
@@ -274,8 +272,7 @@
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.max_min_abc||[])[i]||0,true); tr.appendChild(td); });
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_abc||[])[i]||0,false); tr.appendChild(td); });
       ['valA','valB','valC'].forEach((cls,i)=>{ const td=document.createElement('td'); td.className=cls; td.textContent=fnum((r.after_max_abc||[])[i]||0,false); tr.appendChild(td); });
-      const tdTot = document.createElement('td'); tdTot.textContent = fnum(r.total_calls||0,false); tr.appendChild(tdTot);
-      const tdAfter = document.createElement('td'); tdAfter.textContent = fnum(r.total_after||0,false); tr.appendChild(tdAfter);
+       tdAfter.textContent = fnum(r.total_after||0,false); tr.appendChild(tdAfter);
       tbody.appendChild(tr);
     });
   }
