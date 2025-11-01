@@ -4,7 +4,7 @@ param(
   [int]$UpdaterMinutes = 3
 )
 
-function Is-Admin {
+function Test-Admin {
   try {
     $currentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($currentIdentity)
@@ -32,7 +32,7 @@ $settings = New-ScheduledTaskSettingsSet `
   -MultipleInstances IgnoreNew
 
 # Principal: prefer SYSTEM when running elevated; otherwise current user
-if (Is-Admin) {
+if (Test-Admin) {
   $principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
 } else {
   $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
@@ -60,4 +60,3 @@ $updaterTask = New-ScheduledTask -Action $updaterAction -Trigger @($tAtStartup, 
 Register-ScheduledTask -TaskName $updaterTaskName -InputObject $updaterTask | Out-Null
 
 Write-Host "Installed tasks: '$alertsTaskName' and '$updaterTaskName' (Updater every $UpdaterMinutes min)."
-
