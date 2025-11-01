@@ -5,7 +5,12 @@ from typing import Dict, Any, List, Set, Tuple
 from requests.exceptions import ReadTimeout
 
 # --- Log everything to alerts.log (console and errors) ---
-sys.stdout = open("alerts.log", "a")
+try:
+    _HERE = os.path.dirname(os.path.abspath(__file__))
+    _LOG_FP = os.path.join(_HERE, "alerts.log")
+except Exception:
+    _LOG_FP = "alerts.log"
+sys.stdout = open(_LOG_FP, "a", encoding='utf-8')
 sys.stderr = sys.stdout
 
 def log(msg: str):
