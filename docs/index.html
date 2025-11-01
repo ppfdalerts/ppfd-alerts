@@ -26,10 +26,11 @@
   tbody td{padding:10px 6px; border-bottom:1px dashed #1f2732}
   tbody tr:nth-child(odd){background:rgba(255,255,255,0.015)}
   tbody tr:hover{background:#111722}
-  .col-unit{width:25%}
-  .col-calls{width:20%}
-  .col-avg{width:25%}
-  .col-after{width:30%}
+  .col-unit{width:20%}
+  .col-calls{width:16%}
+  .col-avg{width:22%}
+  .col-max{width:22%}
+  .col-after{width:20%}
   /* Rank accents */
   tr.rank-1 td{background:linear-gradient(90deg, rgba(245,158,11,.15), transparent);} /* gold */
   tr.rank-2 td{background:linear-gradient(90deg, rgba(99,102,241,.12), transparent);} /* indigo */
@@ -45,7 +46,7 @@
   .footer{position:absolute; left:10px; bottom:8px; color:var(--muted); font-size:12px}
   .panel .hdr .dot.today{background:var(--gold)}
   .panel .hdr .dot.prior{background:var(--accent)}
-  .panel .hdr .dot.week{background:var(--smoke)}
+  .panel .hdr .dot.week{background:var(--smoke)}`n  .panel .hdr .dot.month{background:var(--teal)}
 
   /* Mobile layout */
   @media (max-width: 900px){
@@ -71,17 +72,22 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:46vw; height:84vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">—</span></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="panel" id="panel-prior" style="left:50vw; top:8vh; width:46vw; height:40vh">
+    <div class="panel" id="panel-prior" style="left:50vw; top:8vh; width:46vw; height:30vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">—</span></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="panel" id="panel-week" style="left:50vw; top:52vh; width:46vw; height:40vh">
+    <div class="panel" id="panel-week" style="left:50vw; top:40vh; width:46vw; height:28vh">
       <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">—</span></div>
       <div class="body"><table id="board-week"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
+      <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
+    </div>
+    <div class="panel" id="panel-month" style="left:50vw; top:70vh; width:46vw; height:22vh">
+      <div class="hdr"><span class="dot month"></span><span>Month</span><span id="hdr-month" class="sub">—</span></div>
+      <div class="body"><table id="board-month"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg (min)</th><th class="col-after">After 00:00</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="footer">Updated <span id="updated">—</span></div>
@@ -92,9 +98,11 @@
     today: document.getElementById('board-today'),
     prior: document.getElementById('board-prior'),
     week: document.getElementById('board-week'),
+    month: document.getElementById('board-month'),
     hdrToday: document.getElementById('hdr-today'),
     hdrPrior: document.getElementById('hdr-prior'),
     hdrWeek: document.getElementById('hdr-week'),
+    hdrMonth: document.getElementById('hdr-month'),
     ts: document.getElementById('ts'),
     upd: document.getElementById('updated'),
     auto: document.getElementById('auto'),
@@ -106,7 +114,7 @@
     tbody.innerHTML = '';
     if(!data || !Array.isArray(data.rows) || data.rows.length===0){
       const tr=document.createElement('tr');
-      const td=document.createElement('td'); td.colSpan=4; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
+      const td=document.createElement('td'); td.colSpan=(table.querySelectorAll("thead th").length||4); td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
     const rows = data.rows;
     const maxC = Math.max(...rows.map(r=>r.calls));
@@ -125,6 +133,13 @@
       const tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       const tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML = `<span class="pill-badge calls-badge" style="${callsHeat(r.calls)}">${r.calls}</span>`; tr.appendChild(tdC);
       const tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML = `<span class="pill-badge avg-badge">${r.avg_min.toFixed(1)}</span>`; tr.appendChild(tdA);
+      const thCount = table.querySelectorAll('thead th').length;
+      if(thCount >= 5){
+        const tdX=document.createElement('td'); tdX.className='col-max';
+        const show = (r.max_min && r.max_min>0) ? r.max_min.toFixed(1) : '—';
+        tdX.innerHTML = `<span class="pill-badge avg-badge">${show}</span>`;
+        tr.appendChild(tdX);
+      }
       const tdM=document.createElement('td'); tdM.className='col-after';
       if((r.after_0000||0)>0){ tdM.innerHTML = `<span class="pill-badge after-badge">${r.after_0000}</span>`; }
       else { tdM.textContent = '0'; tdM.style.color = '#9ca3af'; }
@@ -134,9 +149,10 @@
   }
 
   function apply(data){
-    if(data.today){ renderTable(el.today, data.today); el.hdrToday.textContent=new Date(data.today.updated||Date.now()).toLocaleTimeString(); }
-    if(data.prior){ renderTable(el.prior, data.prior); el.hdrPrior.textContent=new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }
-    if(data.week){ renderTable(el.week, data.week); el.hdrWeek.textContent=new Date(data.week.updated||Date.now()).toLocaleTimeString(); }
+    if(data.today){ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta && data.today.meta.shift_date) || new Date(data.today.updated||Date.now()).toLocaleTimeString(); }
+    if(data.prior){ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta && data.prior.meta.shift_date) || new Date(data.prior.updated||Date.now()).toLocaleTimeString(); }
+    if(data.week){ renderTable(el.week, data.week); el.hdrWeek.textContent=(data.week.meta && data.week.meta.range) || new Date(data.week.updated||Date.now()).toLocaleTimeString(); }
+    if(data.month){ renderTable(el.month, data.month); el.hdrMonth.textContent=(data.month.meta && data.month.meta.range) || new Date(data.month.updated||Date.now()).toLocaleTimeString(); }
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString();
     el.upd.textContent=new Date().toLocaleString();
   }
