@@ -2,12 +2,20 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 06 Dec 2025\nNo runs recorded.",
-    "rows": [],
+    "text": "Daily runs 06 Dec 2025\nR33: 1  |  avg 0.0 min  |  after 00:00: 0",
+    "rows": [
+      {
+        "unit": "R33",
+        "calls": 1,
+        "avg_min": 0.0,
+        "after_0000": 0,
+        "max_min": 0.0
+      }
+    ],
     "meta": {
       "shift_date": "C-Shift 12/06/25"
     },
-    "updated": "2025-12-06T12:39:10.302660Z"
+    "updated": "2025-12-06T12:40:10.288198Z"
   },
   "prior": {
     "label": "Daily",
@@ -81,19 +89,19 @@
     "meta": {
       "shift_date": "B-Shift 12/05/25"
     },
-    "updated": "2025-12-06T12:39:10.302660Z"
+    "updated": "2025-12-06T12:40:10.289196Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 30 Nov 2025 - 06 Dec 2025\nR33: 59  |  avg 22.5 min  |  after 00:00: 8\nR34: 58  |  avg 20.2 min  |  after 00:00: 9\nE36: 52  |  avg 15.1 min  |  after 00:00: 9\nE35: 43  |  avg 14.5 min  |  after 00:00: 5\nS36: 43  |  avg 15.7 min  |  after 00:00: 4\nT33: 41  |  avg 15.3 min  |  after 00:00: 4\nE34: 31  |  avg 18.0 min  |  after 00:00: 2\nLR36: 19  |  avg 17.5 min  |  after 00:00: 2\nD35: 10  |  avg 10.4 min  |  after 00:00: 1",
+    "text": "Weekly runs 30 Nov 2025 - 06 Dec 2025\nR33: 60  |  avg 22.1 min  |  after 00:00: 8\nR34: 58  |  avg 20.2 min  |  after 00:00: 9\nE36: 52  |  avg 15.1 min  |  after 00:00: 9\nE35: 43  |  avg 14.5 min  |  after 00:00: 5\nS36: 43  |  avg 15.7 min  |  after 00:00: 4\nT33: 41  |  avg 15.3 min  |  after 00:00: 4\nE34: 31  |  avg 18.0 min  |  after 00:00: 2\nLR36: 19  |  avg 17.5 min  |  after 00:00: 2\nD35: 10  |  avg 10.4 min  |  after 00:00: 1",
     "rows": [
       {
         "unit": "R33",
         "calls_abc": [
           77,
           92,
-          56
+          57
         ],
         "calls_max_abc": [
           11,
@@ -103,7 +111,7 @@
         "avg_min_abc": [
           22.2,
           21.8,
-          24.9
+          24.5
         ],
         "max_min_abc": [
           66.5,
@@ -120,7 +128,7 @@
           2,
           1
         ],
-        "total_calls": 225,
+        "total_calls": 226,
         "total_after": 32
       },
       {
@@ -407,12 +415,12 @@
     "meta": {
       "range": "Nov 30 - Dec 06"
     },
-    "updated": "2025-12-06T12:39:10.306167Z"
+    "updated": "2025-12-06T12:40:10.292188Z"
   },
   "month": {
     "label": "Monthly",
     "period": "month",
-    "text": "Monthly runs 07 Nov 2025 - 06 Dec 2025\nR34: 210  |  avg 15.7 min  |  after 00:00: 36\nR33: 189  |  avg 21.0 min  |  after 00:00: 31\nE35: 148  |  avg 12.3 min  |  after 00:00: 30\nS36: 143  |  avg 16.3 min  |  after 00:00: 16\nE36: 140  |  avg 15.4 min  |  after 00:00: 17\nE34: 105  |  avg 16.8 min  |  after 00:00: 12\nT33: 105  |  avg 14.9 min  |  after 00:00: 10\nLR36: 45  |  avg 16.6 min  |  after 00:00: 7\nD35: 32  |  avg 15.1 min  |  after 00:00: 3\nR35: 3  |  avg 11.2 min  |  after 00:00: 0",
+    "text": "Monthly runs 07 Nov 2025 - 06 Dec 2025\nR34: 210  |  avg 15.7 min  |  after 00:00: 36\nR33: 190  |  avg 20.9 min  |  after 00:00: 31\nE35: 148  |  avg 12.3 min  |  after 00:00: 30\nS36: 143  |  avg 16.3 min  |  after 00:00: 16\nE36: 140  |  avg 15.4 min  |  after 00:00: 17\nE34: 105  |  avg 16.8 min  |  after 00:00: 12\nT33: 105  |  avg 14.9 min  |  after 00:00: 10\nLR36: 45  |  avg 16.6 min  |  after 00:00: 7\nD35: 32  |  avg 15.1 min  |  after 00:00: 3\nR35: 3  |  avg 11.2 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R34",
@@ -454,7 +462,7 @@
         "calls_abc": [
           229,
           260,
-          244
+          245
         ],
         "calls_max_abc": [
           13,
@@ -464,7 +472,7 @@
         "avg_min_abc": [
           19.6,
           22.9,
-          20.6
+          20.5
         ],
         "max_min_abc": [
           66.5,
@@ -481,7 +489,7 @@
           3,
           3
         ],
-        "total_calls": 733,
+        "total_calls": 734,
         "total_after": 124
       },
       {
@@ -768,6 +776,6 @@
     "meta": {
       "range": "Nov 07 - Dec 06"
     },
-    "updated": "2025-12-06T12:39:10.314845Z"
+    "updated": "2025-12-06T12:40:10.300167Z"
   }
 }
