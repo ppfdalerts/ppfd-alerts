@@ -2,7 +2,7 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 16 Dec 2025\nR33: 2  |  avg 14.1 min  |  after 00:00: 0\nS36: 2  |  avg 16.8 min  |  after 00:00: 0\nE34: 1  |  avg 9.4 min  |  after 00:00: 0\nE36: 1  |  avg 0.0 min  |  after 00:00: 0\nR34: 1  |  avg 34.3 min  |  after 00:00: 0\nT33: 1  |  avg 0.0 min  |  after 00:00: 0",
+    "text": "Daily runs 16 Dec 2025\nR33: 2  |  avg 14.1 min  |  after 00:00: 0\nS36: 2  |  avg 16.8 min  |  after 00:00: 0\nE34: 1  |  avg 9.4 min  |  after 00:00: 0\nE36: 1  |  avg 0.0 min  |  after 00:00: 0\nLR36: 1  |  avg 0.0 min  |  after 00:00: 0\nR34: 1  |  avg 34.3 min  |  after 00:00: 0\nT33: 1  |  avg 0.0 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
@@ -33,6 +33,13 @@
         "max_min": 0.0
       },
       {
+        "unit": "LR36",
+        "calls": 1,
+        "avg_min": 0.0,
+        "after_0000": 0,
+        "max_min": 0.0
+      },
+      {
         "unit": "R34",
         "calls": 1,
         "avg_min": 34.3,
@@ -50,7 +57,7 @@
     "meta": {
       "shift_date": "A-Shift 12/16/25"
     },
-    "updated": "2025-12-16T14:31:10.641065Z"
+    "updated": "2025-12-16T14:32:10.650113Z"
   },
   "prior": {
     "label": "Daily",
@@ -124,12 +131,12 @@
     "meta": {
       "shift_date": "C-Shift 12/15/25"
     },
-    "updated": "2025-12-16T14:31:10.642062Z"
+    "updated": "2025-12-16T14:32:10.650113Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 10 Dec 2025 - 16 Dec 2025\nR34: 52  |  avg 16.5 min  |  after 00:00: 6\nR33: 47  |  avg 12.0 min  |  after 00:00: 3\nE35: 46  |  avg 14.1 min  |  after 00:00: 7\nE34: 42  |  avg 12.2 min  |  after 00:00: 2\nE36: 38  |  avg 20.8 min  |  after 00:00: 2\nS36: 37  |  avg 17.3 min  |  after 00:00: 3\nT33: 23  |  avg 11.8 min  |  after 00:00: 0\nLR36: 10  |  avg 12.4 min  |  after 00:00: 2\nD35: 8  |  avg 11.9 min  |  after 00:00: 1",
+    "text": "Weekly runs 10 Dec 2025 - 16 Dec 2025\nR34: 52  |  avg 16.5 min  |  after 00:00: 6\nR33: 47  |  avg 12.0 min  |  after 00:00: 3\nE35: 46  |  avg 14.1 min  |  after 00:00: 7\nE34: 42  |  avg 12.2 min  |  after 00:00: 2\nE36: 38  |  avg 20.8 min  |  after 00:00: 2\nS36: 37  |  avg 17.3 min  |  after 00:00: 3\nT33: 23  |  avg 11.8 min  |  after 00:00: 0\nLR36: 11  |  avg 11.3 min  |  after 00:00: 2\nD35: 8  |  avg 11.9 min  |  after 00:00: 1",
     "rows": [
       {
         "unit": "R34",
@@ -379,7 +386,7 @@
       {
         "unit": "LR36",
         "calls_abc": [
-          13,
+          14,
           8,
           10
         ],
@@ -389,7 +396,7 @@
           2
         ],
         "avg_min_abc": [
-          22.2,
+          20.7,
           4.0,
           10.2
         ],
@@ -408,7 +415,7 @@
           0,
           1
         ],
-        "total_calls": 31,
+        "total_calls": 32,
         "total_after": 8
       },
       {
@@ -450,12 +457,12 @@
     "meta": {
       "range": "Dec 10 - Dec 16"
     },
-    "updated": "2025-12-16T14:31:10.645053Z"
+    "updated": "2025-12-16T14:32:10.654273Z"
   },
   "month": {
     "label": "Monthly",
     "period": "month",
-    "text": "Monthly runs 17 Nov 2025 - 16 Dec 2025\nR34: 289  |  avg 16.3 min  |  after 00:00: 48\nR33: 268  |  avg 18.8 min  |  after 00:00: 36\nE35: 212  |  avg 14.1 min  |  after 00:00: 39\nS36: 208  |  avg 16.6 min  |  after 00:00: 22\nE36: 203  |  avg 16.2 min  |  after 00:00: 22\nE34: 157  |  avg 16.3 min  |  after 00:00: 10\nT33: 151  |  avg 16.0 min  |  after 00:00: 11\nLR36: 61  |  avg 17.9 min  |  after 00:00: 10\nD35: 48  |  avg 16.0 min  |  after 00:00: 8\nR35: 3  |  avg 11.2 min  |  after 00:00: 0",
+    "text": "Monthly runs 17 Nov 2025 - 16 Dec 2025\nR34: 289  |  avg 16.3 min  |  after 00:00: 48\nR33: 268  |  avg 18.8 min  |  after 00:00: 36\nE35: 212  |  avg 14.1 min  |  after 00:00: 39\nS36: 208  |  avg 16.6 min  |  after 00:00: 22\nE36: 203  |  avg 16.2 min  |  after 00:00: 22\nE34: 157  |  avg 16.3 min  |  after 00:00: 10\nT33: 151  |  avg 16.0 min  |  after 00:00: 11\nLR36: 62  |  avg 17.6 min  |  after 00:00: 10\nD35: 48  |  avg 16.0 min  |  after 00:00: 8\nR35: 3  |  avg 11.2 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R34",
@@ -705,7 +712,7 @@
       {
         "unit": "LR36",
         "calls_abc": [
-          64,
+          65,
           70,
           65
         ],
@@ -715,7 +722,7 @@
           6
         ],
         "avg_min_abc": [
-          16.8,
+          16.5,
           17.1,
           19.4
         ],
@@ -734,7 +741,7 @@
           1,
           1
         ],
-        "total_calls": 199,
+        "total_calls": 200,
         "total_after": 40
       },
       {
@@ -811,6 +818,6 @@
     "meta": {
       "range": "Nov 17 - Dec 16"
     },
-    "updated": "2025-12-16T14:31:10.656024Z"
+    "updated": "2025-12-16T14:32:10.665895Z"
   }
 }
