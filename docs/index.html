@@ -573,8 +573,8 @@
 
   function apply(data){
     var errors=[]; function safe(label,fn){ try{ fn(); } catch(e){ console.error('render error',label,e); errors.push(label); } }
-    if(data.today){ safe('Today', function(){ renderTable(el.today, data.today); el.hdrToday.textContent=(data.today.meta&&data.today.meta.shift_date)||new Date(data.today.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-today', letterFromMeta(data.today.meta)); }); }
-    if(data.prior){ safe('Prior', function(){ renderTable(el.prior, data.prior); el.hdrPrior.textContent=(data.prior.meta&&data.prior.meta.shift_date)||new Date(data.prior.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-prior', letterFromMeta(data.prior.meta)); }); }
+    if(data.today){ safe('Today', function(){ renderTable(el.today, data.today, 'today'); el.hdrToday.textContent=(data.today.meta&&data.today.meta.shift_date)||new Date(data.today.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-today', letterFromMeta(data.today.meta)); }); }
+    if(data.prior){ safe('Prior', function(){ renderTable(el.prior, data.prior, 'prior'); el.hdrPrior.textContent=(data.prior.meta&&data.prior.meta.shift_date)||new Date(data.prior.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-prior', letterFromMeta(data.prior.meta)); }); }
     if(data.week){ safe('Week', function(){ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta&&data.week.meta.range)||new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
     if(data.month){ safe('Month', function(){ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta&&data.month.meta.range)||new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString(); el.upd.textContent=new Date().toLocaleString();
@@ -600,24 +600,6 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
       if(rosterState.open){ renderRosterPopup(rosterState.open.unit, rosterState.open.period); }
     };
   }
-
-  function attachRosterClicks(table){
-    if(!table) return;
-    table.addEventListener('click', function(e){
-      var target=e.target;
-      if(target && target.nodeType===3){ target=target.parentElement; }
-      if(!target || !target.closest) return;
-      var tr=target.closest('tr');
-      if(!tr || !tr.dataset || !tr.dataset.unit) return;
-      e.preventDefault();
-      e.stopPropagation();
-      showRosterPopup(tr.dataset.unit, e);
-    });
-  }
-  attachRosterClicks(el.today);
-  attachRosterClicks(el.prior);
-  attachRosterClicks(el.week);
-  attachRosterClicks(el.month);
 
   if(el.rosterClose){
     el.rosterClose.onclick=function(e){
