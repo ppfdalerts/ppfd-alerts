@@ -28,6 +28,8 @@
   tbody td{padding:10px 6px; border-bottom:1px dashed #1f2732}
   tbody tr:nth-child(odd){background:rgba(255,255,255,0.015)}
   tbody tr:hover{background:#111722}
+  tbody tr[data-unit]{cursor:pointer}
+  tbody tr[data-unit] td:first-child{color:#bfdbfe}
   .col-unit{width:20%}
   .col-calls{width:16%}
   .col-avg{width:22%}
@@ -93,6 +95,19 @@
   #board-month th:nth-child(13), #board-month td:nth-child(13),
   #board-month th:nth-child(16), #board-month td:nth-child(16),
   #board-month th:nth-child(19), #board-month td:nth-child(19) { border-right:2px solid #223047; }
+  .roster-pop{position:absolute; z-index:9999; min-width:260px; max-width:420px; background:#0f141a; border:1px solid #223047; border-radius:10px; box-shadow:0 10px 24px rgba(0,0,0,.45); padding:10px 12px}
+  .roster-pop .roster-head{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+  .roster-pop .roster-title{font-weight:700; letter-spacing:.3px}
+  .roster-pop .roster-meta{margin-left:auto; color:var(--muted); font-size:12px}
+  .roster-pop .roster-close{background:transparent; border:0; color:var(--muted); cursor:pointer; font-size:16px; line-height:16px; padding:2px 6px}
+  .roster-pop .roster-body{max-height:320px; overflow:auto}
+  .roster-section{border-top:1px dashed #1f2732; padding-top:8px; margin-top:8px}
+  .roster-shift{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; margin-bottom:6px}
+  .roster-entry{display:grid; grid-template-columns:86px 1fr; gap:8px; padding:4px 0; font-size:13px}
+  .roster-entry .time{color:var(--accent); font-weight:700}
+  .roster-entry .name{color:var(--text)}
+  .roster-entry .meta{color:var(--muted); font-size:12px}
+  .roster-empty{color:var(--muted); font-size:13px; padding:6px 0}
   @media (max-width: 900px){
     .wrap{padding:6px}
     .toolbar{gap:8px}
@@ -114,6 +129,7 @@
     </div>
     <div class="pill">Edit layout<label style="margin-left:4px"><input id="edit" type="checkbox"></label></div>
     <div class="pill">Winners <label style="margin-left:4px"><input id="winners" type="checkbox" checked></label></div>
+    <div class="pill">Roster active now <label style="margin-left:4px"><input id="rosterNow" type="checkbox"></label></div>
     <button id="resetLayout" class="btn">Reset layout</button>
     <button id="refresh" class="btn">Refresh now</button>
     <div id="status" class="status"></div><div id="ts" class="timestamp">—</div>
@@ -178,6 +194,14 @@
     <div class="footer">Updated <span id="updated">—</span></div>
   </div>
 </div>
+<div id="rosterPop" class="roster-pop" style="display:none">
+  <div class="roster-head">
+    <div class="roster-title" id="rosterTitle">Unit</div>
+    <div class="roster-meta" id="rosterMeta">Roster</div>
+    <button id="rosterClose" class="roster-close" aria-label="Close roster">x</button>
+  </div>
+  <div class="roster-body" id="rosterBody"></div>
+</div>
 <script>
   const el = {
     today: document.getElementById('board-today'),
@@ -195,7 +219,13 @@
     edit: document.getElementById('edit'),
     resetLayout: document.getElementById('resetLayout'),
     refresh: document.getElementById('refresh'),
-    winners: document.getElementById('winners')
+    winners: document.getElementById('winners'),
+    rosterNow: document.getElementById('rosterNow'),
+    rosterPop: document.getElementById('rosterPop'),
+    rosterTitle: document.getElementById('rosterTitle'),
+    rosterMeta: document.getElementById('rosterMeta'),
+    rosterBody: document.getElementById('rosterBody'),
+    rosterClose: document.getElementById('rosterClose')
   };
 
   // Heartbeat + robust error surfacing so issues are visible without console
@@ -256,6 +286,7 @@
     }
     rows.forEach(function(r, idx){
       var tr=document.createElement('tr');
+      tr.dataset.unit = r.unit;
       if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
@@ -299,6 +330,7 @@
     }
     data.rows.forEach(function(r,idx){
       var tr=document.createElement('tr'); if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
+      tr.dataset.unit = r.unit;
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
       (function(){
         var classes=['valA','valB','valC'];
@@ -322,6 +354,202 @@
     });
   }
 
+  var rosterState = { payload: null, index: null, openUnit: null };
+
+  function normalizeUnitCode(code){
+    var c=(code||'').toString().trim().toUpperCase();
+    if(c.indexOf('DC')===0 && /^\d+$/.test(c.slice(2))){ return 'D'+c.slice(2); }
+    return c;
+  }
+
+  function parseTimeToMinutes(value){
+    if(value==null) return null;
+    var text=String(value).trim();
+    if(!text) return null;
+    var m=/^(\d{1,2}):(\d{2})(?::\d{2})?\s*([AP]M)?$/i.exec(text);
+    if(!m) return null;
+    var hour=parseInt(m[1],10), minute=parseInt(m[2],10);
+    var ap=m[3];
+    if(ap){
+      ap=ap.toUpperCase();
+      if(ap==='PM' && hour!==12) hour+=12;
+      if(ap==='AM' && hour===12) hour=0;
+    }
+    return (hour%24)*60+minute;
+  }
+
+  function coversTime(entry, atMinute){
+    if(atMinute==null) return true;
+    var start=parseTimeToMinutes(entry.from);
+    var end=parseTimeToMinutes(entry.through);
+    var hours=entry.hours;
+    if(start==null || end==null) return true;
+    if(start===end){
+      var hoursVal=parseFloat(hours);
+      if(!isFinite(hoursVal)) return true;
+      if(hoursVal>=23.5) return true;
+      var duration=Math.round(hoursVal*60);
+      end=(start+duration)%(24*60);
+    }
+    if(start<end){ return start<=atMinute && atMinute<end; }
+    return atMinute>=start || atMinute<end;
+  }
+
+  function formatShiftLabel(shiftText){
+    if(!shiftText) return '';
+    var parts=String(shiftText).split('/');
+    return parts[parts.length-1].trim();
+  }
+
+  function buildRosterIndex(payload){
+    var index={};
+    if(!payload || !Array.isArray(payload.units)) return index;
+    payload.units.forEach(function(unit){
+      var code=normalizeUnitCode(unit.unit_code || unit.unit || '');
+      if(!code) return;
+      if(!index[code]) index[code]=[];
+      if(code!==unit.unit_code){
+        unit=Object.assign({}, unit, { unit_code: code });
+      }
+      index[code].push(unit);
+    });
+    return index;
+  }
+
+  function fetchRoster(){
+    return fetch('roster_units.json?t='+Date.now(), {cache:'no-cache'})
+      .then(function(r){ if(!r.ok) throw new Error('roster fetch'); return r.json(); })
+      .then(function(j){
+        rosterState.payload=j;
+        rosterState.index=buildRosterIndex(j);
+        if(rosterState.openUnit){ renderRosterPopup(rosterState.openUnit); }
+      })
+      .catch(function(){
+        rosterState.payload=null;
+        rosterState.index=null;
+      });
+  }
+
+  function nowMinutes(){
+    var n=new Date();
+    return n.getHours()*60+n.getMinutes();
+  }
+
+  function formatMinutes(mins){
+    var h=Math.floor(mins/60)%24;
+    var m=mins%60;
+    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+  }
+
+  function renderRosterPopup(unitCode){
+    if(!el.rosterPop) return;
+    var code=normalizeUnitCode(unitCode);
+    rosterState.openUnit=code;
+    var useActive=!!(el.rosterNow && el.rosterNow.checked);
+    var atMinute=useActive ? nowMinutes() : null;
+    var rosterDate=rosterState.payload && rosterState.payload.date ? rosterState.payload.date : '';
+    var metaParts=[];
+    if(rosterDate){ metaParts.push(rosterDate); }
+    metaParts.push(useActive ? ('Active '+formatMinutes(atMinute)) : 'All day');
+    el.rosterTitle.textContent=code || 'Unit';
+    el.rosterMeta.textContent=metaParts.join(' | ');
+    el.rosterBody.innerHTML='';
+
+    if(!rosterState.index || !rosterState.index[code]){
+      var empty=document.createElement('div');
+      empty.className='roster-empty';
+      empty.textContent='No roster data for this unit.';
+      el.rosterBody.appendChild(empty);
+      return;
+    }
+
+    var sections=[];
+    rosterState.index[code].forEach(function(unit){
+      var entries=Array.isArray(unit.entries) ? unit.entries.slice() : [];
+      if(useActive){
+        entries=entries.filter(function(e){ return coversTime(e, atMinute); });
+      }
+      entries.sort(function(a,b){
+        var ta=parseTimeToMinutes(a.from) || 0;
+        var tb=parseTimeToMinutes(b.from) || 0;
+        return ta-tb;
+      });
+      if(entries.length){
+        sections.push({ shift: formatShiftLabel(unit.shift), entries: entries, unit_name: unit.unit_name });
+      }
+    });
+
+    if(!sections.length){
+      var emptyNow=document.createElement('div');
+      emptyNow.className='roster-empty';
+      emptyNow.textContent=useActive ? 'No staffing active at this time.' : 'No staffing entries found.';
+      el.rosterBody.appendChild(emptyNow);
+      return;
+    }
+
+    sections.forEach(function(section, idx){
+      var container=document.createElement('div');
+      container.className=idx===0 ? '' : 'roster-section';
+      if(section.shift){
+        var shift=document.createElement('div');
+        shift.className='roster-shift';
+        shift.textContent=section.shift;
+        container.appendChild(shift);
+      }
+      section.entries.forEach(function(entry){
+        var row=document.createElement('div');
+        row.className='roster-entry';
+        var time=document.createElement('div');
+        time.className='time';
+        var from=entry.from || '--';
+        var through=entry.through || '--';
+        time.textContent=from+'-'+through;
+        var detail=document.createElement('div');
+        var name=document.createElement('div');
+        name.className='name';
+        name.textContent=entry.name || '-';
+        var meta=document.createElement('div');
+        meta.className='meta';
+        var metaBits=[];
+        if(entry.rank){ metaBits.push(entry.rank); }
+        if(entry.id){ metaBits.push('ID '+entry.id); }
+        if(entry.code){ metaBits.push(entry.code); }
+        meta.textContent=metaBits.join(' | ');
+        detail.appendChild(name);
+        if(meta.textContent){ detail.appendChild(meta); }
+        row.appendChild(time);
+        row.appendChild(detail);
+        container.appendChild(row);
+      });
+      el.rosterBody.appendChild(container);
+    });
+  }
+
+  function positionRosterPopup(x, y){
+    if(!el.rosterPop) return;
+    var pad=12;
+    var rect=el.rosterPop.getBoundingClientRect();
+    var left=Math.min(x+pad, window.innerWidth-rect.width-pad);
+    var top=Math.min(y+pad, window.innerHeight-rect.height-pad);
+    el.rosterPop.style.left=Math.max(pad,left)+'px';
+    el.rosterPop.style.top=Math.max(pad,top)+'px';
+  }
+
+  function showRosterPopup(unitCode, evt){
+    if(!el.rosterPop) return;
+    renderRosterPopup(unitCode);
+    el.rosterPop.style.display='block';
+    var x=evt && evt.clientX != null ? evt.clientX : window.innerWidth/2;
+    var y=evt && evt.clientY != null ? evt.clientY : window.innerHeight/2;
+    positionRosterPopup(x, y);
+  }
+
+  function closeRosterPopup(){
+    if(!el.rosterPop) return;
+    el.rosterPop.style.display='none';
+    rosterState.openUnit=null;
+  }
+
   function setPanelShift(panelId, letter){ var p=document.getElementById(panelId); if(!p||!letter) return; p.classList.remove('shift-a','shift-b','shift-c'); var l=(letter+'').toUpperCase(); if(l==='A') p.classList.add('shift-a'); if(l==='B') p.classList.add('shift-b'); if(l==='C') p.classList.add('shift-c'); }
   function letterFromMeta(meta){ if(!meta||!meta.shift_date) return ''; var m=/^([ABC])\-Shift\s/.exec(meta.shift_date.trim()); return m? m[1]:''; }
 
@@ -342,12 +570,47 @@
       var j=await r.json(); if(!j || (!j.today && !j.week && !j.prior && !j.month)){ el.status.style.display='inline-block'; el.status.textContent='No data in payload'; return; }
       apply(j);
     }catch(e){ console.error('fetch error', e); el.status.style.display='inline-block'; el.status.textContent='Fetch error (network/parse)'; }
+    fetchRoster();
   }
 
   var interval=null; function startAuto(){ stopAuto(); interval=setInterval(fetchOnce, 60000); } function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
   el.auto.onchange=function(){ if(el.auto.checked) startAuto(); else stopAuto(); };
   el.refresh.onclick=function(){ fetchOnce(); };
 el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.winners.checked); };
+  if(el.rosterNow){
+    el.rosterNow.onchange=function(){
+      if(rosterState.openUnit){ renderRosterPopup(rosterState.openUnit); }
+    };
+  }
+
+  function attachRosterClicks(table){
+    if(!table) return;
+    table.addEventListener('click', function(e){
+      var tr=e.target.closest('tr');
+      if(!tr || !tr.dataset || !tr.dataset.unit) return;
+      e.stopPropagation();
+      showRosterPopup(tr.dataset.unit, e);
+    });
+  }
+  attachRosterClicks(el.today);
+  attachRosterClicks(el.prior);
+  attachRosterClicks(el.week);
+  attachRosterClicks(el.month);
+
+  if(el.rosterClose){
+    el.rosterClose.onclick=function(e){
+      e.stopPropagation();
+      closeRosterPopup();
+    };
+  }
+  document.addEventListener('click', function(e){
+    if(!el.rosterPop || el.rosterPop.style.display==='none') return;
+    if(el.rosterPop.contains(e.target)) return;
+    closeRosterPopup();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape'){ closeRosterPopup(); }
+  });
 
   var panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month') };
   var defaultLayout={ today:{left:2,top:8,width:46,height:60}, prior:{left:2,top:70,width:46,height:28}, week:{left:50,top:8,width:48,height:40}, month:{left:50,top:50,width:48,height:48} };
