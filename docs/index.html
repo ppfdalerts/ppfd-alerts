@@ -288,6 +288,11 @@
       var tr=document.createElement('tr');
       tr.dataset.unit = r.unit;
       if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
+      tr.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        showRosterPopup(r.unit, ev);
+      });
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
       var tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML='<span class="pill-badge avg-badge">'+((r.avg_min||0).toFixed(1))+'</span>'; tr.appendChild(tdA);
@@ -331,6 +336,11 @@
     data.rows.forEach(function(r,idx){
       var tr=document.createElement('tr'); if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
       tr.dataset.unit = r.unit;
+      tr.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        showRosterPopup(r.unit, ev);
+      });
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
       (function(){
         var classes=['valA','valB','valC'];
