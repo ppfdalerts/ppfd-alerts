@@ -18,7 +18,7 @@
   .canvas{position:relative; height:100%; width:100%;}
   .canvas.flow{display:grid; grid-template-columns: 1fr 1fr; grid-auto-rows:auto; gap:10px; align-content:start}
   .canvas.flow .panel{position:static !important; width:auto !important; height:auto !important}
-  .panel{position:absolute; background:var(--panel); border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,.35); overflow:hidden; border:1px solid #111722; display:flex; flex-direction:column; min-height:60px; min-width:120px}
+  .panel{position:absolute; z-index:1; background:var(--panel); border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,.35); overflow:hidden; border:1px solid #111722; display:flex; flex-direction:column; min-height:60px; min-width:120px}
   .panel .hdr{display:flex; align-items:center; gap:10px; padding:10px 12px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; font-size:13px; flex:0 0 auto; border-bottom:1px solid #0f141a;}
   .panel .hdr .dot{width:10px; height:10px; border-radius:50%}
   .panel .hdr .sub{margin-left:auto; color:var(--muted); font-weight:500}
@@ -108,7 +108,7 @@
   .roster-entry .name{color:var(--text)}
   .roster-entry .meta{color:var(--muted); font-size:12px}
   .roster-empty{color:var(--muted); font-size:13px; padding:6px 0}
-  #panel-personnel{display:none}
+  #panel-personnel{display:none; z-index:5}
   body.personnel-on #panel-personnel{display:flex}
   .panel .hdr .dot.personnel{background:var(--indigo)}
   .personnel-controls{display:flex; gap:12px; align-items:center; margin:8px 0 10px; font-size:12px; color:var(--muted)}
