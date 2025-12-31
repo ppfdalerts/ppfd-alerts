@@ -586,8 +586,12 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   function attachRosterClicks(table){
     if(!table) return;
     table.addEventListener('click', function(e){
-      var tr=e.target.closest('tr');
+      var target=e.target;
+      if(target && target.nodeType===3){ target=target.parentElement; }
+      if(!target || !target.closest) return;
+      var tr=target.closest('tr');
       if(!tr || !tr.dataset || !tr.dataset.unit) return;
+      e.preventDefault();
       e.stopPropagation();
       showRosterPopup(tr.dataset.unit, e);
     });
