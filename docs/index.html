@@ -413,6 +413,13 @@
     index: { today: null, prior: null },
     open: null
   };
+  var personnelState = {
+    data: { week: null, month: null },
+    period: 'week',
+    sortKey: 'total_calls',
+    sortDir: 'desc',
+    filter: ''
+  };
 
   function normalizeUnitCode(code){
     var c=(code||'').toString().trim().toUpperCase();
@@ -616,6 +623,108 @@
     rosterState.open=null;
   }
 
+  var personnelSortTypes = {
+    name: 'string',
+    total_calls: 'number',
+    single_shift_max_calls: 'number',
+    avg_call_duration_mins: 'number',
+    highest_call_duration_mins: 'number',
+    total_calls_after_midnight: 'number',
+    single_shift_max_after_midnight: 'number',
+    total_call_hours: 'number'
+  };
+
+  function updatePersonnelSortIndicators(){
+    if(!el.personnel) return;
+    var headers = el.personnel.querySelectorAll('thead th[data-sort]');
+    headers.forEach(function(th){
+      th.classList.remove('sort-asc', 'sort-desc');
+      if(th.dataset.sort === personnelState.sortKey){
+        th.classList.add(personnelState.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+      }
+    });
+  }
+
+  function renderPersonnelTable(){
+    if(!el.personnel) return;
+    var tbody = el.personnel.querySelector('tbody');
+    if(!tbody) return;
+    var data = personnelState.data && personnelState.data[personnelState.period];
+    var rows = (data && Array.isArray(data.rows)) ? data.rows.slice() : [];
+    var filter = (personnelState.filter || '').trim().toLowerCase();
+    if(filter){
+      rows = rows.filter(function(r){
+        var name = String(r.name || '').toLowerCase();
+        var pid = String(r.person_id || '').toLowerCase();
+        return name.indexOf(filter) !== -1 || pid.indexOf(filter) !== -1;
+      });
+    }
+    var sortKey = personnelState.sortKey;
+    var sortDir = personnelState.sortDir;
+    var sortType = personnelSortTypes[sortKey] || 'number';
+    rows.sort(function(a,b){
+      var av = (a && a[sortKey] != null) ? a[sortKey] : (sortType === 'string' ? '' : 0);
+      var bv = (b && b[sortKey] != null) ? b[sortKey] : (sortType === 'string' ? '' : 0);
+      if(sortType === 'string'){
+        av = String(av).toLowerCase();
+        bv = String(bv).toLowerCase();
+        if(av < bv) return sortDir === 'asc' ? -1 : 1;
+        if(av > bv) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      av = Number(av) || 0;
+      bv = Number(bv) || 0;
+      return sortDir === 'asc' ? (av - bv) : (bv - av);
+    });
+
+    tbody.innerHTML = '';
+    if(!rows.length){
+      var tr = document.createElement('tr');
+      var td = document.createElement('td');
+      td.colSpan = (el.personnel.querySelectorAll('thead th').length || 8);
+      td.textContent = 'No personnel stats available.';
+      td.style.color = '#9ca3af';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+      if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : '—'; }
+      updatePersonnelSortIndicators();
+      return;
+    }
+
+    rows.forEach(function(r, idx){
+      var tr = document.createElement('tr');
+      if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
+      function addCell(text){
+        var td = document.createElement('td');
+        td.textContent = text;
+        tr.appendChild(td);
+      }
+      addCell(r.name || r.person_id || '');
+      addCell(String(r.total_calls || 0));
+      addCell(String(r.single_shift_max_calls || 0));
+      addCell((r.avg_call_duration_mins != null ? Number(r.avg_call_duration_mins).toFixed(1) : '0.0'));
+      addCell((r.highest_call_duration_mins != null ? Number(r.highest_call_duration_mins).toFixed(1) : '0.0'));
+      addCell(String(r.total_calls_after_midnight || 0));
+      addCell(String(r.single_shift_max_after_midnight || 0));
+      addCell((r.total_call_hours != null ? Number(r.total_call_hours).toFixed(1) : '0.0'));
+      tbody.appendChild(tr);
+    });
+
+    if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : '—'; }
+    updatePersonnelSortIndicators();
+  }
+
+  function applyPersonnel(personnel){
+    if(!personnel) return;
+    personnelState.data.week = personnel.week || null;
+    personnelState.data.month = personnel.month || null;
+    if(!personnelState.data[personnelState.period] && personnelState.data.month){
+      personnelState.period = 'month';
+      if(el.personnelPeriod){ el.personnelPeriod.value = 'month'; }
+    }
+    renderPersonnelTable();
+  }
+
   function setPanelShift(panelId, letter){ var p=document.getElementById(panelId); if(!p||!letter) return; p.classList.remove('shift-a','shift-b','shift-c'); var l=(letter+'').toUpperCase(); if(l==='A') p.classList.add('shift-a'); if(l==='B') p.classList.add('shift-b'); if(l==='C') p.classList.add('shift-c'); }
   function letterFromMeta(meta){ if(!meta||!meta.shift_date) return ''; var m=/^([ABC])\-Shift\s/.exec(meta.shift_date.trim()); return m? m[1]:''; }
 
@@ -625,6 +734,7 @@
     if(data.prior){ safe('Prior', function(){ renderTable(el.prior, data.prior, 'prior'); el.hdrPrior.textContent=(data.prior.meta&&data.prior.meta.shift_date)||new Date(data.prior.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-prior', letterFromMeta(data.prior.meta)); }); }
     if(data.week){ safe('Week', function(){ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta&&data.week.meta.range)||new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
     if(data.month){ safe('Month', function(){ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta&&data.month.meta.range)||new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
+    if(data.personnel){ safe('Personnel', function(){ applyPersonnel(data.personnel); }); }
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString(); el.upd.textContent=new Date().toLocaleString();
     if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; } else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
   }
