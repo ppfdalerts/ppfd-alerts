@@ -758,6 +758,46 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
       if(rosterState.open){ renderRosterPopup(rosterState.open.unit, rosterState.open.period); }
     };
   }
+  if(el.personnelToggle){
+    try{
+      var saved = localStorage.getItem('ppfd_personnel_on');
+      if(saved === '1'){ el.personnelToggle.checked = true; }
+    }catch(_){}
+    document.body.classList.toggle('personnel-on', !!el.personnelToggle.checked);
+    el.personnelToggle.onchange=function(){
+      document.body.classList.toggle('personnel-on', !!el.personnelToggle.checked);
+      try{ localStorage.setItem('ppfd_personnel_on', el.personnelToggle.checked ? '1' : '0'); }catch(_){}
+      renderPersonnelTable();
+    };
+  }
+  if(el.personnelPeriod){
+    el.personnelPeriod.onchange=function(){
+      personnelState.period = el.personnelPeriod.value || 'week';
+      renderPersonnelTable();
+    };
+  }
+  if(el.personnelFilter){
+    el.personnelFilter.oninput=function(){
+      personnelState.filter = el.personnelFilter.value || '';
+      renderPersonnelTable();
+    };
+  }
+  if(el.personnel){
+    var headers = el.personnel.querySelectorAll('thead th[data-sort]');
+    headers.forEach(function(th){
+      th.addEventListener('click', function(){
+        var key = th.dataset.sort;
+        if(!key) return;
+        if(personnelState.sortKey === key){
+          personnelState.sortDir = personnelState.sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          personnelState.sortKey = key;
+          personnelState.sortDir = (key === 'name') ? 'asc' : 'desc';
+        }
+        renderPersonnelTable();
+      });
+    });
+  }
 
   if(el.rosterClose){
     el.rosterClose.onclick=function(e){
@@ -774,8 +814,8 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
     if(e.key==='Escape'){ closeRosterPopup(); }
   });
 
-  var panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month') };
-  var defaultLayout={ today:{left:2,top:8,width:46,height:60}, prior:{left:2,top:70,width:46,height:28}, week:{left:50,top:8,width:48,height:40}, month:{left:50,top:50,width:48,height:48} };
+  var panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month'), personnel:document.getElementById('panel-personnel') };
+  var defaultLayout={ today:{left:2,top:8,width:46,height:60}, prior:{left:2,top:70,width:46,height:28}, week:{left:50,top:8,width:48,height:40}, month:{left:50,top:50,width:48,height:48}, personnel:{left:2,top:8,width:96,height:84} };
   function loadLayout(){ try{ var j=JSON.parse(localStorage.getItem('ppfd_layout_v1')||'{}'); var out={}; for(var k in defaultLayout){ out[k]=defaultLayout[k]; } for(var k2 in j){ out[k2]=j[k2]; } return out; }catch(e){ var d={}; for(var k3 in defaultLayout){ d[k3]=defaultLayout[k3]; } return d; } }
   function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v1', JSON.stringify(l)); }catch(e){} }
   function isDefaultLayout(l){ var tol=0.001; for(var k in defaultLayout){ var a=l[k]||defaultLayout[k], b=defaultLayout[k]; var keys=['left','top','width','height']; for(var i=0;i<keys.length;i++){ var key=keys[i]; if(Math.abs(((a[key]||0)-(b[key]||0)))>tol) return false; } } return true; }
@@ -786,9 +826,9 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   function updateFlowMode(){ var isMobile=window.matchMedia('(max-width: 900px)').matches; var canvas=document.querySelector('.canvas'); if(!canvas) return; if(!el.edit.checked && isDefaultLayout(layoutState.current) && !isMobile){ canvas.classList.add('flow'); for(var k in panels){ var p=panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height=''; } } else { canvas.classList.remove('flow'); applyLayout(layoutState.current); } }
   updateFlowMode();
   function attachDragResize(key){ var node=panels[key]; var handle=node.querySelector('.hdr'); var grip=node.querySelector('.grip'); var state={drag:false,size:false,sx:0,sy:0,start:null}; function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function move(e){ if(!(state.drag||state.size)) return; var vw=innerWidth, vh=innerHeight; var dx=(e.clientX-state.sx)/vw*100; var dy=(e.clientY-state.sy)/vh*100; var r=layoutState.current[key]||(layoutState.current[key]={left:defaultLayout[key].left,top:defaultLayout[key].top,width:defaultLayout[key].width,height:defaultLayout[key].height}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); } function up(){ if(!(state.drag||state.size)) return; state.drag=false; state.size=false; saveLayout(layoutState.current); } handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up); handle.addEventListener('touchstart', function(ev){downDrag(ev.touches[0])}); grip.addEventListener('touchstart', function(ev){downSize(ev.touches[0])}); window.addEventListener('touchmove', function(ev){move(ev.touches[0])}); window.addEventListener('touchend', up); }
-  attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month');
+  attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month'); attachDragResize('personnel');
   el.edit.onchange=function(){ enableEditing(el.edit.checked); updateFlowMode(); };
-  el.resetLayout.onclick=function(){ layoutState.current={today:{left:2,top:8,width:46,height:60}, prior:{left:2,top:70,width:46,height:28}, week:{left:50,top:8,width:48,height:40}, month:{left:50,top:50,width:48,height:48}}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); };
+  el.resetLayout.onclick=function(){ layoutState.current={today:{left:2,top:8,width:46,height:60}, prior:{left:2,top:70,width:46,height:28}, week:{left:50,top:8,width:48,height:40}, month:{left:50,top:50,width:48,height:48}, personnel:{left:2,top:8,width:96,height:84}}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); };
   window.addEventListener('resize', updateFlowMode);
   fetchOnce(); startAuto();
 </script>
