@@ -108,6 +108,16 @@
   .roster-entry .name{color:var(--text)}
   .roster-entry .meta{color:var(--muted); font-size:12px}
   .roster-empty{color:var(--muted); font-size:13px; padding:6px 0}
+  #panel-personnel{display:none}
+  body.personnel-on #panel-personnel{display:flex}
+  .panel .hdr .dot.personnel{background:var(--indigo)}
+  .personnel-controls{display:flex; gap:12px; align-items:center; margin:8px 0 10px; font-size:12px; color:var(--muted)}
+  .personnel-controls label{display:flex; gap:6px; align-items:center}
+  .personnel-controls select, .personnel-controls input{background:#0f141a; border:1px solid #223047; color:var(--text); padding:4px 6px; border-radius:6px; font-size:12px}
+  .personnel-controls input{min-width:180px}
+  .personnel-table th{cursor:pointer}
+  .personnel-table th.sort-asc::after{content:" ▲"; color:var(--muted); font-size:11px}
+  .personnel-table th.sort-desc::after{content:" ▼"; color:var(--muted); font-size:11px}
   @media (max-width: 900px){
     .wrap{padding:6px}
     .toolbar{gap:8px}
@@ -130,6 +140,7 @@
     <div class="pill">Edit layout<label style="margin-left:4px"><input id="edit" type="checkbox"></label></div>
     <div class="pill">Winners <label style="margin-left:4px"><input id="winners" type="checkbox" checked></label></div>
     <div class="pill">Roster active now <label style="margin-left:4px"><input id="rosterNow" type="checkbox"></label></div>
+    <div class="pill">Personnel <label style="margin-left:4px"><input id="personnelToggle" type="checkbox"></label></div>
     <button id="resetLayout" class="btn">Reset layout</button>
     <button id="refresh" class="btn">Refresh now</button>
     <div id="status" class="status"></div><div id="ts" class="timestamp">—</div>
@@ -191,6 +202,38 @@
       </thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
+    <div class="panel" id="panel-personnel" style="left:2vw; top:8vh; width:96vw; height:84vh">
+      <div class="hdr"><span class="dot personnel"></span><span>Personnel</span><span id="hdr-personnel" class="sub">—</span></div>
+      <div class="body">
+        <div class="personnel-controls">
+          <label>Period
+            <select id="personnelPeriod">
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+            </select>
+          </label>
+          <label>Filter
+            <input id="personnelFilter" type="search" placeholder="Name or ID">
+          </label>
+        </div>
+        <table id="board-personnel" class="personnel-table">
+          <thead>
+            <tr>
+              <th data-sort="name">Name</th>
+              <th data-sort="total_calls">Total Calls</th>
+              <th data-sort="single_shift_max_calls">Single-Shift Max Calls</th>
+              <th data-sort="avg_call_duration_mins">Avg. Call Duration (Mins)</th>
+              <th data-sort="highest_call_duration_mins">Highest Call Duration (Mins)</th>
+              <th data-sort="total_calls_after_midnight">Total Calls After Midnight</th>
+              <th data-sort="single_shift_max_after_midnight">Single-Shift Max After Midnight</th>
+              <th data-sort="total_call_hours">Total Call Hours</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
+    </div>
     <div class="footer">Updated <span id="updated">—</span></div>
   </div>
 </div>
@@ -221,6 +264,11 @@
     refresh: document.getElementById('refresh'),
     winners: document.getElementById('winners'),
     rosterNow: document.getElementById('rosterNow'),
+    personnelToggle: document.getElementById('personnelToggle'),
+    personnel: document.getElementById('board-personnel'),
+    personnelPeriod: document.getElementById('personnelPeriod'),
+    personnelFilter: document.getElementById('personnelFilter'),
+    hdrPersonnel: document.getElementById('hdr-personnel'),
     rosterPop: document.getElementById('rosterPop'),
     rosterTitle: document.getElementById('rosterTitle'),
     rosterMeta: document.getElementById('rosterMeta'),
