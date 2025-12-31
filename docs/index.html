@@ -360,7 +360,11 @@
     });
   }
 
-  var rosterState = { payload: null, index: null, openUnit: null };
+  var rosterState = {
+    payload: { today: null, prior: null },
+    index: { today: null, prior: null },
+    open: null
+  };
 
   function normalizeUnitCode(code){
     var c=(code||'').toString().trim().toUpperCase();
@@ -426,13 +430,16 @@
     return fetch('roster_units.json?t='+Date.now(), {cache:'no-cache'})
       .then(function(r){ if(!r.ok) throw new Error('roster fetch'); return r.json(); })
       .then(function(j){
-        rosterState.payload=j;
-        rosterState.index=buildRosterIndex(j);
-        if(rosterState.openUnit){ renderRosterPopup(rosterState.openUnit); }
+        var todayPayload = (j && j.today) ? j.today : j;
+        var priorPayload = (j && j.prior) ? j.prior : null;
+        rosterState.payload = { today: todayPayload, prior: priorPayload };
+        rosterState.index.today = buildRosterIndex(todayPayload);
+        rosterState.index.prior = priorPayload ? buildRosterIndex(priorPayload) : null;
+        if(rosterState.open){ renderRosterPopup(rosterState.open.unit, rosterState.open.period); }
       })
       .catch(function(){
-        rosterState.payload=null;
-        rosterState.index=null;
+        rosterState.payload = { today: null, prior: null };
+        rosterState.index = { today: null, prior: null };
       });
   }
 
@@ -447,30 +454,35 @@
     return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
   }
 
-  function renderRosterPopup(unitCode){
+  function renderRosterPopup(unitCode, period){
     if(!el.rosterPop) return;
     var code=normalizeUnitCode(unitCode);
-    rosterState.openUnit=code;
+    var periodKey = period || 'today';
+    rosterState.open = { unit: code, period: periodKey };
     var useActive=!!(el.rosterNow && el.rosterNow.checked);
     var atMinute=useActive ? nowMinutes() : null;
-    var rosterDate=rosterState.payload && rosterState.payload.date ? rosterState.payload.date : '';
+    var payload = rosterState.payload && rosterState.payload[periodKey] ? rosterState.payload[periodKey] : null;
+    var index = rosterState.index && rosterState.index[periodKey] ? rosterState.index[periodKey] : null;
+    var rosterDate=payload && payload.date ? payload.date : '';
+    var periodLabel = (periodKey === 'prior') ? 'Prior shift' : 'Today';
     var metaParts=[];
     if(rosterDate){ metaParts.push(rosterDate); }
+    metaParts.push(periodLabel);
     metaParts.push(useActive ? ('Active '+formatMinutes(atMinute)) : 'All day');
     el.rosterTitle.textContent=code || 'Unit';
     el.rosterMeta.textContent=metaParts.join(' | ');
     el.rosterBody.innerHTML='';
 
-    if(!rosterState.index || !rosterState.index[code]){
+    if(!payload || !index || !index[code]){
       var empty=document.createElement('div');
       empty.className='roster-empty';
-      empty.textContent='No roster data for this unit.';
+      empty.textContent=(periodKey === 'prior') ? 'No roster data for the prior shift.' : 'No roster data for today.';
       el.rosterBody.appendChild(empty);
       return;
     }
 
     var sections=[];
-    rosterState.index[code].forEach(function(unit){
+    index[code].forEach(function(unit){
       var entries=Array.isArray(unit.entries) ? unit.entries.slice() : [];
       if(useActive){
         entries=entries.filter(function(e){ return coversTime(e, atMinute); });
@@ -541,9 +553,9 @@
     el.rosterPop.style.top=Math.max(pad,top)+'px';
   }
 
-  function showRosterPopup(unitCode, evt){
+  function showRosterPopup(unitCode, period, evt){
     if(!el.rosterPop) return;
-    renderRosterPopup(unitCode);
+    renderRosterPopup(unitCode, period);
     el.rosterPop.style.display='block';
     var x=evt && evt.clientX != null ? evt.clientX : window.innerWidth/2;
     var y=evt && evt.clientY != null ? evt.clientY : window.innerHeight/2;
@@ -553,7 +565,7 @@
   function closeRosterPopup(){
     if(!el.rosterPop) return;
     el.rosterPop.style.display='none';
-    rosterState.openUnit=null;
+    rosterState.open=null;
   }
 
   function setPanelShift(panelId, letter){ var p=document.getElementById(panelId); if(!p||!letter) return; p.classList.remove('shift-a','shift-b','shift-c'); var l=(letter+'').toUpperCase(); if(l==='A') p.classList.add('shift-a'); if(l==='B') p.classList.add('shift-b'); if(l==='C') p.classList.add('shift-c'); }
@@ -585,7 +597,7 @@
 el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.winners.checked); };
   if(el.rosterNow){
     el.rosterNow.onchange=function(){
-      if(rosterState.openUnit){ renderRosterPopup(rosterState.openUnit); }
+      if(rosterState.open){ renderRosterPopup(rosterState.open.unit, rosterState.open.period); }
     };
   }
 
