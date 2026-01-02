@@ -749,7 +749,7 @@
     fetchRoster();
   }
 
-  var interval=null; function startAuto(){ stopAuto(); interval=setInterval(fetchOnce, 60000); } function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
+  var interval=null; function startAuto(){ stopAuto(); interval=setInterval(fetchOnce, 30000); } function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
   el.auto.onchange=function(){ if(el.auto.checked) startAuto(); else stopAuto(); };
   el.refresh.onclick=function(){ fetchOnce(); };
 el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.winners.checked); };
