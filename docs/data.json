@@ -2,7 +2,7 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 09 Jan 2026\nE34: 1  |  avg 0.0 min  |  after 00:00: 0\nR34: 1  |  avg 0.0 min  |  after 00:00: 0",
+    "text": "Daily runs 09 Jan 2026\nE34: 1  |  avg 0.0 min  |  after 00:00: 0\nR34: 1  |  avg 16.2 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "E34",
@@ -14,15 +14,15 @@
       {
         "unit": "R34",
         "calls": 1,
-        "avg_min": 0.0,
+        "avg_min": 16.2,
         "after_0000": 0,
-        "max_min": 0.0
+        "max_min": 16.2
       }
     ],
     "meta": {
       "shift_date": "A-Shift 01/09/26"
     },
-    "updated": "2026-01-09T12:59:05.718406Z"
+    "updated": "2026-01-09T13:29:11.189600Z"
   },
   "prior": {
     "label": "Daily",
@@ -89,12 +89,12 @@
     "meta": {
       "shift_date": "C-Shift 01/08/26"
     },
-    "updated": "2026-01-09T12:59:05.718406Z"
+    "updated": "2026-01-09T13:29:11.189600Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 03 Jan 2026 - 09 Jan 2026\nR34: 50  |  avg 14.3 min  |  after 00:00: 15\nE35: 47  |  avg 20.6 min  |  after 00:00: 10\nE36: 42  |  avg 19.1 min  |  after 00:00: 4\nR33: 40  |  avg 23.9 min  |  after 00:00: 3\nS36: 39  |  avg 16.6 min  |  after 00:00: 5\nT33: 35  |  avg 22.9 min  |  after 00:00: 2\nE34: 31  |  avg 16.6 min  |  after 00:00: 3\nLR36: 14  |  avg 37.4 min  |  after 00:00: 1\nD35: 6  |  avg 33.0 min  |  after 00:00: 0",
+    "text": "Weekly runs 03 Jan 2026 - 09 Jan 2026\nR34: 50  |  avg 14.7 min  |  after 00:00: 15\nE35: 47  |  avg 20.6 min  |  after 00:00: 10\nE36: 42  |  avg 19.1 min  |  after 00:00: 4\nR33: 40  |  avg 23.9 min  |  after 00:00: 3\nS36: 39  |  avg 16.6 min  |  after 00:00: 5\nT33: 35  |  avg 22.9 min  |  after 00:00: 2\nE34: 31  |  avg 16.6 min  |  after 00:00: 3\nLR36: 14  |  avg 37.4 min  |  after 00:00: 1\nD35: 6  |  avg 33.0 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R34",
@@ -109,7 +109,7 @@
           10
         ],
         "avg_min_abc": [
-          26.2,
+          27.6,
           10.2,
           11.7
         ],
@@ -415,7 +415,7 @@
     "meta": {
       "range": "Jan 03 - Jan 09"
     },
-    "updated": "2026-01-09T12:59:05.723958Z"
+    "updated": "2026-01-09T13:29:11.194650Z"
   },
   "month": {
     "label": "Monthly",
@@ -470,7 +470,7 @@
           12
         ],
         "avg_min_abc": [
-          19.8,
+          20.0,
           14.7,
           14.9
         ],
@@ -776,7 +776,7 @@
     "meta": {
       "range": "Dec 11 - Jan 09"
     },
-    "updated": "2026-01-09T12:59:05.734705Z"
+    "updated": "2026-01-09T13:29:11.205621Z"
   },
   "personnel": {
     "week": {
@@ -1019,22 +1019,22 @@
           "name": "Ras 7, Kasey (AL/ALR36/EO/FTOPM/PM/SWAT/TO)",
           "total_calls": 11,
           "single_shift_max_calls": 10,
-          "avg_call_duration_mins": 8.8,
+          "avg_call_duration_mins": 10.2,
           "highest_call_duration_mins": 29.6,
           "total_calls_after_midnight": 2,
           "single_shift_max_after_midnight": 2,
-          "total_call_hours": 1.6
+          "total_call_hours": 1.9
         },
         {
           "person_id": "296",
           "name": "Bailey 2, Zach (B Proby/PPM)",
           "total_calls": 10,
           "single_shift_max_calls": 7,
-          "avg_call_duration_mins": 22.2,
+          "avg_call_duration_mins": 23.7,
           "highest_call_duration_mins": 111.4,
           "total_calls_after_midnight": 0,
           "single_shift_max_after_midnight": 0,
-          "total_call_hours": 3.7
+          "total_call_hours": 4.0
         },
         {
           "person_id": "265",
@@ -1502,7 +1502,7 @@
       "meta": {
         "range": "Jan 03 - Jan 09"
       },
-      "updated": "2026-01-09T12:59:05.741600Z"
+      "updated": "2026-01-09T13:29:11.212695Z"
     },
     "month": {
       "label": "Month",
@@ -1700,11 +1700,11 @@
           "name": "Bailey 2, Zach (B Proby/PPM)",
           "total_calls": 63,
           "single_shift_max_calls": 9,
-          "avg_call_duration_mins": 21.4,
+          "avg_call_duration_mins": 21.6,
           "highest_call_duration_mins": 111.4,
           "total_calls_after_midnight": 8,
           "single_shift_max_after_midnight": 3,
-          "total_call_hours": 22.4
+          "total_call_hours": 22.7
         },
         {
           "person_id": "266",
@@ -1788,11 +1788,11 @@
           "name": "Ras 7, Kasey (AL/ALR36/EO/FTOPM/PM/SWAT/TO)",
           "total_calls": 58,
           "single_shift_max_calls": 10,
-          "avg_call_duration_mins": 13.8,
+          "avg_call_duration_mins": 14.0,
           "highest_call_duration_mins": 80.4,
           "total_calls_after_midnight": 13,
           "single_shift_max_after_midnight": 4,
-          "total_call_hours": 13.3
+          "total_call_hours": 13.6
         },
         {
           "person_id": "279",
@@ -2326,7 +2326,7 @@
       "meta": {
         "range": "Dec 11 - Jan 09"
       },
-      "updated": "2026-01-09T12:59:05.766722Z"
+      "updated": "2026-01-09T13:29:11.236456Z"
     }
   }
 }
