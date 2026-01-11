@@ -2,14 +2,21 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 10 Jan 2026\nR33: 13  |  avg 11.7 min  |  after 00:00: 1\nE35: 11  |  avg 19.0 min  |  after 00:00: 0\nR34: 11  |  avg 25.4 min  |  after 00:00: 0\nE34: 9  |  avg 13.8 min  |  after 00:00: 1\nS36: 7  |  avg 25.8 min  |  after 00:00: 0\nT33: 5  |  avg 29.8 min  |  after 00:00: 1\nE36: 4  |  avg 49.6 min  |  after 00:00: 0\nLR36: 3  |  avg 40.6 min  |  after 00:00: 0\nD35: 2  |  avg 71.3 min  |  after 00:00: 0",
+    "text": "Daily runs 10 Jan 2026\nR33: 13  |  avg 12.8 min  |  after 00:00: 1\nR34: 12  |  avg 23.3 min  |  after 00:00: 1\nE35: 11  |  avg 19.0 min  |  after 00:00: 0\nE34: 9  |  avg 13.8 min  |  after 00:00: 1\nS36: 7  |  avg 25.8 min  |  after 00:00: 0\nE36: 5  |  avg 39.7 min  |  after 00:00: 1\nT33: 5  |  avg 29.8 min  |  after 00:00: 1\nLR36: 3  |  avg 40.6 min  |  after 00:00: 0\nD35: 2  |  avg 71.3 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
         "calls": 13,
-        "avg_min": 11.7,
+        "avg_min": 12.8,
         "after_0000": 1,
         "max_min": 74.6
+      },
+      {
+        "unit": "R34",
+        "calls": 12,
+        "avg_min": 23.3,
+        "after_0000": 1,
+        "max_min": 73.3
       },
       {
         "unit": "E35",
@@ -17,13 +24,6 @@
         "avg_min": 19.0,
         "after_0000": 0,
         "max_min": 65.2
-      },
-      {
-        "unit": "R34",
-        "calls": 11,
-        "avg_min": 25.4,
-        "after_0000": 0,
-        "max_min": 73.3
       },
       {
         "unit": "E34",
@@ -40,18 +40,18 @@
         "max_min": 127.7
       },
       {
+        "unit": "E36",
+        "calls": 5,
+        "avg_min": 39.7,
+        "after_0000": 1,
+        "max_min": 138.5
+      },
+      {
         "unit": "T33",
         "calls": 5,
         "avg_min": 29.8,
         "after_0000": 1,
         "max_min": 137.8
-      },
-      {
-        "unit": "E36",
-        "calls": 4,
-        "avg_min": 49.6,
-        "after_0000": 0,
-        "max_min": 138.5
       },
       {
         "unit": "LR36",
@@ -71,7 +71,7 @@
     "meta": {
       "shift_date": "B-Shift 01/10/26"
     },
-    "updated": "2026-01-11T06:36:53.347360Z"
+    "updated": "2026-01-11T07:06:59.285845Z"
   },
   "prior": {
     "label": "Daily",
@@ -138,12 +138,12 @@
     "meta": {
       "shift_date": "A-Shift 01/09/26"
     },
-    "updated": "2026-01-11T06:36:53.347360Z"
+    "updated": "2026-01-11T07:06:59.286842Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 04 Jan 2026 - 10 Jan 2026\nE35: 62  |  avg 18.8 min  |  after 00:00: 10\nR33: 60  |  avg 21.6 min  |  after 00:00: 6\nR34: 60  |  avg 16.3 min  |  after 00:00: 15\nE34: 49  |  avg 16.4 min  |  after 00:00: 8\nS36: 49  |  avg 18.6 min  |  after 00:00: 5\nE36: 48  |  avg 19.4 min  |  after 00:00: 4\nT33: 44  |  avg 23.8 min  |  after 00:00: 4\nLR36: 16  |  avg 43.5 min  |  after 00:00: 1\nD35: 6  |  avg 52.4 min  |  after 00:00: 0",
+    "text": "Weekly runs 04 Jan 2026 - 10 Jan 2026\nE35: 62  |  avg 18.8 min  |  after 00:00: 10\nR34: 61  |  avg 16.0 min  |  after 00:00: 16\nR33: 60  |  avg 21.9 min  |  after 00:00: 6\nE34: 49  |  avg 16.4 min  |  after 00:00: 8\nE36: 49  |  avg 19.1 min  |  after 00:00: 5\nS36: 49  |  avg 18.6 min  |  after 00:00: 5\nT33: 44  |  avg 23.8 min  |  after 00:00: 4\nLR36: 16  |  avg 43.5 min  |  after 00:00: 1\nD35: 6  |  avg 52.4 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "E35",
@@ -181,6 +181,41 @@
         "total_after": 10
       },
       {
+        "unit": "R34",
+        "calls_abc": [
+          10,
+          31,
+          20
+        ],
+        "calls_max_abc": [
+          8,
+          13,
+          10
+        ],
+        "avg_min_abc": [
+          26.8,
+          15.3,
+          11.7
+        ],
+        "max_min_abc": [
+          94.1,
+          73.3,
+          40.4
+        ],
+        "after_abc": [
+          3,
+          7,
+          6
+        ],
+        "after_max_abc": [
+          3,
+          4,
+          5
+        ],
+        "total_calls": 61,
+        "total_after": 16
+      },
+      {
         "unit": "R33",
         "calls_abc": [
           19,
@@ -194,7 +229,7 @@
         ],
         "avg_min_abc": [
           24.8,
-          17.2,
+          17.8,
           26.5
         ],
         "max_min_abc": [
@@ -214,41 +249,6 @@
         ],
         "total_calls": 60,
         "total_after": 6
-      },
-      {
-        "unit": "R34",
-        "calls_abc": [
-          10,
-          30,
-          20
-        ],
-        "calls_max_abc": [
-          8,
-          13,
-          10
-        ],
-        "avg_min_abc": [
-          26.8,
-          15.8,
-          11.7
-        ],
-        "max_min_abc": [
-          94.1,
-          73.3,
-          40.4
-        ],
-        "after_abc": [
-          3,
-          6,
-          6
-        ],
-        "after_max_abc": [
-          3,
-          4,
-          5
-        ],
-        "total_calls": 60,
-        "total_after": 15
       },
       {
         "unit": "E34",
@@ -286,6 +286,41 @@
         "total_after": 8
       },
       {
+        "unit": "E36",
+        "calls_abc": [
+          9,
+          28,
+          12
+        ],
+        "calls_max_abc": [
+          5,
+          14,
+          7
+        ],
+        "avg_min_abc": [
+          23.3,
+          17.1,
+          20.3
+        ],
+        "max_min_abc": [
+          119.9,
+          138.5,
+          115.9
+        ],
+        "after_abc": [
+          0,
+          4,
+          1
+        ],
+        "after_max_abc": [
+          0,
+          2,
+          1
+        ],
+        "total_calls": 49,
+        "total_after": 5
+      },
+      {
         "unit": "S36",
         "calls_abc": [
           11,
@@ -319,41 +354,6 @@
         ],
         "total_calls": 49,
         "total_after": 5
-      },
-      {
-        "unit": "E36",
-        "calls_abc": [
-          9,
-          27,
-          12
-        ],
-        "calls_max_abc": [
-          5,
-          14,
-          7
-        ],
-        "avg_min_abc": [
-          23.3,
-          17.8,
-          20.3
-        ],
-        "max_min_abc": [
-          119.9,
-          138.5,
-          115.9
-        ],
-        "after_abc": [
-          0,
-          3,
-          1
-        ],
-        "after_max_abc": [
-          0,
-          2,
-          1
-        ],
-        "total_calls": 48,
-        "total_after": 4
       },
       {
         "unit": "T33",
@@ -464,12 +464,12 @@
     "meta": {
       "range": "Jan 04 - Jan 10"
     },
-    "updated": "2026-01-11T06:36:53.352346Z"
+    "updated": "2026-01-11T07:06:59.290831Z"
   },
   "month": {
     "label": "Monthly",
     "period": "month",
-    "text": "Monthly runs 12 Dec 2025 - 10 Jan 2026\nR33: 265  |  avg 18.2 min  |  after 00:00: 32\nR34: 251  |  avg 16.9 min  |  after 00:00: 46\nE35: 215  |  avg 18.0 min  |  after 00:00: 40\nS36: 208  |  avg 17.3 min  |  after 00:00: 22\nE36: 195  |  avg 19.9 min  |  after 00:00: 22\nE34: 176  |  avg 14.6 min  |  after 00:00: 21\nT33: 148  |  avg 18.1 min  |  after 00:00: 8\nLR36: 65  |  avg 25.7 min  |  after 00:00: 5\nD35: 34  |  avg 21.0 min  |  after 00:00: 1\nE33: 1  |  avg 0.7 min  |  after 00:00: 0",
+    "text": "Monthly runs 12 Dec 2025 - 10 Jan 2026\nR33: 265  |  avg 18.3 min  |  after 00:00: 32\nR34: 252  |  avg 16.9 min  |  after 00:00: 47\nE35: 215  |  avg 18.0 min  |  after 00:00: 40\nS36: 208  |  avg 17.3 min  |  after 00:00: 22\nE36: 196  |  avg 19.8 min  |  after 00:00: 23\nE34: 176  |  avg 14.6 min  |  after 00:00: 21\nT33: 148  |  avg 18.1 min  |  after 00:00: 8\nLR36: 65  |  avg 25.7 min  |  after 00:00: 5\nD35: 34  |  avg 21.0 min  |  after 00:00: 1\nE33: 1  |  avg 0.7 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
@@ -485,7 +485,7 @@
         ],
         "avg_min_abc": [
           20.8,
-          18.0,
+          18.1,
           16.0
         ],
         "max_min_abc": [
@@ -510,7 +510,7 @@
         "unit": "R34",
         "calls_abc": [
           73,
-          92,
+          93,
           86
         ],
         "calls_max_abc": [
@@ -520,7 +520,7 @@
         ],
         "avg_min_abc": [
           20.2,
-          16.2,
+          16.0,
           14.9
         ],
         "max_min_abc": [
@@ -530,7 +530,7 @@
         ],
         "after_abc": [
           15,
-          17,
+          18,
           14
         ],
         "after_max_abc": [
@@ -538,8 +538,8 @@
           4,
           5
         ],
-        "total_calls": 251,
-        "total_after": 46
+        "total_calls": 252,
+        "total_after": 47
       },
       {
         "unit": "E35",
@@ -615,7 +615,7 @@
         "unit": "E36",
         "calls_abc": [
           59,
-          72,
+          73,
           64
         ],
         "calls_max_abc": [
@@ -625,7 +625,7 @@
         ],
         "avg_min_abc": [
           18.3,
-          19.9,
+          19.6,
           21.5
         ],
         "max_min_abc": [
@@ -635,7 +635,7 @@
         ],
         "after_abc": [
           6,
-          9,
+          10,
           7
         ],
         "after_max_abc": [
@@ -643,8 +643,8 @@
           2,
           3
         ],
-        "total_calls": 195,
-        "total_after": 22
+        "total_calls": 196,
+        "total_after": 23
       },
       {
         "unit": "E34",
@@ -825,7 +825,7 @@
     "meta": {
       "range": "Dec 12 - Jan 10"
     },
-    "updated": "2026-01-11T06:36:53.363780Z"
+    "updated": "2026-01-11T07:06:59.303586Z"
   },
   "personnel": {
     "week": {
@@ -1551,7 +1551,7 @@
       "meta": {
         "range": "Jan 04 - Jan 10"
       },
-      "updated": "2026-01-11T06:36:53.429799Z"
+      "updated": "2026-01-11T07:06:59.310240Z"
     },
     "month": {
       "label": "Month",
@@ -2375,7 +2375,7 @@
       "meta": {
         "range": "Dec 12 - Jan 10"
       },
-      "updated": "2026-01-11T06:36:53.651552Z"
+      "updated": "2026-01-11T07:06:59.335336Z"
     }
   }
 }
