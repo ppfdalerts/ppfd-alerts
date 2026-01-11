@@ -2,12 +2,12 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 11 Jan 2026\nR34: 2  |  avg 8.1 min  |  after 00:00: 0\nE34: 1  |  avg 29.6 min  |  after 00:00: 0\nS36: 1  |  avg 0.0 min  |  after 00:00: 0",
+    "text": "Daily runs 11 Jan 2026\nR34: 3  |  avg 5.4 min  |  after 00:00: 0\nE34: 1  |  avg 29.6 min  |  after 00:00: 0\nS36: 1  |  avg 0.0 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R34",
-        "calls": 2,
-        "avg_min": 8.1,
+        "calls": 3,
+        "avg_min": 5.4,
         "after_0000": 0,
         "max_min": 14.1
       },
@@ -29,7 +29,7 @@
     "meta": {
       "shift_date": "C-Shift 01/11/26"
     },
-    "updated": "2026-01-11T13:38:11.201876Z"
+    "updated": "2026-01-11T14:08:16.694158Z"
   },
   "prior": {
     "label": "Daily",
@@ -103,12 +103,12 @@
     "meta": {
       "shift_date": "B-Shift 01/10/26"
     },
-    "updated": "2026-01-11T13:38:11.202874Z"
+    "updated": "2026-01-11T14:08:16.694158Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 05 Jan 2026 - 11 Jan 2026\nR33: 55  |  avg 22.3 min  |  after 00:00: 7\nE35: 52  |  avg 17.0 min  |  after 00:00: 7\nR34: 52  |  avg 17.4 min  |  after 00:00: 14\nE34: 47  |  avg 17.5 min  |  after 00:00: 8\nS36: 41  |  avg 21.2 min  |  after 00:00: 3\nE36: 40  |  avg 20.9 min  |  after 00:00: 3\nT33: 37  |  avg 25.7 min  |  after 00:00: 3\nLR36: 14  |  avg 48.2 min  |  after 00:00: 1\nD35: 6  |  avg 52.4 min  |  after 00:00: 0",
+    "text": "Weekly runs 05 Jan 2026 - 11 Jan 2026\nR33: 55  |  avg 22.3 min  |  after 00:00: 7\nR34: 53  |  avg 17.1 min  |  after 00:00: 14\nE35: 52  |  avg 17.0 min  |  after 00:00: 7\nE34: 47  |  avg 17.5 min  |  after 00:00: 8\nS36: 41  |  avg 21.2 min  |  after 00:00: 3\nE36: 40  |  avg 20.9 min  |  after 00:00: 3\nT33: 37  |  avg 25.7 min  |  after 00:00: 3\nLR36: 14  |  avg 48.2 min  |  after 00:00: 1\nD35: 6  |  avg 52.4 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
@@ -146,6 +146,41 @@
         "total_after": 7
       },
       {
+        "unit": "R34",
+        "calls_abc": [
+          10,
+          20,
+          23
+        ],
+        "calls_max_abc": [
+          8,
+          14,
+          10
+        ],
+        "avg_min_abc": [
+          26.8,
+          19.4,
+          10.9
+        ],
+        "max_min_abc": [
+          94.1,
+          73.3,
+          40.4
+        ],
+        "after_abc": [
+          3,
+          5,
+          6
+        ],
+        "after_max_abc": [
+          3,
+          3,
+          5
+        ],
+        "total_calls": 53,
+        "total_after": 14
+      },
+      {
         "unit": "E35",
         "calls_abc": [
           16,
@@ -179,41 +214,6 @@
         ],
         "total_calls": 52,
         "total_after": 7
-      },
-      {
-        "unit": "R34",
-        "calls_abc": [
-          10,
-          20,
-          22
-        ],
-        "calls_max_abc": [
-          8,
-          14,
-          10
-        ],
-        "avg_min_abc": [
-          26.8,
-          19.4,
-          11.4
-        ],
-        "max_min_abc": [
-          94.1,
-          73.3,
-          40.4
-        ],
-        "after_abc": [
-          3,
-          5,
-          6
-        ],
-        "after_max_abc": [
-          3,
-          3,
-          5
-        ],
-        "total_calls": 52,
-        "total_after": 14
       },
       {
         "unit": "E34",
@@ -429,12 +429,12 @@
     "meta": {
       "range": "Jan 05 - Jan 11"
     },
-    "updated": "2026-01-11T13:38:11.206862Z"
+    "updated": "2026-01-11T14:08:16.698147Z"
   },
   "month": {
     "label": "Monthly",
     "period": "month",
-    "text": "Monthly runs 13 Dec 2025 - 11 Jan 2026\nR33: 257  |  avg 18.7 min  |  after 00:00: 32\nR34: 247  |  avg 16.7 min  |  after 00:00: 49\nE35: 206  |  avg 18.2 min  |  after 00:00: 40\nS36: 200  |  avg 17.6 min  |  after 00:00: 21\nE36: 189  |  avg 19.7 min  |  after 00:00: 23\nE34: 168  |  avg 14.9 min  |  after 00:00: 20\nT33: 142  |  avg 18.4 min  |  after 00:00: 8\nLR36: 63  |  avg 26.3 min  |  after 00:00: 5\nD35: 32  |  avg 21.8 min  |  after 00:00: 1\nE33: 1  |  avg 0.7 min  |  after 00:00: 0",
+    "text": "Monthly runs 13 Dec 2025 - 11 Jan 2026\nR33: 257  |  avg 18.7 min  |  after 00:00: 32\nR34: 248  |  avg 16.7 min  |  after 00:00: 49\nE35: 206  |  avg 18.2 min  |  after 00:00: 40\nS36: 200  |  avg 17.6 min  |  after 00:00: 21\nE36: 189  |  avg 19.7 min  |  after 00:00: 23\nE34: 168  |  avg 14.9 min  |  after 00:00: 20\nT33: 142  |  avg 18.4 min  |  after 00:00: 8\nLR36: 63  |  avg 26.3 min  |  after 00:00: 5\nD35: 32  |  avg 21.8 min  |  after 00:00: 1\nE33: 1  |  avg 0.7 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
@@ -476,7 +476,7 @@
         "calls_abc": [
           73,
           95,
-          79
+          80
         ],
         "calls_max_abc": [
           14,
@@ -486,7 +486,7 @@
         "avg_min_abc": [
           20.2,
           15.7,
-          14.8
+          14.6
         ],
         "max_min_abc": [
           94.1,
@@ -503,7 +503,7 @@
           4,
           5
         ],
-        "total_calls": 247,
+        "total_calls": 248,
         "total_after": 49
       },
       {
@@ -790,7 +790,7 @@
     "meta": {
       "range": "Dec 13 - Jan 11"
     },
-    "updated": "2026-01-11T13:38:11.218831Z"
+    "updated": "2026-01-11T14:08:16.710751Z"
   },
   "personnel": {
     "week": {
@@ -1075,9 +1075,9 @@
         {
           "person_id": "285",
           "name": "Cinko 3, Zac (FTOPM/PM)",
-          "total_calls": 12,
+          "total_calls": 13,
           "single_shift_max_calls": 10,
-          "avg_call_duration_mins": 7.1,
+          "avg_call_duration_mins": 6.5,
           "highest_call_duration_mins": 37.5,
           "total_calls_after_midnight": 5,
           "single_shift_max_after_midnight": 5,
@@ -1086,9 +1086,9 @@
         {
           "person_id": "266",
           "name": "Houghtaling 3, Kent (EO/PM/TRT)",
-          "total_calls": 12,
+          "total_calls": 13,
           "single_shift_max_calls": 11,
-          "avg_call_duration_mins": 17.7,
+          "avg_call_duration_mins": 16.4,
           "highest_call_duration_mins": 63.9,
           "total_calls_after_midnight": 0,
           "single_shift_max_after_midnight": 0,
@@ -1516,7 +1516,7 @@
       "meta": {
         "range": "Jan 05 - Jan 11"
       },
-      "updated": "2026-01-11T13:38:11.225812Z"
+      "updated": "2026-01-11T14:08:16.717235Z"
     },
     "month": {
       "label": "Month",
@@ -1591,9 +1591,9 @@
         {
           "person_id": "266",
           "name": "Houghtaling 3, Kent (EO/PM/TRT)",
-          "total_calls": 75,
+          "total_calls": 76,
           "single_shift_max_calls": 13,
-          "avg_call_duration_mins": 14.6,
+          "avg_call_duration_mins": 14.4,
           "highest_call_duration_mins": 63.9,
           "total_calls_after_midnight": 13,
           "single_shift_max_after_midnight": 4,
@@ -1745,9 +1745,9 @@
         {
           "person_id": "285",
           "name": "Cinko 3, Zac (FTOPM/PM)",
-          "total_calls": 64,
+          "total_calls": 65,
           "single_shift_max_calls": 10,
-          "avg_call_duration_mins": 13.6,
+          "avg_call_duration_mins": 13.4,
           "highest_call_duration_mins": 77.1,
           "total_calls_after_midnight": 12,
           "single_shift_max_after_midnight": 5,
@@ -2340,7 +2340,7 @@
       "meta": {
         "range": "Dec 13 - Jan 11"
       },
-      "updated": "2026-01-11T13:38:11.249877Z"
+      "updated": "2026-01-11T14:08:16.741506Z"
     }
   }
 }
