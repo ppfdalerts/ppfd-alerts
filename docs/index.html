@@ -739,19 +739,37 @@
     if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; } else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
   }
 
-  async function fetchOnce(){
+  var isFetching=false;
+  function setRefreshBusy(on){
     try{
-      var r=await fetch('data.json?t='+Date.now(), {cache:'no-cache'});
+      if(!el || !el.refresh) return;
+      el.refresh.disabled=!!on;
+      el.refresh.textContent=on ? 'Refreshing…' : 'Refresh now';
+    }catch(_){}
+  }
+
+  async function fetchOnce(){
+    if(isFetching) return;
+    isFetching=true;
+    setRefreshBusy(true);
+    try{
+      var r=await fetch('data.json?t='+Date.now(), {cache:'no-store'});
       if(!r.ok){ el.status.style.display='inline-block'; el.status.textContent='Fetch error: '+r.status+' '+r.statusText; return; }
       var j=await r.json(); if(!j || (!j.today && !j.week && !j.prior && !j.month)){ el.status.style.display='inline-block'; el.status.textContent='No data in payload'; return; }
       apply(j);
     }catch(e){ console.error('fetch error', e); el.status.style.display='inline-block'; el.status.textContent='Fetch error (network/parse)'; }
-    fetchRoster();
+    finally{
+      try{ fetchRoster(); }catch(_){}
+      isFetching=false;
+      setRefreshBusy(false);
+    }
   }
 
   var interval=null; function startAuto(){ stopAuto(); interval=setInterval(fetchOnce, 30000); } function stopAuto(){ if(interval) clearInterval(interval); interval=null; }
   el.auto.onchange=function(){ if(el.auto.checked) startAuto(); else stopAuto(); };
-  el.refresh.onclick=function(){ fetchOnce(); };
+  if(el.refresh){
+    el.refresh.onclick=function(e){ if(e && e.preventDefault) e.preventDefault(); fetchOnce(); };
+  }
 el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.winners.checked); };
   if(el.rosterNow){
     el.rosterNow.onchange=function(){
