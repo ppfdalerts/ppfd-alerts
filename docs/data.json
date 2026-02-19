@@ -2,21 +2,21 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 18 Feb 2026\nT33: 11  |  avg 21.8 min  |  after 00:00: 0\nR34: 10  |  avg 21.3 min  |  after 00:00: 1\nS36: 7  |  avg 22.0 min  |  after 00:00: 0\nE34: 6  |  avg 21.1 min  |  after 00:00: 0\nE35: 5  |  avg 23.6 min  |  after 00:00: 0\nE36: 5  |  avg 9.0 min  |  after 00:00: 0\nR33: 4  |  avg 24.0 min  |  after 00:00: 0\nLR36: 3  |  avg 26.4 min  |  after 00:00: 0\nD35: 1  |  avg 20.9 min  |  after 00:00: 0",
+    "text": "Daily runs 18 Feb 2026\nR34: 11  |  avg 19.4 min  |  after 00:00: 2\nT33: 11  |  avg 21.8 min  |  after 00:00: 0\nS36: 7  |  avg 22.0 min  |  after 00:00: 0\nE34: 6  |  avg 21.1 min  |  after 00:00: 0\nE35: 5  |  avg 23.6 min  |  after 00:00: 0\nE36: 5  |  avg 9.0 min  |  after 00:00: 0\nR33: 4  |  avg 24.0 min  |  after 00:00: 0\nLR36: 3  |  avg 26.4 min  |  after 00:00: 0\nD35: 1  |  avg 20.9 min  |  after 00:00: 0",
     "rows": [
+      {
+        "unit": "R34",
+        "calls": 11,
+        "avg_min": 19.4,
+        "after_0000": 2,
+        "max_min": 70.6
+      },
       {
         "unit": "T33",
         "calls": 11,
         "avg_min": 21.8,
         "after_0000": 0,
         "max_min": 98.8
-      },
-      {
-        "unit": "R34",
-        "calls": 10,
-        "avg_min": 21.3,
-        "after_0000": 1,
-        "max_min": 70.6
       },
       {
         "unit": "S36",
@@ -71,7 +71,7 @@
     "meta": {
       "shift_date": "B-Shift 02/18/26"
     },
-    "updated": "2026-02-19T05:25:27.992327Z"
+    "updated": "2026-02-19T05:30:29.876331Z"
   },
   "prior": {
     "label": "Daily",
@@ -138,18 +138,18 @@
     "meta": {
       "shift_date": "A-Shift 02/17/26"
     },
-    "updated": "2026-02-19T05:25:27.992327Z"
+    "updated": "2026-02-19T05:30:29.876331Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 12 Feb 2026 - 18 Feb 2026\nR34: 90  |  avg 18.9 min  |  after 00:00: 17\nR33: 53  |  avg 23.0 min  |  after 00:00: 8\nE35: 50  |  avg 19.9 min  |  after 00:00: 6\nT33: 49  |  avg 14.1 min  |  after 00:00: 2\nE36: 45  |  avg 14.3 min  |  after 00:00: 5\nE34: 44  |  avg 22.3 min  |  after 00:00: 4\nS36: 42  |  avg 13.4 min  |  after 00:00: 4\nLR36: 17  |  avg 21.2 min  |  after 00:00: 1\nD35: 16  |  avg 16.6 min  |  after 00:00: 1",
+    "text": "Weekly runs 12 Feb 2026 - 18 Feb 2026\nR34: 91  |  avg 18.7 min  |  after 00:00: 18\nR33: 53  |  avg 23.0 min  |  after 00:00: 8\nE35: 50  |  avg 19.9 min  |  after 00:00: 6\nT33: 49  |  avg 14.1 min  |  after 00:00: 2\nE36: 45  |  avg 14.3 min  |  after 00:00: 5\nE34: 44  |  avg 22.3 min  |  after 00:00: 4\nS36: 42  |  avg 13.4 min  |  after 00:00: 4\nLR36: 17  |  avg 21.2 min  |  after 00:00: 1\nD35: 16  |  avg 16.6 min  |  after 00:00: 1",
     "rows": [
       {
         "unit": "R34",
         "calls_abc": [
           28,
-          38,
+          39,
           24
         ],
         "calls_max_abc": [
@@ -159,7 +159,7 @@
         ],
         "avg_min_abc": [
           21.3,
-          14.8,
+          14.5,
           22.5
         ],
         "max_min_abc": [
@@ -169,7 +169,7 @@
         ],
         "after_abc": [
           7,
-          6,
+          7,
           4
         ],
         "after_max_abc": [
@@ -177,8 +177,8 @@
           5,
           2
         ],
-        "total_calls": 90,
-        "total_after": 17
+        "total_calls": 91,
+        "total_after": 18
       },
       {
         "unit": "R33",
@@ -464,18 +464,18 @@
     "meta": {
       "range": "Feb 12 - Feb 18"
     },
-    "updated": "2026-02-19T05:25:27.999310Z"
+    "updated": "2026-02-19T05:30:29.883314Z"
   },
   "month": {
     "label": "Monthly",
     "period": "month",
-    "text": "Monthly runs 20 Jan 2026 - 18 Feb 2026\nR34: 290  |  avg 18.8 min  |  after 00:00: 37\nR33: 275  |  avg 19.7 min  |  after 00:00: 46\nE35: 254  |  avg 17.2 min  |  after 00:00: 36\nS36: 234  |  avg 17.5 min  |  after 00:00: 35\nT33: 230  |  avg 16.1 min  |  after 00:00: 24\nE36: 221  |  avg 17.8 min  |  after 00:00: 37\nE34: 169  |  avg 20.3 min  |  after 00:00: 17\nLR36: 71  |  avg 21.7 min  |  after 00:00: 5\nD35: 68  |  avg 19.8 min  |  after 00:00: 14",
+    "text": "Monthly runs 20 Jan 2026 - 18 Feb 2026\nR34: 291  |  avg 18.7 min  |  after 00:00: 38\nR33: 275  |  avg 19.7 min  |  after 00:00: 46\nE35: 254  |  avg 17.2 min  |  after 00:00: 36\nS36: 234  |  avg 17.5 min  |  after 00:00: 35\nT33: 230  |  avg 16.1 min  |  after 00:00: 24\nE36: 221  |  avg 17.8 min  |  after 00:00: 37\nE34: 169  |  avg 20.3 min  |  after 00:00: 17\nLR36: 71  |  avg 21.7 min  |  after 00:00: 5\nD35: 68  |  avg 19.8 min  |  after 00:00: 14",
     "rows": [
       {
         "unit": "R34",
         "calls_abc": [
           99,
-          91,
+          92,
           100
         ],
         "calls_max_abc": [
@@ -485,7 +485,7 @@
         ],
         "avg_min_abc": [
           21.2,
-          16.1,
+          16.0,
           18.9
         ],
         "max_min_abc": [
@@ -495,7 +495,7 @@
         ],
         "after_abc": [
           14,
-          11,
+          12,
           12
         ],
         "after_max_abc": [
@@ -503,8 +503,8 @@
           5,
           3
         ],
-        "total_calls": 290,
-        "total_after": 37
+        "total_calls": 291,
+        "total_after": 38
       },
       {
         "unit": "R33",
@@ -790,7 +790,7 @@
     "meta": {
       "range": "Jan 20 - Feb 18"
     },
-    "updated": "2026-02-19T05:25:28.012276Z"
+    "updated": "2026-02-19T05:30:29.897277Z"
   },
   "personnel": {
     "week": {
@@ -963,6 +963,17 @@
           "total_call_hours": 9.6
         },
         {
+          "person_id": "191",
+          "name": "Killian 12, Timothy (AL/EO/TO/TRT)",
+          "total_calls": 18,
+          "single_shift_max_calls": 11,
+          "avg_call_duration_mins": 19.6,
+          "highest_call_duration_mins": 69.2,
+          "total_calls_after_midnight": 2,
+          "single_shift_max_after_midnight": 2,
+          "total_call_hours": 5.9
+        },
+        {
           "person_id": "223",
           "name": "Nestor Lt-4, Jared (ALR36/PM/SWAT/TRT)",
           "total_calls": 18,
@@ -1005,17 +1016,6 @@
           "total_calls_after_midnight": 2,
           "single_shift_max_after_midnight": 2,
           "total_call_hours": 5.3
-        },
-        {
-          "person_id": "191",
-          "name": "Killian 12, Timothy (AL/EO/TO/TRT)",
-          "total_calls": 17,
-          "single_shift_max_calls": 10,
-          "avg_call_duration_mins": 20.8,
-          "highest_call_duration_mins": 69.2,
-          "total_calls_after_midnight": 1,
-          "single_shift_max_after_midnight": 1,
-          "total_call_hours": 5.9
         },
         {
           "person_id": "277",
@@ -1128,6 +1128,17 @@
           "total_call_hours": 4.2
         },
         {
+          "person_id": "270",
+          "name": "Pavao 3, Ryan (PM/SWAT)",
+          "total_calls": 14,
+          "single_shift_max_calls": 11,
+          "avg_call_duration_mins": 20.8,
+          "highest_call_duration_mins": 81.1,
+          "total_calls_after_midnight": 2,
+          "single_shift_max_after_midnight": 2,
+          "total_call_hours": 4.9
+        },
+        {
           "person_id": "183",
           "name": "Weaver Lt-7, William (ADC/TRT)",
           "total_calls": 14,
@@ -1159,17 +1170,6 @@
           "total_calls_after_midnight": 4,
           "single_shift_max_after_midnight": 3,
           "total_call_hours": 4.0
-        },
-        {
-          "person_id": "270",
-          "name": "Pavao 3, Ryan (PM/SWAT)",
-          "total_calls": 13,
-          "single_shift_max_calls": 10,
-          "avg_call_duration_mins": 22.4,
-          "highest_call_duration_mins": 81.1,
-          "total_calls_after_midnight": 1,
-          "single_shift_max_after_midnight": 1,
-          "total_call_hours": 4.9
         },
         {
           "person_id": "235",
@@ -1571,7 +1571,7 @@
       "meta": {
         "range": "Feb 12 - Feb 18"
       },
-      "updated": "2026-02-19T05:25:28.020255Z"
+      "updated": "2026-02-19T05:30:29.905256Z"
     },
     "month": {
       "label": "Month",
@@ -1897,6 +1897,17 @@
           "total_call_hours": 20.8
         },
         {
+          "person_id": "191",
+          "name": "Killian 12, Timothy (AL/EO/TO/TRT)",
+          "total_calls": 62,
+          "single_shift_max_calls": 13,
+          "avg_call_duration_mins": 20.1,
+          "highest_call_duration_mins": 77.3,
+          "total_calls_after_midnight": 4,
+          "single_shift_max_after_midnight": 2,
+          "total_call_hours": 20.8
+        },
+        {
           "person_id": "159",
           "name": "Pickett 12, Jason (AL/ALR36/EO/FTOPM/HM/PM/TO)",
           "total_calls": 62,
@@ -1917,17 +1928,6 @@
           "total_calls_after_midnight": 5,
           "single_shift_max_after_midnight": 2,
           "total_call_hours": 16.7
-        },
-        {
-          "person_id": "191",
-          "name": "Killian 12, Timothy (AL/EO/TO/TRT)",
-          "total_calls": 61,
-          "single_shift_max_calls": 13,
-          "avg_call_duration_mins": 20.5,
-          "highest_call_duration_mins": 77.3,
-          "total_calls_after_midnight": 3,
-          "single_shift_max_after_midnight": 2,
-          "total_call_hours": 20.8
         },
         {
           "person_id": "240",
@@ -2018,6 +2018,17 @@
           "total_call_hours": 17.7
         },
         {
+          "person_id": "270",
+          "name": "Pavao 3, Ryan (PM/SWAT)",
+          "total_calls": 55,
+          "single_shift_max_calls": 11,
+          "avg_call_duration_mins": 18.6,
+          "highest_call_duration_mins": 82.3,
+          "total_calls_after_midnight": 4,
+          "single_shift_max_after_midnight": 2,
+          "total_call_hours": 17.0
+        },
+        {
           "person_id": "103",
           "name": "Riley Lt-7, Christopher (ADC/HM)",
           "total_calls": 55,
@@ -2038,17 +2049,6 @@
           "total_calls_after_midnight": 7,
           "single_shift_max_after_midnight": 3,
           "total_call_hours": 16.3
-        },
-        {
-          "person_id": "270",
-          "name": "Pavao 3, Ryan (PM/SWAT)",
-          "total_calls": 54,
-          "single_shift_max_calls": 11,
-          "avg_call_duration_mins": 18.9,
-          "highest_call_duration_mins": 82.3,
-          "total_calls_after_midnight": 3,
-          "single_shift_max_after_midnight": 1,
-          "total_call_hours": 17.0
         },
         {
           "person_id": "272",
@@ -2140,7 +2140,7 @@
         },
         {
           "person_id": "200",
-          "name": "Bayes Lt-6, Wesley (ADC/LR/PM/TRT)",
+          "name": "Bayes Lt-6, Wesley (LR/PM/TRT)",
           "total_calls": 47,
           "single_shift_max_calls": 11,
           "avg_call_duration_mins": 18.9,
@@ -2406,7 +2406,7 @@
       "meta": {
         "range": "Jan 20 - Feb 18"
       },
-      "updated": "2026-02-19T05:25:28.045188Z"
+      "updated": "2026-02-19T05:30:29.930515Z"
     }
   }
 }
