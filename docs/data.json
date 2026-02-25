@@ -2,8 +2,15 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 25 Feb 2026\nE34: 2  |  avg 4.3 min  |  after 00:00: 0\nR33: 2  |  avg 12.8 min  |  after 00:00: 0\nR34: 2  |  avg 3.7 min  |  after 00:00: 0\nS36: 2  |  avg 11.2 min  |  after 00:00: 0\nE35: 1  |  avg 81.5 min  |  after 00:00: 0\nE36: 1  |  avg 0.0 min  |  after 00:00: 0",
+    "text": "Daily runs 25 Feb 2026\nS36: 3  |  avg 7.5 min  |  after 00:00: 0\nE34: 2  |  avg 4.3 min  |  after 00:00: 0\nR33: 2  |  avg 12.8 min  |  after 00:00: 0\nR34: 2  |  avg 3.7 min  |  after 00:00: 0\nE35: 1  |  avg 81.5 min  |  after 00:00: 0\nE36: 1  |  avg 0.0 min  |  after 00:00: 0",
     "rows": [
+      {
+        "unit": "S36",
+        "calls": 3,
+        "avg_min": 7.5,
+        "after_0000": 0,
+        "max_min": 20.9
+      },
       {
         "unit": "E34",
         "calls": 2,
@@ -26,13 +33,6 @@
         "max_min": 7.4
       },
       {
-        "unit": "S36",
-        "calls": 2,
-        "avg_min": 11.2,
-        "after_0000": 0,
-        "max_min": 20.9
-      },
-      {
         "unit": "E35",
         "calls": 1,
         "avg_min": 81.5,
@@ -50,7 +50,7 @@
     "meta": {
       "shift_date": "C-Shift 02/25/26"
     },
-    "updated": "2026-02-25T15:52:30.446634Z"
+    "updated": "2026-02-25T15:53:02.299277Z"
   },
   "prior": {
     "label": "Daily",
@@ -124,12 +124,12 @@
     "meta": {
       "shift_date": "B-Shift 02/24/26"
     },
-    "updated": "2026-02-25T15:52:30.447637Z"
+    "updated": "2026-02-25T15:53:02.299277Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 19 Feb 2026 - 25 Feb 2026\nR33: 61  |  avg 15.2 min  |  after 00:00: 9\nR34: 49  |  avg 17.7 min  |  after 00:00: 9\nE35: 42  |  avg 25.3 min  |  after 00:00: 5\nS36: 42  |  avg 17.5 min  |  after 00:00: 8\nT33: 38  |  avg 16.0 min  |  after 00:00: 3\nE36: 37  |  avg 22.6 min  |  after 00:00: 5\nLR36: 20  |  avg 15.8 min  |  after 00:00: 2\nE34: 19  |  avg 22.3 min  |  after 00:00: 1\nD35: 8  |  avg 26.8 min  |  after 00:00: 1",
+    "text": "Weekly runs 19 Feb 2026 - 25 Feb 2026\nR33: 61  |  avg 15.2 min  |  after 00:00: 9\nR34: 49  |  avg 17.7 min  |  after 00:00: 9\nS36: 43  |  avg 17.1 min  |  after 00:00: 8\nE35: 42  |  avg 25.3 min  |  after 00:00: 5\nT33: 38  |  avg 16.0 min  |  after 00:00: 3\nE36: 37  |  avg 22.6 min  |  after 00:00: 5\nLR36: 20  |  avg 15.8 min  |  after 00:00: 2\nE34: 19  |  avg 22.3 min  |  after 00:00: 1\nD35: 8  |  avg 26.8 min  |  after 00:00: 1",
     "rows": [
       {
         "unit": "R33",
@@ -202,6 +202,41 @@
         "total_after": 9
       },
       {
+        "unit": "S36",
+        "calls_abc": [
+          15,
+          11,
+          17
+        ],
+        "calls_max_abc": [
+          11,
+          6,
+          8
+        ],
+        "avg_min_abc": [
+          20.0,
+          18.5,
+          13.5
+        ],
+        "max_min_abc": [
+          144.1,
+          67.3,
+          74.0
+        ],
+        "after_abc": [
+          3,
+          2,
+          3
+        ],
+        "after_max_abc": [
+          2,
+          2,
+          2
+        ],
+        "total_calls": 43,
+        "total_after": 8
+      },
+      {
         "unit": "E35",
         "calls_abc": [
           16,
@@ -235,41 +270,6 @@
         ],
         "total_calls": 42,
         "total_after": 5
-      },
-      {
-        "unit": "S36",
-        "calls_abc": [
-          15,
-          11,
-          16
-        ],
-        "calls_max_abc": [
-          11,
-          6,
-          8
-        ],
-        "avg_min_abc": [
-          20.0,
-          18.5,
-          14.4
-        ],
-        "max_min_abc": [
-          144.1,
-          67.3,
-          74.0
-        ],
-        "after_abc": [
-          3,
-          2,
-          3
-        ],
-        "after_max_abc": [
-          2,
-          2,
-          2
-        ],
-        "total_calls": 42,
-        "total_after": 8
       },
       {
         "unit": "T33",
@@ -450,12 +450,12 @@
     "meta": {
       "range": "Feb 19 - Feb 25"
     },
-    "updated": "2026-02-25T15:52:30.454855Z"
+    "updated": "2026-02-25T15:53:02.306261Z"
   },
   "month": {
     "label": "Monthly",
     "period": "month",
-    "text": "Monthly runs 27 Jan 2026 - 25 Feb 2026\nR34: 282  |  avg 19.3 min  |  after 00:00: 43\nR33: 274  |  avg 19.8 min  |  after 00:00: 45\nE35: 234  |  avg 19.1 min  |  after 00:00: 33\nS36: 229  |  avg 17.1 min  |  after 00:00: 37\nT33: 228  |  avg 15.7 min  |  after 00:00: 21\nE36: 213  |  avg 16.1 min  |  after 00:00: 33\nE34: 157  |  avg 20.8 min  |  after 00:00: 16\nLR36: 76  |  avg 18.7 min  |  after 00:00: 6\nD35: 65  |  avg 19.9 min  |  after 00:00: 13",
+    "text": "Monthly runs 27 Jan 2026 - 25 Feb 2026\nR34: 282  |  avg 19.3 min  |  after 00:00: 43\nR33: 274  |  avg 19.8 min  |  after 00:00: 45\nE35: 234  |  avg 19.1 min  |  after 00:00: 33\nS36: 230  |  avg 17.1 min  |  after 00:00: 37\nT33: 228  |  avg 15.7 min  |  after 00:00: 21\nE36: 213  |  avg 16.1 min  |  after 00:00: 33\nE34: 157  |  avg 20.8 min  |  after 00:00: 16\nLR36: 76  |  avg 18.7 min  |  after 00:00: 6\nD35: 65  |  avg 19.9 min  |  after 00:00: 13",
     "rows": [
       {
         "unit": "R34",
@@ -567,7 +567,7 @@
         "calls_abc": [
           73,
           75,
-          81
+          82
         ],
         "calls_max_abc": [
           12,
@@ -577,7 +577,7 @@
         "avg_min_abc": [
           18.4,
           19.8,
-          13.5
+          13.3
         ],
         "max_min_abc": [
           144.1,
@@ -594,7 +594,7 @@
           2,
           3
         ],
-        "total_calls": 229,
+        "total_calls": 230,
         "total_after": 37
       },
       {
@@ -776,7 +776,7 @@
     "meta": {
       "range": "Jan 27 - Feb 25"
     },
-    "updated": "2026-02-25T15:52:30.470166Z"
+    "updated": "2026-02-25T15:53:02.320224Z"
   },
   "personnel": {
     "week": {
@@ -1513,7 +1513,7 @@
       "meta": {
         "range": "Feb 19 - Feb 25"
       },
-      "updated": "2026-02-25T15:52:30.481371Z"
+      "updated": "2026-02-25T15:53:02.328259Z"
     },
     "month": {
       "label": "Month",
@@ -2348,7 +2348,7 @@
       "meta": {
         "range": "Jan 27 - Feb 25"
       },
-      "updated": "2026-02-25T15:52:30.506609Z"
+      "updated": "2026-02-25T15:53:02.357653Z"
     }
   }
 }
