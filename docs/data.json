@@ -2,12 +2,83 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 05 Mar 2026\nNo runs recorded.",
-    "rows": [],
+    "text": "Daily runs 05 Mar 2026\nR33: 10  |  avg 11.5 min  |  after 00:00: 0\nT33: 8  |  avg 13.3 min  |  after 00:00: 0\nR34: 5  |  avg 13.9 min  |  after 00:00: 0\nE36: 4  |  avg 31.1 min  |  after 00:00: 0\nS36: 4  |  avg 16.2 min  |  after 00:00: 0\nE35: 3  |  avg 20.2 min  |  after 00:00: 0\nLR36: 3  |  avg 4.5 min  |  after 00:00: 0\nD35: 2  |  avg 6.8 min  |  after 00:00: 0\nE34: 1  |  avg 31.0 min  |  after 00:00: 0\nR35: 1  |  avg 78.8 min  |  after 00:00: 0",
+    "rows": [
+      {
+        "unit": "R33",
+        "calls": 10,
+        "avg_min": 11.5,
+        "after_0000": 0,
+        "max_min": 31.0
+      },
+      {
+        "unit": "T33",
+        "calls": 8,
+        "avg_min": 13.3,
+        "after_0000": 0,
+        "max_min": 49.1
+      },
+      {
+        "unit": "R34",
+        "calls": 5,
+        "avg_min": 13.9,
+        "after_0000": 0,
+        "max_min": 38.3
+      },
+      {
+        "unit": "E36",
+        "calls": 4,
+        "avg_min": 31.1,
+        "after_0000": 0,
+        "max_min": 100.9
+      },
+      {
+        "unit": "S36",
+        "calls": 4,
+        "avg_min": 16.2,
+        "after_0000": 0,
+        "max_min": 28.2
+      },
+      {
+        "unit": "E35",
+        "calls": 3,
+        "avg_min": 20.2,
+        "after_0000": 0,
+        "max_min": 35.0
+      },
+      {
+        "unit": "LR36",
+        "calls": 3,
+        "avg_min": 4.5,
+        "after_0000": 0,
+        "max_min": 7.4
+      },
+      {
+        "unit": "D35",
+        "calls": 2,
+        "avg_min": 6.8,
+        "after_0000": 0,
+        "max_min": 9.5
+      },
+      {
+        "unit": "E34",
+        "calls": 1,
+        "avg_min": 31.0,
+        "after_0000": 0,
+        "max_min": 31.0
+      },
+      {
+        "unit": "R35",
+        "calls": 1,
+        "avg_min": 78.8,
+        "after_0000": 0,
+        "max_min": 78.8
+      }
+    ],
     "meta": {
       "shift_date": "B-Shift 03/05/26"
     },
-    "updated": "2026-03-05T12:35:04.453898Z"
+    "updated": "2026-03-06T00:35:07.643443Z"
   },
   "prior": {
     "label": "Daily",
@@ -67,18 +138,18 @@
     "meta": {
       "shift_date": "A-Shift 03/04/26"
     },
-    "updated": "2026-03-05T12:35:04.453898Z"
+    "updated": "2026-03-06T00:35:07.651420Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 27 Feb 2026 - 05 Mar 2026\nR33: 66  |  avg 14.7 min  |  after 00:00: 12\nR34: 61  |  avg 19.2 min  |  after 00:00: 10\nE35: 50  |  avg 17.2 min  |  after 00:00: 8\nS36: 45  |  avg 19.3 min  |  after 00:00: 7\nE36: 40  |  avg 19.5 min  |  after 00:00: 6\nT33: 36  |  avg 17.0 min  |  after 00:00: 4\nE34: 34  |  avg 19.5 min  |  after 00:00: 4\nLR36: 16  |  avg 16.7 min  |  after 00:00: 2\nD35: 13  |  avg 20.2 min  |  after 00:00: 3",
+    "text": "Weekly runs 27 Feb 2026 - 05 Mar 2026\nR33: 76  |  avg 14.3 min  |  after 00:00: 12\nR34: 66  |  avg 18.8 min  |  after 00:00: 10\nE35: 53  |  avg 17.4 min  |  after 00:00: 8\nS36: 49  |  avg 19.1 min  |  after 00:00: 7\nE36: 44  |  avg 20.5 min  |  after 00:00: 6\nT33: 44  |  avg 16.3 min  |  after 00:00: 4\nE34: 35  |  avg 19.9 min  |  after 00:00: 4\nLR36: 19  |  avg 14.8 min  |  after 00:00: 2\nD35: 15  |  avg 18.4 min  |  after 00:00: 3\nR35: 1  |  avg 78.8 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
         "calls_abc": [
           19,
-          22,
+          32,
           25
         ],
         "calls_max_abc": [
@@ -88,7 +159,7 @@
         ],
         "avg_min_abc": [
           10.2,
-          20.4,
+          17.6,
           13.2
         ],
         "max_min_abc": [
@@ -106,14 +177,14 @@
           3,
           4
         ],
-        "total_calls": 66,
+        "total_calls": 76,
         "total_after": 12
       },
       {
         "unit": "R34",
         "calls_abc": [
           18,
-          21,
+          26,
           22
         ],
         "calls_max_abc": [
@@ -123,7 +194,7 @@
         ],
         "avg_min_abc": [
           20.9,
-          17.6,
+          16.9,
           19.4
         ],
         "max_min_abc": [
@@ -141,14 +212,14 @@
           2,
           4
         ],
-        "total_calls": 61,
+        "total_calls": 66,
         "total_after": 10
       },
       {
         "unit": "E35",
         "calls_abc": [
           13,
-          26,
+          29,
           11
         ],
         "calls_max_abc": [
@@ -158,7 +229,7 @@
         ],
         "avg_min_abc": [
           20.7,
-          13.3,
+          14.0,
           22.3
         ],
         "max_min_abc": [
@@ -176,14 +247,14 @@
           2,
           2
         ],
-        "total_calls": 50,
+        "total_calls": 53,
         "total_after": 8
       },
       {
         "unit": "S36",
         "calls_abc": [
           12,
-          16,
+          20,
           17
         ],
         "calls_max_abc": [
@@ -193,7 +264,7 @@
         ],
         "avg_min_abc": [
           29.1,
-          15.5,
+          15.6,
           16.0
         ],
         "max_min_abc": [
@@ -211,14 +282,14 @@
           2,
           2
         ],
-        "total_calls": 45,
+        "total_calls": 49,
         "total_after": 7
       },
       {
         "unit": "E36",
         "calls_abc": [
           14,
-          12,
+          16,
           14
         ],
         "calls_max_abc": [
@@ -228,12 +299,12 @@
         ],
         "avg_min_abc": [
           16.2,
-          18.2,
+          21.4,
           23.8
         ],
         "max_min_abc": [
           43.7,
-          100.3,
+          100.9,
           92.2
         ],
         "after_abc": [
@@ -246,14 +317,14 @@
           1,
           3
         ],
-        "total_calls": 40,
+        "total_calls": 44,
         "total_after": 6
       },
       {
         "unit": "T33",
         "calls_abc": [
           6,
-          19,
+          27,
           11
         ],
         "calls_max_abc": [
@@ -263,7 +334,7 @@
         ],
         "avg_min_abc": [
           14.3,
-          16.0,
+          15.2,
           20.1
         ],
         "max_min_abc": [
@@ -281,14 +352,14 @@
           1,
           2
         ],
-        "total_calls": 36,
+        "total_calls": 44,
         "total_after": 4
       },
       {
         "unit": "E34",
         "calls_abc": [
           12,
-          12,
+          13,
           10
         ],
         "calls_max_abc": [
@@ -298,7 +369,7 @@
         ],
         "avg_min_abc": [
           22.4,
-          11.5,
+          13.0,
           25.8
         ],
         "max_min_abc": [
@@ -316,14 +387,14 @@
           1,
           1
         ],
-        "total_calls": 34,
+        "total_calls": 35,
         "total_after": 4
       },
       {
         "unit": "LR36",
         "calls_abc": [
           3,
-          8,
+          11,
           5
         ],
         "calls_max_abc": [
@@ -333,7 +404,7 @@
         ],
         "avg_min_abc": [
           18.0,
-          9.2,
+          7.9,
           28.1
         ],
         "max_min_abc": [
@@ -351,14 +422,14 @@
           1,
           1
         ],
-        "total_calls": 16,
+        "total_calls": 19,
         "total_after": 2
       },
       {
         "unit": "D35",
         "calls_abc": [
           4,
-          6,
+          8,
           3
         ],
         "calls_max_abc": [
@@ -368,7 +439,7 @@
         ],
         "avg_min_abc": [
           4.2,
-          13.2,
+          11.6,
           55.4
         ],
         "max_min_abc": [
@@ -386,25 +457,60 @@
           2,
           1
         ],
-        "total_calls": 13,
+        "total_calls": 15,
         "total_after": 3
+      },
+      {
+        "unit": "R35",
+        "calls_abc": [
+          0,
+          1,
+          0
+        ],
+        "calls_max_abc": [
+          0,
+          1,
+          0
+        ],
+        "avg_min_abc": [
+          0.0,
+          78.8,
+          0.0
+        ],
+        "max_min_abc": [
+          0.0,
+          78.8,
+          0.0
+        ],
+        "after_abc": [
+          0,
+          0,
+          0
+        ],
+        "after_max_abc": [
+          0,
+          0,
+          0
+        ],
+        "total_calls": 1,
+        "total_after": 0
       }
     ],
     "meta": {
       "range": "Feb 27 - Mar 05"
     },
-    "updated": "2026-03-05T12:35:04.495984Z"
+    "updated": "2026-03-06T00:35:07.695406Z"
   },
   "month": {
     "label": "Monthly",
     "period": "month",
-    "text": "Monthly runs 04 Feb 2026 - 05 Mar 2026\nR34: 290  |  avg 19.4 min  |  after 00:00: 46\nR33: 275  |  avg 17.4 min  |  after 00:00: 42\nE35: 239  |  avg 18.5 min  |  after 00:00: 34\nS36: 213  |  avg 18.0 min  |  after 00:00: 34\nT33: 202  |  avg 15.8 min  |  after 00:00: 15\nE36: 198  |  avg 18.2 min  |  after 00:00: 29\nE34: 163  |  avg 21.5 min  |  after 00:00: 13\nLR36: 78  |  avg 18.6 min  |  after 00:00: 7\nD35: 64  |  avg 20.2 min  |  after 00:00: 12",
+    "text": "Monthly runs 04 Feb 2026 - 05 Mar 2026\nR34: 295  |  avg 19.3 min  |  after 00:00: 46\nR33: 285  |  avg 17.2 min  |  after 00:00: 42\nE35: 242  |  avg 18.6 min  |  after 00:00: 34\nS36: 217  |  avg 18.0 min  |  after 00:00: 34\nT33: 210  |  avg 15.7 min  |  after 00:00: 15\nE36: 202  |  avg 18.5 min  |  after 00:00: 29\nE34: 164  |  avg 21.6 min  |  after 00:00: 13\nLR36: 81  |  avg 18.1 min  |  after 00:00: 7\nD35: 66  |  avg 19.8 min  |  after 00:00: 12\nR35: 1  |  avg 78.8 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R34",
         "calls_abc": [
           95,
-          92,
+          97,
           103
         ],
         "calls_max_abc": [
@@ -414,7 +520,7 @@
         ],
         "avg_min_abc": [
           22.7,
-          15.9,
+          15.8,
           19.4
         ],
         "max_min_abc": [
@@ -432,14 +538,14 @@
           5,
           5
         ],
-        "total_calls": 290,
+        "total_calls": 295,
         "total_after": 46
       },
       {
         "unit": "R33",
         "calls_abc": [
           92,
-          72,
+          82,
           111
         ],
         "calls_max_abc": [
@@ -449,7 +555,7 @@
         ],
         "avg_min_abc": [
           16.4,
-          19.7,
+          18.7,
           16.7
         ],
         "max_min_abc": [
@@ -467,14 +573,14 @@
           3,
           4
         ],
-        "total_calls": 275,
+        "total_calls": 285,
         "total_after": 42
       },
       {
         "unit": "E35",
         "calls_abc": [
           71,
-          82,
+          85,
           86
         ],
         "calls_max_abc": [
@@ -502,14 +608,14 @@
           4,
           2
         ],
-        "total_calls": 239,
+        "total_calls": 242,
         "total_after": 34
       },
       {
         "unit": "S36",
         "calls_abc": [
           62,
-          60,
+          64,
           91
         ],
         "calls_max_abc": [
@@ -519,7 +625,7 @@
         ],
         "avg_min_abc": [
           22.8,
-          20.3,
+          20.0,
           13.3
         ],
         "max_min_abc": [
@@ -537,14 +643,14 @@
           2,
           2
         ],
-        "total_calls": 213,
+        "total_calls": 217,
         "total_after": 34
       },
       {
         "unit": "T33",
         "calls_abc": [
           55,
-          61,
+          69,
           86
         ],
         "calls_max_abc": [
@@ -554,7 +660,7 @@
         ],
         "avg_min_abc": [
           19.3,
-          15.4,
+          15.1,
           13.8
         ],
         "max_min_abc": [
@@ -572,14 +678,14 @@
           2,
           2
         ],
-        "total_calls": 202,
+        "total_calls": 210,
         "total_after": 15
       },
       {
         "unit": "E36",
         "calls_abc": [
           60,
-          60,
+          64,
           78
         ],
         "calls_max_abc": [
@@ -589,7 +695,7 @@
         ],
         "avg_min_abc": [
           20.5,
-          22.1,
+          22.6,
           13.5
         ],
         "max_min_abc": [
@@ -607,14 +713,14 @@
           3,
           3
         ],
-        "total_calls": 198,
+        "total_calls": 202,
         "total_after": 29
       },
       {
         "unit": "E34",
         "calls_abc": [
           56,
-          41,
+          42,
           66
         ],
         "calls_max_abc": [
@@ -624,7 +730,7 @@
         ],
         "avg_min_abc": [
           26.5,
-          19.7,
+          20.0,
           18.5
         ],
         "max_min_abc": [
@@ -642,14 +748,14 @@
           3,
           2
         ],
-        "total_calls": 163,
+        "total_calls": 164,
         "total_after": 13
       },
       {
         "unit": "LR36",
         "calls_abc": [
           16,
-          36,
+          39,
           26
         ],
         "calls_max_abc": [
@@ -659,7 +765,7 @@
         ],
         "avg_min_abc": [
           23.3,
-          18.7,
+          17.6,
           15.5
         ],
         "max_min_abc": [
@@ -677,14 +783,14 @@
           1,
           1
         ],
-        "total_calls": 78,
+        "total_calls": 81,
         "total_after": 7
       },
       {
         "unit": "D35",
         "calls_abc": [
           15,
-          25,
+          27,
           24
         ],
         "calls_max_abc": [
@@ -694,7 +800,7 @@
         ],
         "avg_min_abc": [
           16.2,
-          27.1,
+          25.6,
           15.6
         ],
         "max_min_abc": [
@@ -712,14 +818,49 @@
           2,
           1
         ],
-        "total_calls": 64,
+        "total_calls": 66,
         "total_after": 12
+      },
+      {
+        "unit": "R35",
+        "calls_abc": [
+          0,
+          1,
+          0
+        ],
+        "calls_max_abc": [
+          0,
+          1,
+          0
+        ],
+        "avg_min_abc": [
+          0.0,
+          78.8,
+          0.0
+        ],
+        "max_min_abc": [
+          0.0,
+          78.8,
+          0.0
+        ],
+        "after_abc": [
+          0,
+          0,
+          0
+        ],
+        "after_max_abc": [
+          0,
+          0,
+          0
+        ],
+        "total_calls": 1,
+        "total_after": 0
       }
     ],
     "meta": {
       "range": "Feb 04 - Mar 05"
     },
-    "updated": "2026-03-05T12:35:04.661126Z"
+    "updated": "2026-03-06T00:35:07.866737Z"
   },
   "personnel": {
     "week": {
@@ -729,7 +870,7 @@
       "meta": {
         "range": "Feb 27 - Mar 05"
       },
-      "updated": "2026-03-05T12:35:04.676583Z"
+      "updated": "2026-03-06T00:35:07.884869Z"
     },
     "month": {
       "label": "Month",
@@ -1564,7 +1705,7 @@
       "meta": {
         "range": "Feb 04 - Mar 05"
       },
-      "updated": "2026-03-05T12:35:04.862959Z"
+      "updated": "2026-03-06T00:35:08.072553Z"
     }
   }
 }
