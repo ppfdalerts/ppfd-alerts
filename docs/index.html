@@ -603,7 +603,7 @@
     });
   }
 
-  function renderWeekMonth(table, data){
+  function renderWeekMonth(table, data, periodKey){
     var tbody=table.querySelector('tbody');
     tbody.innerHTML='';
     var thCount=20;
@@ -627,6 +627,11 @@
     data.rows.forEach(function(r,idx){
       var tr=document.createElement('tr'); if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
       tr.dataset.unit = r.unit;
+      tr.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        showDetailPopup('units', periodKey || (data && data.period) || '', r.unit, r.unit, ev);
+      });
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
       (function(){
         var classes=['valA','valB','valC'];
@@ -870,6 +875,68 @@
     if(!el.rosterPop) return;
     el.rosterPop.style.display='none';
     rosterState.open=null;
+  }
+
+  function getDetailRows(kind, period, key){
+    var d = appState && appState.payload && appState.payload.details;
+    if(!d || !d[kind] || !d[kind][period]) return null;
+    var entry = d[kind][period][key];
+    if(!entry) return null;
+    if(Array.isArray(entry)) return entry;
+    if(entry && Array.isArray(entry.shifts)) return entry.shifts;
+    return null;
+  }
+
+  function renderDetailPopup(kind, period, key, label){
+    if(!el.detailPop || !el.detailBody) return;
+    var rows = getDetailRows(kind, period, key) || [];
+    var title = (kind === 'personnel' ? 'Personnel Detail' : 'Unit Detail');
+    var subtitle = label || key;
+    if(el.detailTitle){ el.detailTitle.textContent = title + ' - ' + subtitle; }
+    if(el.detailMeta){ el.detailMeta.textContent = (period || '').toUpperCase() + ' | Recent Shift Activity'; }
+    if(!rows.length){
+      el.detailBody.innerHTML = '<div class=\"roster-empty\">No detail rows available for this selection.</div>';
+      return;
+    }
+    var html = '<table><thead><tr><th>Date</th><th>Shift</th><th>Calls</th><th>Avg Min</th><th>Max Min</th><th>After 00:00</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+      html += '<tr>'
+        + '<td>' + (r.date || '--') + '</td>'
+        + '<td>' + (r.shift || '--') + '</td>'
+        + '<td>' + String(r.calls || 0) + '</td>'
+        + '<td>' + Number(r.avg_min || 0).toFixed(1) + '</td>'
+        + '<td>' + Number(r.max_min || 0).toFixed(1) + '</td>'
+        + '<td>' + String(r.after_0000 || 0) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    el.detailBody.innerHTML = html;
+  }
+
+  function positionDetailPopup(x, y){
+    if(!el.detailPop) return;
+    var pad=12;
+    var rect=el.detailPop.getBoundingClientRect();
+    var left=Math.min(x+pad, window.innerWidth-rect.width-pad);
+    var top=Math.min(y+pad, window.innerHeight-rect.height-pad);
+    el.detailPop.style.left=Math.max(pad,left)+'px';
+    el.detailPop.style.top=Math.max(pad,top)+'px';
+  }
+
+  function showDetailPopup(kind, period, key, label, evt){
+    if(!el.detailPop) return;
+    renderDetailPopup(kind, period, key, label);
+    detailState.open = { kind: kind, period: period, key: key, label: label || key };
+    el.detailPop.style.display='block';
+    var x=evt && evt.clientX != null ? evt.clientX : window.innerWidth/2;
+    var y=evt && evt.clientY != null ? evt.clientY : window.innerHeight/2;
+    positionDetailPopup(x, y);
+  }
+
+  function closeDetailPopup(){
+    if(!el.detailPop) return;
+    el.detailPop.style.display='none';
+    detailState.open = null;
   }
 
   var personnelSortTypes = {
