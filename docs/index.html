@@ -505,6 +505,7 @@
     if(!el || !el.integritySummary) return;
     if(!integrity || !Array.isArray(integrity.checks)){
       el.integritySummary.textContent = 'Integrity: --';
+      el.integritySummary.style.color = '';
       return;
     }
     var warns = integrity.checks.filter(function(c){ return c.status === 'warn'; }).length;
@@ -1080,6 +1081,9 @@
     else { safe('Year', function(){ renderWeekMonth(el.year, null, 'year'); el.hdrYear.textContent='--'; }); }
     if(data.personnel){ safe('Personnel', function(){ applyPersonnel(data.personnel); }); }
     safe('BackfillHealth', function(){ renderBackfillHealth(data.backfill_health, data.integrity_checks); });
+    if(detailState.open){
+      safe('DetailRefresh', function(){ renderDetailPopup(detailState.open.kind, detailState.open.period, detailState.open.key, detailState.open.label); });
+    }
     safe('Freshness', function(){ renderStaleNotice(data); });
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString(); el.upd.textContent=new Date().toLocaleString();
     if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; } else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
