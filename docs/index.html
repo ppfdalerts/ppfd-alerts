@@ -672,7 +672,8 @@
     period: 'week',
     sortKey: 'total_calls',
     sortDir: 'desc',
-    filter: ''
+    filter: '',
+    renderedRows: []
   };
 
   function normalizeUnitCode(code){
@@ -993,9 +994,11 @@
       bv = Number(bv) || 0;
       return sortDir === 'asc' ? (av - bv) : (bv - av);
     });
+    personnelState.renderedRows = rows.slice();
 
     tbody.innerHTML = '';
     if(!rows.length){
+      personnelState.renderedRows = [];
       var tr = document.createElement('tr');
       var td = document.createElement('td');
       td.colSpan = (el.personnel.querySelectorAll('thead th').length || 8);
