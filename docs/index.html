@@ -16,7 +16,7 @@
   .btn{background:#1f2937; border:1px solid #111722; color:var(--text); padding:8px 10px; border-radius:8px; cursor:pointer}
   .btn:hover{background:#223047}
   .canvas{position:relative; height:100%; width:100%;}
-  .canvas.flow{display:grid; grid-template-columns: 1fr 1fr; grid-auto-rows:auto; gap:10px; align-content:start}
+  .canvas.flow{display:grid; grid-template-columns: 1fr; grid-auto-rows:auto; gap:10px; align-content:start; overflow-y:auto}
   .canvas.flow .panel{position:relative !important; z-index:1; width:auto !important; height:auto !important}
   .panel{position:absolute; z-index:1; background:var(--panel); border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,.35); overflow:hidden; border:1px solid #111722; display:flex; flex-direction:column; min-height:60px; min-width:120px}
   .panel .hdr{display:flex; align-items:center; gap:10px; padding:10px 12px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; font-size:13px; flex:0 0 auto; border-bottom:1px solid #0f141a;}
@@ -117,8 +117,7 @@
   .roster-entry .name{color:var(--text)}
   .roster-entry .meta{color:var(--muted); font-size:12px}
   .roster-empty{color:var(--muted); font-size:13px; padding:6px 0}
-  #panel-personnel{display:none; z-index:5}
-  body.personnel-on #panel-personnel{display:flex}
+  #panel-personnel{display:flex; z-index:5}
   .panel .hdr .dot.personnel{background:var(--indigo)}
   .personnel-controls{display:flex; gap:12px; align-items:center; margin:8px 0 10px; font-size:12px; color:var(--muted)}
   .personnel-controls label{display:flex; gap:6px; align-items:center}
@@ -150,23 +149,22 @@
     <div class="pill">Edit layout<label style="margin-left:4px"><input id="edit" type="checkbox"></label></div>
     <div class="pill">Winners <label style="margin-left:4px"><input id="winners" type="checkbox" checked></label></div>
     <div class="pill">Roster active now <label style="margin-left:4px"><input id="rosterNow" type="checkbox"></label></div>
-    <div class="pill">Personnel <label style="margin-left:4px"><input id="personnelToggle" type="checkbox"></label></div>
     <button id="resetLayout" class="btn">Reset layout</button>
     <button id="refresh" class="btn">Refresh now</button>
     <div id="status" class="status"></div><div id="ts" class="timestamp">—</div>
   </div>
   <div class="canvas">
-    <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:46vw; height:84vh">
+    <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">—</span></div>
       <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="panel" id="panel-prior" style="left:50vw; top:8vh; width:46vw; height:20vh">
+    <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">—</span></div>
       <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="panel" id="panel-week" style="left:50vw; top:30vh; width:46vw; height:22vh">
+    <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">—</span></div>
       <div class="body"><table id="board-week"><thead>
         <tr>
@@ -189,7 +187,7 @@
       </thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="panel" id="panel-month" style="left:50vw; top:54vh; width:46vw; height:20vh">
+    <div class="panel" id="panel-month" style="left:2vw; top:53vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot month"></span><span>Month</span><span id="hdr-month" class="sub">—</span></div>
       <div class="body"><table id="board-month"><thead>
         <tr>
@@ -212,7 +210,7 @@
       </thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="panel" id="panel-year" style="left:50vw; top:76vh; width:46vw; height:18vh">
+    <div class="panel" id="panel-year" style="left:2vw; top:68vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot year"></span><span>Year</span><span id="hdr-year" class="sub">--</span></div>
       <div class="body"><table id="board-year"><thead>
         <tr>
@@ -235,7 +233,7 @@
       </thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="panel" id="panel-personnel" style="left:2vw; top:8vh; width:96vw; height:84vh">
+    <div class="panel" id="panel-personnel" style="left:2vw; top:83vh; width:96vw; height:16vh">
       <div class="hdr"><span class="dot personnel"></span><span>Personnel</span><span id="hdr-personnel" class="sub">—</span></div>
       <div class="body">
         <div class="personnel-controls">
@@ -301,7 +299,6 @@
     refresh: document.getElementById('refresh'),
     winners: document.getElementById('winners'),
     rosterNow: document.getElementById('rosterNow'),
-    personnelToggle: document.getElementById('personnelToggle'),
     personnel: document.getElementById('board-personnel'),
     personnelPeriod: document.getElementById('personnelPeriod'),
     personnelFilter: document.getElementById('personnelFilter'),
@@ -847,18 +844,6 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
       if(rosterState.open){ renderRosterPopup(rosterState.open.unit, rosterState.open.period); }
     };
   }
-  if(el.personnelToggle){
-    try{
-      var saved = localStorage.getItem('ppfd_personnel_on');
-      if(saved === '1'){ el.personnelToggle.checked = true; }
-    }catch(_){}
-    document.body.classList.toggle('personnel-on', !!el.personnelToggle.checked);
-    el.personnelToggle.onchange=function(){
-      document.body.classList.toggle('personnel-on', !!el.personnelToggle.checked);
-      try{ localStorage.setItem('ppfd_personnel_on', el.personnelToggle.checked ? '1' : '0'); }catch(_){}
-      renderPersonnelTable();
-    };
-  }
   if(el.personnelPeriod){
     el.personnelPeriod.onchange=function(){
       personnelState.period = el.personnelPeriod.value || 'week';
@@ -904,9 +889,9 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   });
 
   var panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month'), year:document.getElementById('panel-year'), personnel:document.getElementById('panel-personnel') };
-  var defaultLayout={ today:{left:2,top:8,width:46,height:84}, prior:{left:50,top:8,width:46,height:20}, week:{left:50,top:30,width:46,height:22}, month:{left:50,top:54,width:46,height:20}, year:{left:50,top:76,width:46,height:18}, personnel:{left:2,top:8,width:96,height:84} };
-  function loadLayout(){ try{ var j=JSON.parse(localStorage.getItem('ppfd_layout_v1')||'{}'); var out={}; for(var k in defaultLayout){ out[k]=defaultLayout[k]; } for(var k2 in j){ out[k2]=j[k2]; } return out; }catch(e){ var d={}; for(var k3 in defaultLayout){ d[k3]=defaultLayout[k3]; } return d; } }
-  function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v1', JSON.stringify(l)); }catch(e){} }
+  var defaultLayout={ today:{left:2,top:8,width:96,height:14}, prior:{left:2,top:23,width:96,height:14}, week:{left:2,top:38,width:96,height:14}, month:{left:2,top:53,width:96,height:14}, year:{left:2,top:68,width:96,height:14}, personnel:{left:2,top:83,width:96,height:16} };
+  function loadLayout(){ try{ var j=JSON.parse(localStorage.getItem('ppfd_layout_v2')||'{}'); var out={}; for(var k in defaultLayout){ out[k]=defaultLayout[k]; } for(var k2 in j){ out[k2]=j[k2]; } return out; }catch(e){ var d={}; for(var k3 in defaultLayout){ d[k3]=defaultLayout[k3]; } return d; } }
+  function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v2', JSON.stringify(l)); }catch(e){} }
   function isDefaultLayout(l){ var tol=0.001; for(var k in defaultLayout){ var a=l[k]||defaultLayout[k], b=defaultLayout[k]; var keys=['left','top','width','height']; for(var i=0;i<keys.length;i++){ var key=keys[i]; if(Math.abs(((a[key]||0)-(b[key]||0)))>tol) return false; } } return true; }
   function applyLayout(l){ for(var k in panels){ var p=panels[k]; var r=l[k]||defaultLayout[k]; p.style.left=r.left+'vw'; p.style.top=r.top+'vh'; p.style.width=r.width+'vw'; p.style.height=r.height+'vh'; } }
   function enableEditing(on){ document.body.classList.toggle('edit-on', !!on); }
@@ -917,7 +902,7 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   function attachDragResize(key){ var node=panels[key]; var handle=node.querySelector('.hdr'); var grip=node.querySelector('.grip'); var state={drag:false,size:false,sx:0,sy:0,start:null}; function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function move(e){ if(!(state.drag||state.size)) return; var vw=innerWidth, vh=innerHeight; var dx=(e.clientX-state.sx)/vw*100; var dy=(e.clientY-state.sy)/vh*100; var r=layoutState.current[key]||(layoutState.current[key]={left:defaultLayout[key].left,top:defaultLayout[key].top,width:defaultLayout[key].width,height:defaultLayout[key].height}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); } function up(){ if(!(state.drag||state.size)) return; state.drag=false; state.size=false; saveLayout(layoutState.current); } handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up); handle.addEventListener('touchstart', function(ev){downDrag(ev.touches[0])}); grip.addEventListener('touchstart', function(ev){downSize(ev.touches[0])}); window.addEventListener('touchmove', function(ev){move(ev.touches[0])}); window.addEventListener('touchend', up); }
   attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month'); attachDragResize('year'); attachDragResize('personnel');
   el.edit.onchange=function(){ enableEditing(el.edit.checked); updateFlowMode(); };
-  el.resetLayout.onclick=function(){ layoutState.current={today:{left:2,top:8,width:46,height:84}, prior:{left:50,top:8,width:46,height:20}, week:{left:50,top:30,width:46,height:22}, month:{left:50,top:54,width:46,height:20}, year:{left:50,top:76,width:46,height:18}, personnel:{left:2,top:8,width:96,height:84}}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); };
+  el.resetLayout.onclick=function(){ layoutState.current={today:{left:2,top:8,width:96,height:14}, prior:{left:2,top:23,width:96,height:14}, week:{left:2,top:38,width:96,height:14}, month:{left:2,top:53,width:96,height:14}, year:{left:2,top:68,width:96,height:14}, personnel:{left:2,top:83,width:96,height:16}}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); };
   window.addEventListener('resize', updateFlowMode);
   fetchOnce(); startAuto();
 </script>
