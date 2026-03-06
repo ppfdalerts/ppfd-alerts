@@ -879,6 +879,7 @@
     if(data.year){ safe('Year', function(){ renderWeekMonth(el.year, data.year); el.hdrYear.textContent=(data.year.meta&&data.year.meta.range)||new Date(data.year.updated||Date.now()).toLocaleTimeString(); }); }
     else { safe('Year', function(){ renderWeekMonth(el.year, null); el.hdrYear.textContent='--'; }); }
     if(data.personnel){ safe('Personnel', function(){ applyPersonnel(data.personnel); }); }
+    safe('Freshness', function(){ renderStaleNotice(data); });
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString(); el.upd.textContent=new Date().toLocaleString();
     if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; } else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
     applyPageScrollLayout();
@@ -893,12 +894,33 @@
     }catch(_){}
   }
 
+  async function fetchVersion(){
+    var fallbackToken = String(Date.now());
+    try{
+      var r = await fetch('version.json?t=' + Date.now(), {cache:'no-store'});
+      if(!r.ok){ throw new Error('version fetch ' + r.status); }
+      var j = await r.json();
+      appState.version = j || null;
+      var tokenSource = (j && (j.build_id || j.generated_at || j.commit_short || j.commit)) ? (j.build_id || j.generated_at || j.commit_short || j.commit) : fallbackToken;
+      appState.cacheToken = String(tokenSource);
+      renderBuildInfo(j);
+      return j;
+    }catch(_){
+      appState.version = null;
+      appState.cacheToken = fallbackToken;
+      renderBuildInfo(null);
+      return null;
+    }
+  }
+
   async function fetchOnce(){
     if(isFetching) return;
     isFetching=true;
     setRefreshBusy(true);
     try{
-      var r=await fetch('data.json?t='+Date.now(), {cache:'no-store'});
+      await fetchVersion();
+      var cacheToken = encodeURIComponent(appState.cacheToken || String(Date.now()));
+      var r=await fetch('data.json?v='+cacheToken+'&t='+Date.now(), {cache:'no-store'});
       if(!r.ok){ el.status.style.display='inline-block'; el.status.textContent='Fetch error: '+r.status+' '+r.statusText; return; }
       var j=await r.json(); if(!j || (!j.today && !j.week && !j.prior && !j.month && !j.year)){ el.status.style.display='inline-block'; el.status.textContent='No data in payload'; return; }
       apply(j);
