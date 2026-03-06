@@ -411,7 +411,8 @@
     version: null,
     cacheToken: 'init',
     lastDataUpdatedMs: NaN,
-    staleThresholdMs: 3 * 60 * 1000
+    staleThresholdMs: 3 * 60 * 1000,
+    payload: null
   };
 
   function renderBuildInfo(version){
@@ -486,6 +487,72 @@
       ' | Resets: ' + resets;
   }
 
+  function formatDelta(value){
+    var n = Number(value || 0);
+    if(!isFinite(n)) n = 0;
+    if(n > 0) return '+' + n;
+    return String(n);
+  }
+
+  function deltaClass(value){
+    var n = Number(value || 0);
+    if(n > 0) return 'delta-pos';
+    if(n < 0) return 'delta-neg';
+    return 'delta-zero';
+  }
+
+  function renderIntegritySummary(integrity){
+    if(!el || !el.integritySummary) return;
+    if(!integrity || !Array.isArray(integrity.checks)){
+      el.integritySummary.textContent = 'Integrity: --';
+      return;
+    }
+    var warns = integrity.checks.filter(function(c){ return c.status === 'warn'; }).length;
+    if(warns > 0){
+      el.integritySummary.textContent = 'Integrity: WARN (' + warns + ')';
+      el.integritySummary.style.color = '#fde68a';
+    } else {
+      el.integritySummary.textContent = 'Integrity: OK';
+      el.integritySummary.style.color = '#bbf7d0';
+    }
+  }
+
+  function renderBackfillHealth(health, integrity){
+    if(!el || !el.healthGrid) return;
+    if(!health || typeof health !== 'object'){
+      el.healthGrid.innerHTML = '<div class="k">Status</div><div class="v">No health data</div>';
+      if(el.hdrHealth) el.hdrHealth.textContent = '--';
+      return;
+    }
+    var latestStats = health.latest_stats_date || '--';
+    var latestRoster = health.latest_roster_date || '--';
+    var latestPersonnel = health.latest_personnel_date || '--';
+    var missingRoster = Number(health.missing_roster_days_count || 0);
+    var missingPersonnel = Number(health.missing_personnel_days_count || 0);
+    var rosterLag = (health.roster_lag_days == null) ? '--' : String(health.roster_lag_days);
+    var personnelLag = (health.personnel_lag_days == null) ? '--' : String(health.personnel_lag_days);
+    var bf = health.last_backfill_status || {};
+    var bfStatus = bf.status || 'unknown';
+    var bfMsg = bf.message || '--';
+    var updated = bf.updated_at ? new Date(bf.updated_at).toLocaleString() : '--';
+    var integrityWarns = (integrity && Array.isArray(integrity.checks)) ? integrity.checks.filter(function(c){ return c.status==='warn'; }).length : 0;
+    if(el.hdrHealth){
+      el.hdrHealth.textContent = 'Stats ' + latestStats + ' | Backfill ' + bfStatus;
+    }
+    el.healthGrid.innerHTML = ''
+      + '<div class="k">Latest Stats Date</div><div class="v">' + latestStats + '</div>'
+      + '<div class="k">Latest Roster Date</div><div class="v">' + latestRoster + '</div>'
+      + '<div class="k">Latest Personnel Date</div><div class="v">' + latestPersonnel + '</div>'
+      + '<div class="k">Roster Lag (days)</div><div class="v">' + rosterLag + '</div>'
+      + '<div class="k">Personnel Lag (days)</div><div class="v">' + personnelLag + '</div>'
+      + '<div class="k">Missing Roster Days</div><div class="v">' + missingRoster + '</div>'
+      + '<div class="k">Missing Personnel Days</div><div class="v">' + missingPersonnel + '</div>'
+      + '<div class="k">Integrity Warnings</div><div class="v">' + integrityWarns + '</div>'
+      + '<div class="k">Last Backfill Status</div><div class="v">' + bfStatus + '</div>'
+      + '<div class="k">Last Backfill Message</div><div class="v">' + bfMsg + '</div>'
+      + '<div class="k">Backfill Updated</div><div class="v">' + updated + '</div>';
+  }
+
   function renderTable(table, data, rosterKey){
     var tbody = table.querySelector('tbody');
     tbody.innerHTML='';
@@ -518,6 +585,7 @@
       }
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
+      var tdD=document.createElement('td'); tdD.className='col-calls ' + deltaClass(r.delta_calls||0); tdD.textContent=formatDelta(r.delta_calls||0); tr.appendChild(tdD);
       var tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML='<span class="pill-badge avg-badge">'+((r.avg_min||0).toFixed(1))+'</span>'; tr.appendChild(tdA);
       var thCount=table.querySelectorAll('thead th').length;
       if(thCount>=5){
