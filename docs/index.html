@@ -134,6 +134,7 @@
 <div class="wrap">
   <div class="toolbar">
     <div class="pill">PPFD Leaderboards</div>
+    <div id="yearlySummary" class="pill">Yearly Calls | Units: -- | Personnel: -- | Started: ---- -- -- | Resets: ---- -- --</div>
     <div class="pill">Auto refresh
       <label style="margin-left:4px"><input id="auto" type="checkbox" checked></label>
     </div>
@@ -257,6 +258,7 @@
     hdrMonth: document.getElementById('hdr-month'),
     ts: document.getElementById('ts'),
     upd: document.getElementById('updated'),
+    yearlySummary: document.getElementById('yearlySummary'),
     status: document.getElementById('status'),
     auto: document.getElementById('auto'),
     edit: document.getElementById('edit'),
@@ -312,6 +314,30 @@
       showStatus('Promise Error: ' + m, false);
     });
   })();
+
+  function formatIsoDate(value){
+    if(!value) return '---- -- --';
+    var text = String(value).trim();
+    if(text.length >= 10) return text.slice(0, 10);
+    return text;
+  }
+
+  function renderYearlySummary(summary){
+    if(!el || !el.yearlySummary) return;
+    if(!summary || typeof summary !== 'object'){
+      el.yearlySummary.textContent = 'Yearly Calls | Units: -- | Personnel: -- | Started: ---- -- -- | Resets: ---- -- --';
+      return;
+    }
+    var units = Number(summary.units_total_calls || 0);
+    var personnel = Number(summary.personnel_total_calls || 0);
+    var started = formatIsoDate(summary.start_date);
+    var resets = formatIsoDate(summary.next_reset_date);
+    el.yearlySummary.textContent =
+      'Yearly Calls | Units: ' + units.toLocaleString() +
+      ' | Personnel: ' + personnel.toLocaleString() +
+      ' | Started: ' + started +
+      ' | Resets: ' + resets;
+  }
 
   function renderTable(table, data, rosterKey){
     var tbody = table.querySelector('tbody');
@@ -730,6 +756,7 @@
 
   function apply(data){
     var errors=[]; function safe(label,fn){ try{ fn(); } catch(e){ console.error('render error',label,e); errors.push(label); } }
+    safe('YearlySummary', function(){ renderYearlySummary(data.yearly_summary); });
     if(data.today){ safe('Today', function(){ renderTable(el.today, data.today, 'today'); el.hdrToday.textContent=(data.today.meta&&data.today.meta.shift_date)||new Date(data.today.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-today', letterFromMeta(data.today.meta)); }); }
     if(data.prior){ safe('Prior', function(){ renderTable(el.prior, data.prior, 'prior'); el.hdrPrior.textContent=(data.prior.meta&&data.prior.meta.shift_date)||new Date(data.prior.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-prior', letterFromMeta(data.prior.meta)); }); }
     if(data.week){ safe('Week', function(){ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta&&data.week.meta.range)||new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
