@@ -375,6 +375,7 @@
   var appState = {
     version: null,
     cacheToken: 'init',
+    lastDataUpdatedMs: NaN,
     staleThresholdMs: 3 * 60 * 1000
   };
 
@@ -411,6 +412,11 @@
   function renderStaleNotice(data){
     if(!el || !el.staleNotice) return;
     var latestMs = latestPayloadUpdatedMs(data);
+    if(isFinite(latestMs)){
+      appState.lastDataUpdatedMs = latestMs;
+    } else {
+      latestMs = appState.lastDataUpdatedMs;
+    }
     if(!isFinite(latestMs)){
       el.staleNotice.style.display = 'block';
       el.staleNotice.textContent = 'Warning: leaderboard freshness unknown (missing update timestamp).';
@@ -927,6 +933,7 @@
     }catch(e){ console.error('fetch error', e); el.status.style.display='inline-block'; el.status.textContent='Fetch error (network/parse)'; }
     finally{
       try{ fetchRoster(); }catch(_){}
+      try{ renderStaleNotice(); }catch(_){}
       isFetching=false;
       setRefreshBusy(false);
     }
