@@ -606,7 +606,7 @@
   function renderWeekMonth(table, data){
     var tbody=table.querySelector('tbody');
     tbody.innerHTML='';
-    var thCount=19;
+    var thCount=20;
     if(!data || !Array.isArray(data.rows) || data.rows.length===0){
       var tr=document.createElement('tr'); var td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
@@ -626,6 +626,7 @@
     }
     data.rows.forEach(function(r,idx){
       var tr=document.createElement('tr'); if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
+      tr.dataset.unit = r.unit;
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
       (function(){
         var classes=['valA','valB','valC'];
@@ -645,6 +646,10 @@
         renderGroup(r.after_abc, false, false);
         renderGroup(r.after_max_abc, false, false);
       })();
+      var tdDelta=document.createElement('td');
+      tdDelta.className = deltaClass(r.delta_calls||0);
+      tdDelta.textContent = formatDelta(r.delta_calls||0);
+      tr.appendChild(tdDelta);
       tbody.appendChild(tr);
     });
   }
@@ -652,6 +657,9 @@
   var rosterState = {
     payload: { today: null, prior: null },
     index: { today: null, prior: null },
+    open: null
+  };
+  var detailState = {
     open: null
   };
   var personnelState = {
@@ -872,7 +880,8 @@
     highest_call_duration_mins: 'number',
     total_calls_after_midnight: 'number',
     single_shift_max_after_midnight: 'number',
-    total_call_hours: 'number'
+    total_call_hours: 'number',
+    delta_calls: 'number'
   };
 
   function updatePersonnelSortIndicators(){
@@ -936,9 +945,10 @@
     rows.forEach(function(r, idx){
       var tr = document.createElement('tr');
       if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
-      function addCell(text){
+      function addCell(text, cls){
         var td = document.createElement('td');
         td.textContent = text;
+        if(cls){ td.className = cls; }
         tr.appendChild(td);
       }
       addCell(r.name || r.person_id || '');
@@ -949,6 +959,7 @@
       addCell(String(r.total_calls_after_midnight || 0));
       addCell(String(r.single_shift_max_after_midnight || 0));
       addCell((r.total_call_hours != null ? Number(r.total_call_hours).toFixed(1) : '0.0'));
+      addCell(formatDelta(r.delta_calls || 0), deltaClass(r.delta_calls || 0));
       tbody.appendChild(tr);
     });
 
