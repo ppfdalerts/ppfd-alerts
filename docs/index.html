@@ -142,8 +142,8 @@
   .personnel-controls select, .personnel-controls input{background:#0f141a; border:1px solid #223047; color:var(--text); padding:4px 6px; border-radius:6px; font-size:12px}
   .personnel-controls input{min-width:180px}
   .personnel-table th{cursor:pointer}
-  .personnel-table th.sort-asc::after{content:" ▲"; color:var(--muted); font-size:11px}
-  .personnel-table th.sort-desc::after{content:" ▼"; color:var(--muted); font-size:11px}
+  .personnel-table th.sort-asc::after{content:" â–²"; color:var(--muted); font-size:11px}
+  .personnel-table th.sort-desc::after{content:" â–¼"; color:var(--muted); font-size:11px}
   @media (max-width: 900px){
     .wrap{padding:6px}
     .toolbar{gap:8px}
@@ -171,22 +171,22 @@
     <div class="pill">Roster active now <label style="margin-left:4px"><input id="rosterNow" type="checkbox"></label></div>
     <button id="resetLayout" class="btn">Reset layout</button>
     <button id="refresh" class="btn">Refresh now</button>
-    <div id="status" class="status"></div><div id="ts" class="timestamp">—</div>
+    <div id="status" class="status"></div><div id="ts" class="timestamp">â€”</div>
   </div>
   <div id="staleNotice" class="stale-banner">Warning: data freshness unknown.</div>
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
-      <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">—</span></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-calls">Delta Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
-      <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">—</span></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-calls">Delta Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
-      <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">—</span></div>
+      <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">â€”</span></div>
       <div class="body"><table id="board-week"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
@@ -209,7 +209,7 @@
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-month" style="left:2vw; top:53vh; width:96vw; height:14vh">
-      <div class="hdr"><span class="dot month"></span><span>Month</span><span id="hdr-month" class="sub">—</span></div>
+      <div class="hdr"><span class="dot month"></span><span>Month</span><span id="hdr-month" class="sub">â€”</span></div>
       <div class="body"><table id="board-month"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
@@ -255,7 +255,7 @@
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-personnel" style="left:2vw; top:83vh; width:96vw; height:16vh">
-      <div class="hdr"><span class="dot personnel"></span><span>Personnel</span><span id="hdr-personnel" class="sub">—</span></div>
+      <div class="hdr"><span class="dot personnel"></span><span>Personnel</span><span id="hdr-personnel" class="sub">â€”</span></div>
       <div class="body">
         <div class="personnel-controls">
           <label>Period
@@ -287,7 +287,7 @@
       </div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="footer">Updated <span id="updated">—</span></div>
+    <div class="footer">Updated <span id="updated">â€”</span></div>
   </div>
 </div>
 <div id="rosterPop" class="roster-pop" style="display:none">
@@ -842,7 +842,7 @@
       td.style.color = '#9ca3af';
       tr.appendChild(td);
       tbody.appendChild(tr);
-      if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : '—'; }
+      if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : 'â€”'; }
       updatePersonnelSortIndicators();
       applyPageScrollLayout();
       return;
@@ -867,7 +867,7 @@
       tbody.appendChild(tr);
     });
 
-    if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : '—'; }
+    if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : 'â€”'; }
     updatePersonnelSortIndicators();
     applyPageScrollLayout();
   }
@@ -914,7 +914,7 @@
     try{
       if(!el || !el.refresh) return;
       el.refresh.disabled=!!on;
-      el.refresh.textContent=on ? 'Refreshing…' : 'Refresh now';
+      el.refresh.textContent=on ? 'Refreshingâ€¦' : 'Refresh now';
     }catch(_){}
   }
 
