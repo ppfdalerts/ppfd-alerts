@@ -142,8 +142,8 @@
   .personnel-controls select, .personnel-controls input{background:#0f141a; border:1px solid #223047; color:var(--text); padding:4px 6px; border-radius:6px; font-size:12px}
   .personnel-controls input{min-width:180px}
   .personnel-table th{cursor:pointer}
-  .personnel-table th.sort-asc::after{content:" â–²"; color:var(--muted); font-size:11px}
-  .personnel-table th.sort-desc::after{content:" â–¼"; color:var(--muted); font-size:11px}
+  .personnel-table th.sort-asc::after{content:" ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â²"; color:var(--muted); font-size:11px}
+  .personnel-table th.sort-desc::after{content:" ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼"; color:var(--muted); font-size:11px}
   @media (max-width: 900px){
     .wrap{padding:6px}
     .toolbar{gap:8px}
@@ -171,7 +171,7 @@
     <div class="pill">Roster active now <label style="margin-left:4px"><input id="rosterNow" type="checkbox"></label></div>
     <button id="resetLayout" class="btn">Reset layout</button>
     <button id="refresh" class="btn">Refresh now</button>
-    <div id="status" class="status"></div><div id="ts" class="timestamp">â€”</div>
+    <div id="status" class="status"></div><div id="ts" class="timestamp">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</div>
   </div>
   <div id="staleNotice" class="stale-banner">Warning: data freshness unknown.</div>
   <div class="canvas">
@@ -186,7 +186,7 @@
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
-      <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">â€”</span></div>
+      <div class="hdr"><span class="dot week"></span><span>Week</span><span id="hdr-week" class="sub">--</span><button class="mini-btn csv-btn" data-panel="week">CSV</button></div>
       <div class="body"><table id="board-week"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
@@ -195,8 +195,7 @@
           <th colspan="3">Avg. Call Duration (Mins)</th>
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
-          <th colspan="3">Single-Shift Max After Midnight</th>
-        </tr>
+          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Delta Calls</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -209,7 +208,7 @@
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-month" style="left:2vw; top:53vh; width:96vw; height:14vh">
-      <div class="hdr"><span class="dot month"></span><span>Month</span><span id="hdr-month" class="sub">â€”</span></div>
+      <div class="hdr"><span class="dot month"></span><span>Month</span><span id="hdr-month" class="sub">--</span><button class="mini-btn csv-btn" data-panel="month">CSV</button></div>
       <div class="body"><table id="board-month"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
@@ -218,8 +217,7 @@
           <th colspan="3">Avg. Call Duration (Mins)</th>
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
-          <th colspan="3">Single-Shift Max After Midnight</th>
-        </tr>
+          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Delta Calls</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -232,7 +230,7 @@
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-year" style="left:2vw; top:68vh; width:96vw; height:14vh">
-      <div class="hdr"><span class="dot year"></span><span>Year</span><span id="hdr-year" class="sub">--</span></div>
+      <div class="hdr"><span class="dot year"></span><span>Year</span><span id="hdr-year" class="sub">--</span><button class="mini-btn csv-btn" data-panel="year">CSV</button></div>
       <div class="body"><table id="board-year"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
@@ -241,8 +239,7 @@
           <th colspan="3">Avg. Call Duration (Mins)</th>
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
-          <th colspan="3">Single-Shift Max After Midnight</th>
-        </tr>
+          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Delta Calls</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -254,8 +251,12 @@
       </thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="panel" id="panel-personnel" style="left:2vw; top:83vh; width:96vw; height:16vh">
-      <div class="hdr"><span class="dot personnel"></span><span>Personnel</span><span id="hdr-personnel" class="sub">â€”</span></div>
+        <div class="panel" id="panel-health" style="left:2vw; top:83vh; width:96vw; height:12vh">
+      <div class="hdr"><span class="dot health"></span><span>Backfill Health</span><span id="hdr-health" class="sub">--</span><button class="mini-btn csv-btn" data-panel="health">CSV</button></div>
+      <div class="body"><div id="healthGrid" class="health-grid"></div></div>
+      <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
+    </div>    <div class="panel" id="panel-personnel" style="left:2vw; top:95vh; width:96vw; height:16vh">
+      <div class="hdr"><span class="dot personnel"></span><span>Personnel</span><span id="hdr-personnel" class="sub">--</span><button class="mini-btn csv-btn" data-panel="personnel">CSV</button></div>
       <div class="body">
         <div class="personnel-controls">
           <label>Period
@@ -279,7 +280,7 @@
               <th data-sort="highest_call_duration_mins">Highest Call Duration (Mins)</th>
               <th data-sort="total_calls_after_midnight">Total Calls After Midnight</th>
               <th data-sort="single_shift_max_after_midnight">Single-Shift Max After Midnight</th>
-              <th data-sort="total_call_hours">Total Call Hours</th>
+              <th data-sort="total_call_hours">Total Call Hours</th><th data-sort="delta_calls">Delta Calls</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -287,7 +288,7 @@
       </div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
-    <div class="footer">Updated <span id="updated">â€”</span></div>
+    <div class="footer">Updated <span id="updated">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span></div>
   </div>
 </div>
 <div id="rosterPop" class="roster-pop" style="display:none">
@@ -842,7 +843,7 @@
       td.style.color = '#9ca3af';
       tr.appendChild(td);
       tbody.appendChild(tr);
-      if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : 'â€”'; }
+      if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'; }
       updatePersonnelSortIndicators();
       applyPageScrollLayout();
       return;
@@ -867,7 +868,7 @@
       tbody.appendChild(tr);
     });
 
-    if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : 'â€”'; }
+    if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'; }
     updatePersonnelSortIndicators();
     applyPageScrollLayout();
   }
@@ -914,7 +915,7 @@
     try{
       if(!el || !el.refresh) return;
       el.refresh.disabled=!!on;
-      el.refresh.textContent=on ? 'Refreshingâ€¦' : 'Refresh now';
+      el.refresh.textContent=on ? 'RefreshingÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦' : 'Refresh now';
     }catch(_){}
   }
 
