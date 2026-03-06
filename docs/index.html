@@ -1012,6 +1012,14 @@
     rows.forEach(function(r, idx){
       var tr = document.createElement('tr');
       if(idx===0) tr.classList.add('rank-1'); if(idx===1) tr.classList.add('rank-2'); if(idx===2) tr.classList.add('rank-3');
+      tr.dataset.personId = (r.person_id || '');
+      tr.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        var pkey = String(r.person_id || '');
+        var label = r.name || pkey || 'Personnel';
+        showDetailPopup('personnel', personnelState.period, pkey, label, ev);
+      });
       function addCell(text, cls){
         var td = document.createElement('td');
         td.textContent = text;
@@ -1057,15 +1065,18 @@
   function letterFromMeta(meta){ if(!meta||!meta.shift_date) return ''; var m=/^([ABC])\-Shift\s/.exec(meta.shift_date.trim()); return m? m[1]:''; }
 
   function apply(data){
+    appState.payload = data || null;
     var errors=[]; function safe(label,fn){ try{ fn(); } catch(e){ console.error('render error',label,e); errors.push(label); } }
     safe('YearlySummary', function(){ renderYearlySummary(data.yearly_summary); });
+    safe('IntegritySummary', function(){ renderIntegritySummary(data.integrity_checks); });
     if(data.today){ safe('Today', function(){ renderTable(el.today, data.today, 'today'); el.hdrToday.textContent=(data.today.meta&&data.today.meta.shift_date)||new Date(data.today.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-today', letterFromMeta(data.today.meta)); }); }
     if(data.prior){ safe('Prior', function(){ renderTable(el.prior, data.prior, 'prior'); el.hdrPrior.textContent=(data.prior.meta&&data.prior.meta.shift_date)||new Date(data.prior.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-prior', letterFromMeta(data.prior.meta)); }); }
-    if(data.week){ safe('Week', function(){ renderWeekMonth(el.week, data.week); el.hdrWeek.textContent=(data.week.meta&&data.week.meta.range)||new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
-    if(data.month){ safe('Month', function(){ renderWeekMonth(el.month, data.month); el.hdrMonth.textContent=(data.month.meta&&data.month.meta.range)||new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
-    if(data.year){ safe('Year', function(){ renderWeekMonth(el.year, data.year); el.hdrYear.textContent=(data.year.meta&&data.year.meta.range)||new Date(data.year.updated||Date.now()).toLocaleTimeString(); }); }
-    else { safe('Year', function(){ renderWeekMonth(el.year, null); el.hdrYear.textContent='--'; }); }
+    if(data.week){ safe('Week', function(){ renderWeekMonth(el.week, data.week, 'week'); el.hdrWeek.textContent=(data.week.meta&&data.week.meta.range)||new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
+    if(data.month){ safe('Month', function(){ renderWeekMonth(el.month, data.month, 'month'); el.hdrMonth.textContent=(data.month.meta&&data.month.meta.range)||new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
+    if(data.year){ safe('Year', function(){ renderWeekMonth(el.year, data.year, 'year'); el.hdrYear.textContent=(data.year.meta&&data.year.meta.range)||new Date(data.year.updated||Date.now()).toLocaleTimeString(); }); }
+    else { safe('Year', function(){ renderWeekMonth(el.year, null, 'year'); el.hdrYear.textContent='--'; }); }
     if(data.personnel){ safe('Personnel', function(){ applyPersonnel(data.personnel); }); }
+    safe('BackfillHealth', function(){ renderBackfillHealth(data.backfill_health, data.integrity_checks); });
     safe('Freshness', function(){ renderStaleNotice(data); });
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString(); el.upd.textContent=new Date().toLocaleString();
     if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; } else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
