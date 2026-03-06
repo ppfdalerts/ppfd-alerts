@@ -142,8 +142,8 @@
   .personnel-controls select, .personnel-controls input{background:#0f141a; border:1px solid #223047; color:var(--text); padding:4px 6px; border-radius:6px; font-size:12px}
   .personnel-controls input{min-width:180px}
   .personnel-table th{cursor:pointer}
-  .personnel-table th.sort-asc::after{content:" ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â²"; color:var(--muted); font-size:11px}
-  .personnel-table th.sort-desc::after{content:" ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¼"; color:var(--muted); font-size:11px}
+  .personnel-table th.sort-asc::after{content:" ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â²"; color:var(--muted); font-size:11px}
+  .personnel-table th.sort-desc::after{content:" ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¼"; color:var(--muted); font-size:11px}
   @media (max-width: 900px){
     .wrap{padding:6px}
     .toolbar{gap:8px}
@@ -1003,7 +1003,7 @@
       td.style.color = '#9ca3af';
       tr.appendChild(td);
       tbody.appendChild(tr);
-      if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â'; }
+      if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : '--'; }
       updatePersonnelSortIndicators();
       applyPageScrollLayout();
       return;
@@ -1038,7 +1038,7 @@
       tbody.appendChild(tr);
     });
 
-    if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â'; }
+    if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : '--'; }
     updatePersonnelSortIndicators();
     applyPageScrollLayout();
   }
@@ -1088,7 +1088,7 @@
     try{
       if(!el || !el.refresh) return;
       el.refresh.disabled=!!on;
-      el.refresh.textContent=on ? 'RefreshingÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦' : 'Refresh now';
+      el.refresh.textContent=on ? 'Refreshing...' : 'Refresh now';
     }catch(_){}
   }
 
@@ -1186,8 +1186,8 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
     if(e.key==='Escape'){ closeRosterPopup(); }
   });
 
-  var panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month'), year:document.getElementById('panel-year'), personnel:document.getElementById('panel-personnel') };
-  var defaultLayout={ today:{left:2,top:8,width:96,height:14}, prior:{left:2,top:23,width:96,height:14}, week:{left:2,top:38,width:96,height:14}, month:{left:2,top:53,width:96,height:14}, year:{left:2,top:68,width:96,height:14}, personnel:{left:2,top:83,width:96,height:16} };
+  var panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month'), year:document.getElementById('panel-year'), health:document.getElementById('panel-health'), personnel:document.getElementById('panel-personnel') };
+  var defaultLayout={ today:{left:2,top:8,width:96,height:14}, prior:{left:2,top:23,width:96,height:14}, week:{left:2,top:38,width:96,height:14}, month:{left:2,top:53,width:96,height:14}, year:{left:2,top:68,width:96,height:14}, health:{left:2,top:83,width:96,height:12}, personnel:{left:2,top:96,width:96,height:16} };
   function loadLayout(){ try{ var j=JSON.parse(localStorage.getItem('ppfd_layout_v2')||'{}'); var out={}; for(var k in defaultLayout){ out[k]=defaultLayout[k]; } for(var k2 in j){ out[k2]=j[k2]; } return out; }catch(e){ var d={}; for(var k3 in defaultLayout){ d[k3]=defaultLayout[k3]; } return d; } }
   function saveLayout(l){ try{ localStorage.setItem('ppfd_layout_v2', JSON.stringify(l)); }catch(e){} }
   function isDefaultLayout(l){ var tol=0.001; for(var k in defaultLayout){ var a=l[k]||defaultLayout[k], b=defaultLayout[k]; var keys=['left','top','width','height']; for(var i=0;i<keys.length;i++){ var key=keys[i]; if(Math.abs(((a[key]||0)-(b[key]||0)))>tol) return false; } } return true; }
@@ -1240,9 +1240,9 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   function updateFlowMode(){ var isMobile=isMobileViewport(); var canvas=document.querySelector('.canvas'); if(!canvas) return; if(!el.edit.checked && isDefaultLayout(layoutState.current) && !isMobile){ canvas.classList.add('flow'); for(var k in panels){ var p=panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height=''; } } else { canvas.classList.remove('flow'); applyLayout(layoutState.current); } applyPageScrollLayout(); }
   updateFlowMode();
   function attachDragResize(key){ var node=panels[key]; var handle=node.querySelector('.hdr'); var grip=node.querySelector('.grip'); var state={drag:false,size:false,sx:0,sy:0,start:null}; function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function move(e){ if(!(state.drag||state.size)) return; var vw=innerWidth, vh=innerHeight; var dx=(e.clientX-state.sx)/vw*100; var dy=(e.clientY-state.sy)/vh*100; var r=layoutState.current[key]||(layoutState.current[key]={left:defaultLayout[key].left,top:defaultLayout[key].top,width:defaultLayout[key].width,height:defaultLayout[key].height}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); syncCanvasPageHeight(); } function up(){ if(!(state.drag||state.size)) return; state.drag=false; state.size=false; saveLayout(layoutState.current); applyPageScrollLayout(); } handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up); handle.addEventListener('touchstart', function(ev){downDrag(ev.touches[0])}); grip.addEventListener('touchstart', function(ev){downSize(ev.touches[0])}); window.addEventListener('touchmove', function(ev){move(ev.touches[0])}); window.addEventListener('touchend', up); }
-  attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month'); attachDragResize('year'); attachDragResize('personnel');
+  attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month'); attachDragResize('year'); attachDragResize('health'); attachDragResize('personnel');
   el.edit.onchange=function(){ enableEditing(el.edit.checked); updateFlowMode(); applyPageScrollLayout(); };
-  el.resetLayout.onclick=function(){ layoutState.current={today:{left:2,top:8,width:96,height:14}, prior:{left:2,top:23,width:96,height:14}, week:{left:2,top:38,width:96,height:14}, month:{left:2,top:53,width:96,height:14}, year:{left:2,top:68,width:96,height:14}, personnel:{left:2,top:83,width:96,height:16}}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); applyPageScrollLayout(); };
+  el.resetLayout.onclick=function(){ layoutState.current={today:{left:2,top:8,width:96,height:14}, prior:{left:2,top:23,width:96,height:14}, week:{left:2,top:38,width:96,height:14}, month:{left:2,top:53,width:96,height:14}, year:{left:2,top:68,width:96,height:14}, health:{left:2,top:83,width:96,height:12}, personnel:{left:2,top:96,width:96,height:16}}; saveLayout(layoutState.current); applyLayout(layoutState.current); updateFlowMode(); applyPageScrollLayout(); };
   window.addEventListener('resize', function(){ updateFlowMode(); applyPageScrollLayout(); });
   fetchOnce(); startAuto();
 </script>
