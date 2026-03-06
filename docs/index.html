@@ -13,7 +13,6 @@
   .wrap{display:grid; grid-template-rows:auto 1fr; min-height:100vh; height:auto; width:100vw; padding:8px 10px;}
   .toolbar{display:flex; align-items:center; gap:12px; margin:4px 0 8px;}
   .pill{background:#1f2937; padding:6px 10px; border-radius:999px; color:var(--muted); font-size:13px}
-  .stale-banner{display:none; margin:0 0 8px; font-size:12px; background:rgba(245,158,11,.16); color:#fde68a; border:1px solid rgba(245,158,11,.35); padding:6px 10px; border-radius:8px}
   .btn{background:#1f2937; border:1px solid #111722; color:var(--text); padding:8px 10px; border-radius:8px; cursor:pointer}
   .btn:hover{background:#223047}
   .canvas{position:relative; height:auto; min-height:100%; width:100%;}
@@ -173,7 +172,6 @@
     <button id="refresh" class="btn">Refresh now</button>
     <div id="status" class="status"></div><div id="ts" class="timestamp">--</div>
   </div>
-  <div id="staleNotice" class="stale-banner">Warning: data freshness unknown.</div>
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
@@ -324,7 +322,6 @@
     buildInfo: document.getElementById('buildInfo'),
     yearlySummary: document.getElementById('yearlySummary'),
     integritySummary: document.getElementById('integritySummary'),
-    staleNotice: document.getElementById('staleNotice'),
     status: document.getElementById('status'),
     auto: document.getElementById('auto'),
     edit: document.getElementById('edit'),
@@ -410,8 +407,6 @@
   var appState = {
     version: null,
     cacheToken: 'init',
-    lastDataUpdatedMs: NaN,
-    staleThresholdMs: 3 * 60 * 1000,
     payload: null
   };
 
@@ -421,53 +416,6 @@
     var stamp = v && v.generated_at ? formatUtcStamp(v.generated_at) : '--';
     var commit = v && v.commit_short ? String(v.commit_short) : '-------';
     el.buildInfo.textContent = 'Build: ' + stamp + ' | Commit: ' + commit;
-  }
-
-  function latestPayloadUpdatedMs(data){
-    if(!data || typeof data !== 'object') return NaN;
-    var candidates = [];
-    ['today','prior','week','month','year'].forEach(function(k){
-      if(data[k] && data[k].updated) candidates.push(data[k].updated);
-    });
-    if(data.personnel){
-      ['week','month','year'].forEach(function(k){
-        if(data.personnel[k] && data.personnel[k].updated) candidates.push(data.personnel[k].updated);
-      });
-    }
-    if(data.yearly_summary && data.yearly_summary.generated_at){
-      candidates.push(data.yearly_summary.generated_at);
-    }
-    var maxMs = NaN;
-    candidates.forEach(function(v){
-      var ms = Date.parse(v);
-      if(isFinite(ms) && (!isFinite(maxMs) || ms > maxMs)){ maxMs = ms; }
-    });
-    return maxMs;
-  }
-
-  function renderStaleNotice(data){
-    if(!el || !el.staleNotice) return;
-    var latestMs = latestPayloadUpdatedMs(data);
-    if(isFinite(latestMs)){
-      appState.lastDataUpdatedMs = latestMs;
-    } else {
-      latestMs = appState.lastDataUpdatedMs;
-    }
-    if(!isFinite(latestMs)){
-      el.staleNotice.style.display = 'block';
-      el.staleNotice.textContent = 'Warning: leaderboard freshness unknown (missing update timestamp).';
-      return;
-    }
-    var ageMs = Date.now() - latestMs;
-    if(ageMs <= appState.staleThresholdMs){
-      el.staleNotice.style.display = 'none';
-      return;
-    }
-    var mins = Math.floor(ageMs / 60000);
-    var secs = Math.floor((ageMs % 60000) / 1000);
-    var last = new Date(latestMs).toLocaleString();
-    el.staleNotice.style.display = 'block';
-    el.staleNotice.textContent = 'Warning: leaderboard data is stale (last update ' + last + ', age ' + mins + 'm ' + secs + 's).';
   }
 
   function renderYearlySummary(summary){
@@ -1084,7 +1032,6 @@
     if(detailState.open){
       safe('DetailRefresh', function(){ renderDetailPopup(detailState.open.kind, detailState.open.period, detailState.open.key, detailState.open.label); });
     }
-    safe('Freshness', function(){ renderStaleNotice(data); });
     el.ts.textContent='Fetched '+new Date().toLocaleTimeString(); el.upd.textContent=new Date().toLocaleString();
     if(errors.length){ el.status.style.display='inline-block'; el.status.textContent='Render error: '+errors.join(', '); el.status.title='One or more panels failed to render'; } else { el.status.style.display='none'; el.status.textContent=''; el.status.title=''; }
     applyPageScrollLayout();
@@ -1230,7 +1177,6 @@
     }catch(e){ console.error('fetch error', e); el.status.style.display='inline-block'; el.status.textContent='Fetch error (network/parse)'; }
     finally{
       try{ fetchRoster(); }catch(_){}
-      try{ renderStaleNotice(); }catch(_){}
       isFetching=false;
       setRefreshBusy(false);
     }
@@ -1359,7 +1305,7 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   function enableEditing(on){ document.body.classList.toggle('edit-on', !!on); }
   var layoutState={ current: loadLayout() };
   applyLayout(layoutState.current); enableEditing(false); document.body.classList.toggle('winners-on', el.winners && el.winners.checked);
-  function updateFlowMode(){ var isMobile=isMobileViewport(); var canvas=document.querySelector('.canvas'); if(!canvas) return; if(!el.edit.checked && isDefaultLayout(layoutState.current) && !isMobile){ canvas.classList.add('flow'); for(var k in panels){ var p=panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height=''; } } else { canvas.classList.remove('flow'); applyLayout(layoutState.current); } applyPageScrollLayout(); }
+  function updateFlowMode(){ var canvas=document.querySelector('.canvas'); if(!canvas) return; if(!el.edit.checked){ canvas.classList.add('flow'); for(var k in panels){ var p=panels[k]; p.style.left=''; p.style.top=''; p.style.width=''; p.style.height=''; } } else { canvas.classList.remove('flow'); applyLayout(layoutState.current); } applyPageScrollLayout(); }
   updateFlowMode();
   function attachDragResize(key){ var node=panels[key]; var handle=node.querySelector('.hdr'); var grip=node.querySelector('.grip'); var state={drag:false,size:false,sx:0,sy:0,start:null}; function downDrag(e){ if(!el.edit.checked) return; state.drag=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function downSize(e){ if(!el.edit.checked) return; state.size=true; state.sx=e.clientX; state.sy=e.clientY; var r=layoutState.current[key]||defaultLayout[key]; state.start={left:r.left,top:r.top,width:r.width,height:r.height}; e.preventDefault(); } function move(e){ if(!(state.drag||state.size)) return; var vw=innerWidth, vh=innerHeight; var dx=(e.clientX-state.sx)/vw*100; var dy=(e.clientY-state.sy)/vh*100; var r=layoutState.current[key]||(layoutState.current[key]={left:defaultLayout[key].left,top:defaultLayout[key].top,width:defaultLayout[key].width,height:defaultLayout[key].height}); if(state.drag){ r.left=Math.max(0, Math.min(100-r.width, state.start.left+dx)); r.top=Math.max(0, Math.min(100-r.height, state.start.top+dy)); } if(state.size){ r.width=Math.min(100-r.left, Math.max(20, state.start.width+dx)); r.height=Math.min(100-r.top, Math.max(20, state.start.height+dy)); } applyLayout(layoutState.current); syncCanvasPageHeight(); } function up(){ if(!(state.drag||state.size)) return; state.drag=false; state.size=false; saveLayout(layoutState.current); applyPageScrollLayout(); } handle.addEventListener('mousedown', downDrag); grip.addEventListener('mousedown', downSize); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up); handle.addEventListener('touchstart', function(ev){downDrag(ev.touches[0])}); grip.addEventListener('touchstart', function(ev){downSize(ev.touches[0])}); window.addEventListener('touchmove', function(ev){move(ev.touches[0])}); window.addEventListener('touchend', up); }
   attachDragResize('today'); attachDragResize('prior'); attachDragResize('week'); attachDragResize('month'); attachDragResize('year'); attachDragResize('health'); attachDragResize('personnel');
