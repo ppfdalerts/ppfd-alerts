@@ -143,6 +143,7 @@
 <div class="wrap">
   <div class="toolbar">
     <div class="pill">PPFD Leaderboards</div>
+    <div id="buildInfo" class="pill">Build: -- | Commit: -------</div>
     <div id="yearlySummary" class="pill">Yearly Calls | Units: -- | Personnel: -- | Started: ---- -- -- | Resets: ---- -- --</div>
     <div class="pill">Auto refresh
       <label style="margin-left:4px"><input id="auto" type="checkbox" checked></label>
@@ -154,6 +155,7 @@
     <button id="refresh" class="btn">Refresh now</button>
     <div id="status" class="status"></div><div id="ts" class="timestamp">—</div>
   </div>
+  <div id="staleNotice" class="stale-banner">Warning: data freshness unknown.</div>
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">—</span></div>
@@ -292,7 +294,9 @@
     hdrYear: document.getElementById('hdr-year'),
     ts: document.getElementById('ts'),
     upd: document.getElementById('updated'),
+    buildInfo: document.getElementById('buildInfo'),
     yearlySummary: document.getElementById('yearlySummary'),
+    staleNotice: document.getElementById('staleNotice'),
     status: document.getElementById('status'),
     auto: document.getElementById('auto'),
     edit: document.getElementById('edit'),
@@ -353,6 +357,75 @@
     var text = String(value).trim();
     if(text.length >= 10) return text.slice(0, 10);
     return text;
+  }
+
+  function formatUtcStamp(value){
+    var ms = Date.parse(value);
+    if(!isFinite(ms)) return '--';
+    var d = new Date(ms);
+    var y = d.getUTCFullYear();
+    var m = String(d.getUTCMonth()+1).padStart(2, '0');
+    var day = String(d.getUTCDate()).padStart(2, '0');
+    var hh = String(d.getUTCHours()).padStart(2, '0');
+    var mm = String(d.getUTCMinutes()).padStart(2, '0');
+    var ss = String(d.getUTCSeconds()).padStart(2, '0');
+    return y + '-' + m + '-' + day + ' ' + hh + ':' + mm + ':' + ss + ' UTC';
+  }
+
+  var appState = {
+    version: null,
+    cacheToken: 'init',
+    staleThresholdMs: 3 * 60 * 1000
+  };
+
+  function renderBuildInfo(version){
+    if(!el || !el.buildInfo) return;
+    var v = version || appState.version || null;
+    var stamp = v && v.generated_at ? formatUtcStamp(v.generated_at) : '--';
+    var commit = v && v.commit_short ? String(v.commit_short) : '-------';
+    el.buildInfo.textContent = 'Build: ' + stamp + ' | Commit: ' + commit;
+  }
+
+  function latestPayloadUpdatedMs(data){
+    if(!data || typeof data !== 'object') return NaN;
+    var candidates = [];
+    ['today','prior','week','month','year'].forEach(function(k){
+      if(data[k] && data[k].updated) candidates.push(data[k].updated);
+    });
+    if(data.personnel){
+      ['week','month','year'].forEach(function(k){
+        if(data.personnel[k] && data.personnel[k].updated) candidates.push(data.personnel[k].updated);
+      });
+    }
+    if(data.yearly_summary && data.yearly_summary.generated_at){
+      candidates.push(data.yearly_summary.generated_at);
+    }
+    var maxMs = NaN;
+    candidates.forEach(function(v){
+      var ms = Date.parse(v);
+      if(isFinite(ms) && (!isFinite(maxMs) || ms > maxMs)){ maxMs = ms; }
+    });
+    return maxMs;
+  }
+
+  function renderStaleNotice(data){
+    if(!el || !el.staleNotice) return;
+    var latestMs = latestPayloadUpdatedMs(data);
+    if(!isFinite(latestMs)){
+      el.staleNotice.style.display = 'block';
+      el.staleNotice.textContent = 'Warning: leaderboard freshness unknown (missing update timestamp).';
+      return;
+    }
+    var ageMs = Date.now() - latestMs;
+    if(ageMs <= appState.staleThresholdMs){
+      el.staleNotice.style.display = 'none';
+      return;
+    }
+    var mins = Math.floor(ageMs / 60000);
+    var secs = Math.floor((ageMs % 60000) / 1000);
+    var last = new Date(latestMs).toLocaleString();
+    el.staleNotice.style.display = 'block';
+    el.staleNotice.textContent = 'Warning: leaderboard data is stale (last update ' + last + ', age ' + mins + 'm ' + secs + 's).';
   }
 
   function renderYearlySummary(summary){
