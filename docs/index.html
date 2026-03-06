@@ -21,6 +21,7 @@
   .canvas.flow .panel{position:relative !important; z-index:1; width:auto !important; height:auto !important}
   .panel{position:absolute; z-index:1; background:var(--panel); border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,.35); overflow:hidden; border:1px solid #111722; display:flex; flex-direction:column; min-height:60px; min-width:120px}
   .panel .hdr{display:flex; align-items:center; gap:10px; padding:10px 12px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; font-size:13px; flex:0 0 auto; border-bottom:1px solid #0f141a;}
+  .panel .hdr .spacer{margin-left:auto}
   .panel .hdr .dot{width:10px; height:10px; border-radius:50%}
   .panel .hdr .sub{margin-left:auto; color:var(--muted); font-weight:500}
   .panel .body{margin:0; padding:0 12px 12px; overflow:visible}
@@ -65,6 +66,7 @@
   .panel .hdr .dot.week{background:var(--smoke)}
   .panel .hdr .dot.month{background:var(--teal)}
   .panel .hdr .dot.year{background:var(--indigo)}
+  .panel .hdr .dot.health{background:var(--gold)}
   .panel.shift-a{ border-color: rgba(59,130,246,.35); box-shadow:0 6px 16px rgba(59,130,246,.12); }
   .panel.shift-a .hdr{ background:rgba(59,130,246,.10); }
   .panel.shift-a .hdr .dot{ background: var(--blue); }
@@ -118,6 +120,21 @@
   .roster-entry .name{color:var(--text)}
   .roster-entry .meta{color:var(--muted); font-size:12px}
   .roster-empty{color:var(--muted); font-size:13px; padding:6px 0}
+  .detail-pop{position:absolute; z-index:10000; min-width:420px; max-width:900px; background:#0f141a; border:1px solid #223047; border-radius:10px; box-shadow:0 10px 24px rgba(0,0,0,.45); padding:10px 12px}
+  .detail-pop .detail-head{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+  .detail-pop .detail-title{font-weight:700; letter-spacing:.3px}
+  .detail-pop .detail-meta{margin-left:auto; color:var(--muted); font-size:12px}
+  .detail-pop .detail-close{background:transparent; border:0; color:var(--muted); cursor:pointer; font-size:16px; line-height:16px; padding:2px 6px}
+  .detail-pop .detail-body{max-height:420px; overflow:auto}
+  .detail-pop table{font-size:13px}
+  .delta-pos{color:#86efac; font-weight:700}
+  .delta-neg{color:#fca5a5; font-weight:700}
+  .delta-zero{color:#9ca3af}
+  .health-grid{display:grid; grid-template-columns:220px 1fr; gap:6px 10px; font-size:13px; padding-top:8px}
+  .health-grid .k{color:#9ca3af}
+  .health-grid .v{color:#e5e7eb}
+  .mini-btn{background:#1f2937; border:1px solid #111722; color:#d1d5db; padding:2px 8px; border-radius:999px; font-size:11px; cursor:pointer; text-transform:none; letter-spacing:0}
+  .mini-btn:hover{background:#223047}
   #panel-personnel{display:flex; z-index:5}
   .panel .hdr .dot.personnel{background:var(--indigo)}
   .personnel-controls{display:flex; gap:12px; align-items:center; margin:8px 0 10px; font-size:12px; color:var(--muted)}
