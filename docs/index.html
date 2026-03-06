@@ -1114,6 +1114,104 @@
     }
   }
 
+  function csvEscape(value){
+    var text = value == null ? '' : String(value);
+    if(/[\",\\r\\n]/.test(text)){
+      return '\"' + text.replace(/\"/g, '\"\"') + '\"';
+    }
+    return text;
+  }
+
+  function downloadCsv(filename, headers, rows){
+    var lines = [];
+    lines.push(headers.map(csvEscape).join(','));
+    rows.forEach(function(row){
+      lines.push(row.map(csvEscape).join(','));
+    });
+    var csv = lines.join('\\r\\n');
+    var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){
+      URL.revokeObjectURL(a.href);
+      a.remove();
+    }, 0);
+  }
+
+  function exportPanelCsv(panel){
+    var data = appState.payload || {};
+    var ts = new Date().toISOString().replace(/[:T]/g,'-').slice(0,19);
+    if(panel === 'today' || panel === 'prior'){
+      var p = data[panel] || {rows:[]};
+      var rows = (p.rows || []).map(function(r){
+        return [r.unit || '', Number(r.calls || 0), Number(r.delta_calls || 0), Number(r.avg_min || 0).toFixed(1), Number(r.max_min || 0).toFixed(1), Number(r.after_0000 || 0)];
+      });
+      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Delta Calls','Avg Min','Max Min','After 00:00'], rows);
+      return;
+    }
+    if(panel === 'week' || panel === 'month' || panel === 'year'){
+      var w = data[panel] || {rows:[]};
+      var rowsW = (w.rows || []).map(function(r){
+        var c = r.calls_abc || [0,0,0];
+        var cm = r.calls_max_abc || [0,0,0];
+        var a = r.avg_min_abc || [0,0,0];
+        var m = r.max_min_abc || [0,0,0];
+        var af = r.after_abc || [0,0,0];
+        var afm = r.after_max_abc || [0,0,0];
+        return [r.unit || '', c[0], c[1], c[2], cm[0], cm[1], cm[2], a[0], a[1], a[2], m[0], m[1], m[2], af[0], af[1], af[2], afm[0], afm[1], afm[2], Number(r.delta_calls || 0)];
+      });
+      downloadCsv(
+        'ppfd_' + panel + '_' + ts + '.csv',
+        ['Unit','Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Delta Calls'],
+        rowsW
+      );
+      return;
+    }
+    if(panel === 'personnel'){
+      var rp = personnelState.renderedRows || [];
+      var rowsP = rp.map(function(r){
+        return [
+          r.name || r.person_id || '',
+          Number(r.total_calls || 0),
+          Number(r.delta_calls || 0),
+          Number(r.single_shift_max_calls || 0),
+          Number(r.avg_call_duration_mins || 0).toFixed(1),
+          Number(r.highest_call_duration_mins || 0).toFixed(1),
+          Number(r.total_calls_after_midnight || 0),
+          Number(r.single_shift_max_after_midnight || 0),
+          Number(r.total_call_hours || 0).toFixed(1)
+        ];
+      });
+      downloadCsv(
+        'ppfd_personnel_' + (personnelState.period || 'period') + '_' + ts + '.csv',
+        ['Name','Total Calls','Delta Calls','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
+        rowsP
+      );
+      return;
+    }
+    if(panel === 'health'){
+      var h = data.backfill_health || {};
+      var bf = h.last_backfill_status || {};
+      var rowsH = [
+        ['latest_stats_date', h.latest_stats_date || ''],
+        ['latest_roster_date', h.latest_roster_date || ''],
+        ['latest_personnel_date', h.latest_personnel_date || ''],
+        ['roster_lag_days', h.roster_lag_days == null ? '' : h.roster_lag_days],
+        ['personnel_lag_days', h.personnel_lag_days == null ? '' : h.personnel_lag_days],
+        ['missing_roster_days_count', h.missing_roster_days_count || 0],
+        ['missing_personnel_days_count', h.missing_personnel_days_count || 0],
+        ['last_backfill_status', bf.status || ''],
+        ['last_backfill_action', bf.action || ''],
+        ['last_backfill_message', bf.message || ''],
+        ['last_backfill_updated_at', bf.updated_at || '']
+      ];
+      downloadCsv('ppfd_backfill_health_' + ts + '.csv', ['key','value'], rowsH);
+    }
+  }
+
   async function fetchOnce(){
     if(isFetching) return;
     isFetching=true;
@@ -1180,13 +1278,30 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
       closeRosterPopup();
     };
   }
+  if(el.detailClose){
+    el.detailClose.onclick=function(e){
+      e.stopPropagation();
+      closeDetailPopup();
+    };
+  }
+  document.querySelectorAll('.csv-btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var panel = btn.getAttribute('data-panel');
+      if(panel){ exportPanelCsv(panel); }
+    });
+  });
   document.addEventListener('click', function(e){
-    if(!el.rosterPop || el.rosterPop.style.display==='none') return;
-    if(el.rosterPop.contains(e.target)) return;
-    closeRosterPopup();
+    if(el.rosterPop && el.rosterPop.style.display!=='none' && !el.rosterPop.contains(e.target)){
+      closeRosterPopup();
+    }
+    if(el.detailPop && el.detailPop.style.display!=='none' && !el.detailPop.contains(e.target)){
+      closeDetailPopup();
+    }
   });
   document.addEventListener('keydown', function(e){
-    if(e.key==='Escape'){ closeRosterPopup(); }
+    if(e.key==='Escape'){ closeRosterPopup(); closeDetailPopup(); }
   });
 
   var panels={ today:document.getElementById('panel-today'), prior:document.getElementById('panel-prior'), week:document.getElementById('panel-week'), month:document.getElementById('panel-month'), year:document.getElementById('panel-year'), health:document.getElementById('panel-health'), personnel:document.getElementById('panel-personnel') };
