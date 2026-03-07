@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <title>PPFD Live Leaderboards</title>
 <style>
@@ -175,12 +175,12 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-calls">Delta Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-calls">Delta Calls</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
@@ -193,7 +193,7 @@
           <th colspan="3">Avg. Call Duration (Mins)</th>
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
-          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Delta Calls</th></tr>
+          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Change vs Last Period</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -215,7 +215,7 @@
           <th colspan="3">Avg. Call Duration (Mins)</th>
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
-          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Delta Calls</th></tr>
+          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Change vs Last Period</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -237,7 +237,7 @@
           <th colspan="3">Avg. Call Duration (Mins)</th>
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
-          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Delta Calls</th></tr>
+          <th colspan="3">Single-Shift Max After Midnight</th><th rowspan="2">Change vs Last Period</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -278,7 +278,7 @@
               <th data-sort="highest_call_duration_mins">Highest Call Duration (Mins)</th>
               <th data-sort="total_calls_after_midnight">Total Calls After Midnight</th>
               <th data-sort="single_shift_max_after_midnight">Single-Shift Max After Midnight</th>
-              <th data-sort="total_call_hours">Total Call Hours</th><th data-sort="delta_calls">Delta Calls</th>
+              <th data-sort="total_call_hours">Total Call Hours</th><th data-sort="delta_calls">Change vs Last Period</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -1100,7 +1100,7 @@
       var rows = (p.rows || []).map(function(r){
         return [r.unit || '', Number(r.calls || 0), Number(r.delta_calls || 0), Number(r.avg_min || 0).toFixed(1), Number(r.max_min || 0).toFixed(1), Number(r.after_0000 || 0)];
       });
-      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Delta Calls','Avg Min','Max Min','After 00:00'], rows);
+      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
       return;
     }
     if(panel === 'week' || panel === 'month' || panel === 'year'){
@@ -1116,7 +1116,7 @@
       });
       downloadCsv(
         'ppfd_' + panel + '_' + ts + '.csv',
-        ['Unit','Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Delta Calls'],
+        ['Unit','Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Change vs Last Period'],
         rowsW
       );
       return;
@@ -1138,7 +1138,7 @@
       });
       downloadCsv(
         'ppfd_personnel_' + (personnelState.period || 'period') + '_' + ts + '.csv',
-        ['Name','Total Calls','Delta Calls','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
+        ['Name','Total Calls','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
         rowsP
       );
       return;
@@ -1314,3 +1314,4 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   window.addEventListener('resize', function(){ updateFlowMode(); applyPageScrollLayout(); });
   fetchOnce(); startAuto();
 </script>
+
