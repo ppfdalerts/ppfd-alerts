@@ -580,12 +580,12 @@
       var tr=document.createElement('tr'); var td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
     function fnum(v,isFloat){ return isFloat ? ((isFinite(v)? Number(v).toFixed(1):'0.0')) : (v||0); }
-    function winnerIndex(arr, lowest){
+    function winnerIndex(arr, lowest, allowZero){
       var bestIdx=-1, bestVal=null;
       for(var i=0;i<3;i++){
         var v=Number((arr && arr[i]!=null) ? arr[i] : 0);
         if(lowest){
-          if(!(v>0)) continue;
+          if(!allowZero && !(v>0)) continue;
           if(bestIdx===-1 || v<bestVal){ bestVal=v; bestIdx=i; }
         } else {
           if(bestIdx===-1 || v>bestVal){ bestVal=v; bestIdx=i; }
@@ -604,8 +604,8 @@
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tr.appendChild(tdU);
       (function(){
         var classes=['valA','valB','valC'];
-        function renderGroup(arr, isFloat, lowestWins){
-          var wi = winnerIndex(arr, lowestWins);
+        function renderGroup(arr, isFloat, lowestWins, allowZero){
+          var wi = winnerIndex(arr, lowestWins, allowZero);
           for(var i=0;i<3;i++){
             var td=document.createElement('td'); td.className=classes[i];
             var t = fnum(((arr||[])[i]||0), isFloat);
@@ -619,7 +619,7 @@
         renderGroup(r.max_min_abc, true, true);
         renderGroup(r.after_abc, false, false);
         renderGroup(r.after_max_abc, false, false);
-        renderGroup(r.ride_in_abc, false, false);
+        renderGroup(r.ride_in_abc, false, true, true);
       })();
       var tdDelta=document.createElement('td');
       tdDelta.className = deltaClass(r.delta_calls||0);
