@@ -432,16 +432,20 @@
   function renderYearlySummary(summary){
     if(!el || !el.yearlySummary) return;
     if(!summary || typeof summary !== 'object'){
-      el.yearlySummary.textContent = 'Yearly Calls | Units: -- | Personnel: -- | Started: ---- -- -- | Resets: ---- -- --';
+      el.yearlySummary.textContent = 'Yearly Cycle | Calls U:-- P:-- | Ride-Ins U:-- P:-- | Started: ---- -- -- | Resets: ---- -- --';
       return;
     }
     var units = Number(summary.units_total_calls || 0);
     var personnel = Number(summary.personnel_total_calls || 0);
+    var unitsRideIns = Number(summary.units_total_ride_ins || 0);
+    var personnelRideIns = Number(summary.personnel_total_ride_ins || 0);
     var started = formatIsoDate(summary.start_date);
     var resets = formatIsoDate(summary.next_reset_date);
     el.yearlySummary.textContent =
-      'Yearly Calls | Units: ' + units.toLocaleString() +
-      ' | Personnel: ' + personnel.toLocaleString() +
+      'Yearly Cycle | Calls U:' + units.toLocaleString() +
+      ' P:' + personnel.toLocaleString() +
+      ' | Ride-Ins U:' + unitsRideIns.toLocaleString() +
+      ' P:' + personnelRideIns.toLocaleString() +
       ' | Started: ' + started +
       ' | Resets: ' + resets;
   }
@@ -545,6 +549,11 @@
       }
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
+      var tdR=document.createElement('td'); tdR.className='col-calls';
+      var rideIns=r.ride_in_count||0;
+      if(rideIns>0){ tdR.innerHTML='<span class="pill-badge ride-badge">'+rideIns+'</span>'; }
+      else { tdR.textContent='0'; tdR.style.color='#9ca3af'; }
+      tr.appendChild(tdR);
       var tdD=document.createElement('td'); tdD.className='col-calls ' + deltaClass(r.delta_calls||0); tdD.textContent=formatDelta(r.delta_calls||0); tr.appendChild(tdD);
       var tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML='<span class="pill-badge avg-badge">'+((r.avg_min||0).toFixed(1))+'</span>'; tr.appendChild(tdA);
       var thCount=table.querySelectorAll('thead th').length;
@@ -566,7 +575,7 @@
   function renderWeekMonth(table, data, periodKey){
     var tbody=table.querySelector('tbody');
     tbody.innerHTML='';
-    var thCount=20;
+    var thCount=23;
     if(!data || !Array.isArray(data.rows) || data.rows.length===0){
       var tr=document.createElement('tr'); var td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
@@ -610,6 +619,7 @@
         renderGroup(r.max_min_abc, true, true);
         renderGroup(r.after_abc, false, false);
         renderGroup(r.after_max_abc, false, false);
+        renderGroup(r.ride_in_abc, false, false);
       })();
       var tdDelta=document.createElement('td');
       tdDelta.className = deltaClass(r.delta_calls||0);
@@ -859,12 +869,13 @@
       el.detailBody.innerHTML = '<div class=\"roster-empty\">No detail rows available for this selection.</div>';
       return;
     }
-    var html = '<table><thead><tr><th>Date</th><th>Shift</th><th>Calls</th><th>Avg Min</th><th>Max Min</th><th>After 00:00</th></tr></thead><tbody>';
+    var html = '<table><thead><tr><th>Date</th><th>Shift</th><th>Calls</th><th>Ride-Ins</th><th>Avg Min</th><th>Max Min</th><th>After 00:00</th></tr></thead><tbody>';
     rows.forEach(function(r){
       html += '<tr>'
         + '<td>' + (r.date || '--') + '</td>'
         + '<td>' + (r.shift || '--') + '</td>'
         + '<td>' + String(r.calls || 0) + '</td>'
+        + '<td>' + String(r.ride_in_count || 0) + '</td>'
         + '<td>' + Number(r.avg_min || 0).toFixed(1) + '</td>'
         + '<td>' + Number(r.max_min || 0).toFixed(1) + '</td>'
         + '<td>' + String(r.after_0000 || 0) + '</td>'
@@ -903,6 +914,7 @@
   var personnelSortTypes = {
     name: 'string',
     total_calls: 'number',
+    ride_in_count: 'number',
     single_shift_max_calls: 'number',
     avg_call_duration_mins: 'number',
     highest_call_duration_mins: 'number',
@@ -991,6 +1003,7 @@
       }
       addCell(r.name || r.person_id || '');
       addCell(String(r.total_calls || 0));
+      addCell(String(r.ride_in_count || 0));
       addCell(String(r.single_shift_max_calls || 0));
       addCell((r.avg_call_duration_mins != null ? Number(r.avg_call_duration_mins).toFixed(1) : '0.0'));
       addCell((r.highest_call_duration_mins != null ? Number(r.highest_call_duration_mins).toFixed(1) : '0.0'));
@@ -1109,9 +1122,9 @@
     if(panel === 'today' || panel === 'prior'){
       var p = data[panel] || {rows:[]};
       var rows = (p.rows || []).map(function(r){
-        return [r.unit || '', Number(r.calls || 0), Number(r.delta_calls || 0), Number(r.avg_min || 0).toFixed(1), Number(r.max_min || 0).toFixed(1), Number(r.after_0000 || 0)];
+        return [r.unit || '', Number(r.calls || 0), Number(r.ride_in_count || 0), Number(r.delta_calls || 0), Number(r.avg_min || 0).toFixed(1), Number(r.max_min || 0).toFixed(1), Number(r.after_0000 || 0)];
       });
-      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
+      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
       return;
     }
     if(panel === 'week' || panel === 'month' || panel === 'year'){
@@ -1123,11 +1136,12 @@
         var m = r.max_min_abc || [0,0,0];
         var af = r.after_abc || [0,0,0];
         var afm = r.after_max_abc || [0,0,0];
-        return [r.unit || '', c[0], c[1], c[2], cm[0], cm[1], cm[2], a[0], a[1], a[2], m[0], m[1], m[2], af[0], af[1], af[2], afm[0], afm[1], afm[2], Number(r.delta_calls || 0)];
+        var ri = r.ride_in_abc || [0,0,0];
+        return [r.unit || '', c[0], c[1], c[2], cm[0], cm[1], cm[2], a[0], a[1], a[2], m[0], m[1], m[2], af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2], Number(r.delta_calls || 0)];
       });
       downloadCsv(
         'ppfd_' + panel + '_' + ts + '.csv',
-        ['Unit','Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Change vs Last Period'],
+        ['Unit','Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Ride-Ins A','Ride-Ins B','Ride-Ins C','Change vs Last Period'],
         rowsW
       );
       return;
@@ -1138,6 +1152,7 @@
         return [
           r.name || r.person_id || '',
           Number(r.total_calls || 0),
+          Number(r.ride_in_count || 0),
           Number(r.delta_calls || 0),
           Number(r.single_shift_max_calls || 0),
           Number(r.avg_call_duration_mins || 0).toFixed(1),
@@ -1149,7 +1164,7 @@
       });
       downloadCsv(
         'ppfd_personnel_' + (personnelState.period || 'period') + '_' + ts + '.csv',
-        ['Name','Total Calls','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
+        ['Name','Total Calls','Ride-Ins','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
         rowsP
       );
       return;
