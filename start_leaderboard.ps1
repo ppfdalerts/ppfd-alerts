@@ -1073,10 +1073,13 @@ function Invoke-LeaderboardRun {
 
   try {
     $here = $script:ScriptRoot
-    Set-Location $here
+    $stateRoot = $script:StateRoot
+    $repoRoot = $script:CodeRepoRoot
+    $generatedRoot = $script:GeneratedRoot
+    Set-Location $stateRoot
 
     # Prefer the same venv used by the alerts script if present
-    $venvPy = Join-Path $here 'venv\Scripts\python.exe'
+    $venvPy = Join-Path $stateRoot 'venv\Scripts\python.exe'
     if (Test-Path $venvPy) {
       $python = $venvPy
     } else {
@@ -1091,13 +1094,13 @@ function Invoke-LeaderboardRun {
     }
 
     # Resolve stats directory from the freshest available source.
-    $statsDir = Resolve-StatsDir -BaseDir $here
+    $statsDir = Resolve-StatsDir -BaseDir $stateRoot
 
     if ($statsDir) {
       $env:SHIFT_STATS_DIR = $statsDir
     }
 
-    $personnelStats = Join-Path $here 'data\shift_personnel'
+    $personnelStats = Join-Path $stateRoot 'data\shift_personnel'
     if (Test-Path $personnelStats) {
       try {
         $env:PERSONNEL_STATS_DIR = (Resolve-Path $personnelStats).Path
@@ -1110,7 +1113,7 @@ function Invoke-LeaderboardRun {
 
     # Always set ROSTER_DIR when TSlogs exists (even when -SkipRoster is used),
     # so downstream generators can still resolve roster_units JSON files.
-    $tsLogs = Join-Path $here 'TSlogs'
+    $tsLogs = Join-Path $stateRoot 'TSlogs'
     if (Test-Path $tsLogs) {
       try {
         $env:ROSTER_DIR = (Resolve-Path $tsLogs).Path
@@ -1203,15 +1206,22 @@ function Invoke-LeaderboardRun {
       }
     }
 
-    $repoRoot = Join-Path $here 'ppfd-alerts'
     $genScript = Join-Path $repoRoot 'scripts\generate_leaderboard.py'
     $indexOut = Join-Path $repoRoot 'docs\index.html'
-    $outData = Join-Path $repoRoot 'docs\data.json'
-    $outRoster = Join-Path $repoRoot 'docs\roster_units.json'
-    $versionOut = Join-Path $repoRoot 'docs\version.json'
-    $backfillStatusOut = Join-Path $repoRoot 'docs\backfill_status.json'
+    $outData = Join-Path $generatedRoot 'docs\data.json'
+    $outRoster = Join-Path $generatedRoot 'docs\roster_units.json'
+    $versionOut = Join-Path $generatedRoot 'docs\version.json'
+    $backfillStatusOut = Join-Path $generatedRoot 'docs\backfill_status.json'
     $legacyCalc = Join-Path $here 'ppfd_leaderboard_calculator.py'
-    $legacyOut = Join-Path $repoRoot 'data\leaderboards.json'
+    $legacyOut = Join-Path $generatedRoot 'data\leaderboards.json'
+    foreach ($dir in @(
+      (Split-Path -Parent $outData),
+      (Split-Path -Parent $legacyOut)
+    )) {
+      if ($dir -and -not (Test-Path $dir)) {
+        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+      }
+    }
     Write-BackfillStatusFile -Path $backfillStatusOut
     $runFingerprint = @(
       $fp,
