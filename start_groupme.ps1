@@ -5,6 +5,23 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+$script:CodeRoot = $PSScriptRoot
+if (-not $script:CodeRoot) {
+  try {
+    $script:CodeRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+  } catch {
+    $script:CodeRoot = Get-Location
+  }
+}
+$script:StateRoot = ([string]$env:PPFD_STATE_ROOT).Trim()
+if (-not $script:StateRoot) {
+  $script:StateRoot = $script:CodeRoot
+} else {
+  try {
+    $script:StateRoot = [System.IO.Path]::GetFullPath($script:StateRoot)
+  } catch {}
+}
+
 function Write-Info($msg) {
   $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
   Write-Output "$ts  $msg"
@@ -100,13 +117,17 @@ function Get-StatsHeartbeat {
 }
 
 try {
-  $here = Split-Path -Parent $MyInvocation.MyCommand.Path
-  Set-Location $here
-  $handshake = Join-Path $here 'startup_handshake.json'
-  $statsDir = Join-Path $here 'data\shift_stats'
-  $legacyStatsDir = Join-Path (Split-Path $here -Parent) 'data\shift_stats'
-  $personnelDir = Join-Path $here 'data\shift_personnel'
-  $rosterDir = Join-Path $here 'TSlogs'
+  $codeRoot = $script:CodeRoot
+  $stateRoot = $script:StateRoot
+  if (-not (Test-Path $stateRoot)) {
+    New-Item -ItemType Directory -Path $stateRoot -Force | Out-Null
+  }
+  Set-Location $stateRoot
+  $handshake = Join-Path $stateRoot 'startup_handshake.json'
+  $statsDir = Join-Path $stateRoot 'data\shift_stats'
+  $legacyStatsDir = Join-Path (Split-Path $stateRoot -Parent) 'data\shift_stats'
+  $personnelDir = Join-Path $stateRoot 'data\shift_personnel'
+  $rosterDir = Join-Path $stateRoot 'TSlogs'
 
   # Guard against concurrent launches (scheduled task + manual, duplicate triggers, etc.)
   $mutex = $null
@@ -161,7 +182,7 @@ try {
     }
   }
 
-  $venvPy = Join-Path $here 'venv\Scripts\python.exe'
+  $venvPy = Join-Path $stateRoot 'venv\Scripts\python.exe'
   $existing = @(Get-AlertsProcesses)
   if ($existing.Count -gt 0) {
     $local = $existing | Where-Object { $_.ExecutablePath -and ($_.ExecutablePath -ieq $venvPy) }
@@ -210,7 +231,7 @@ try {
       # Fallback to 3.12.7 if 3.11.x not available
       'https://www.python.org/ftp/python/3.12.7/python-3.12.7-amd64.exe'
     )
-    $tmp = Join-Path $here 'python-installer.exe'
+    $tmp = Join-Path $stateRoot 'python-installer.exe'
     foreach ($u in $urls) {
       try {
         Write-Info "Downloading Python: $u"
@@ -259,25 +280,26 @@ try {
       if (-not $basePy) { throw 'Python installation not found after install.' }
     }
     Write-Info "Creating virtual environment ($basePy -m venv venv)"
-    & $basePy -m venv (Join-Path $here 'venv')
+    & $basePy -m venv (Join-Path $stateRoot 'venv')
     if (-not (Test-Path $venvPy)) { throw 'Failed to create virtual environment.' }
     Write-Info 'Installing dependencies'
     & $venvPy -m pip install --upgrade pip
-    if (Test-Path (Join-Path $here 'requirements.txt')) {
-      & $venvPy -m pip install -r (Join-Path $here 'requirements.txt')
+    if (Test-Path (Join-Path $codeRoot 'requirements.txt')) {
+      & $venvPy -m pip install -r (Join-Path $codeRoot 'requirements.txt')
     } else {
       & $venvPy -m pip install requests
     }
   }
   ${python} = $venvPy
-  ${argsList} = @('.\ppfd_groupme_alerts_v1.py')
+  ${argsList} = @('"' + (Join-Path $codeRoot 'ppfd_groupme_alerts_v1.py') + '"')
 
   # Environment for quieter logging by default
   if (-not $env:DEBUG_VERBOSE) { $env:DEBUG_VERBOSE = '0' }
   if (-not $env:REQUIRE_STARTUP_CONFIRM) { $env:REQUIRE_STARTUP_CONFIRM = '1' }
   if ($TestMode) { $env:TEST_MODE = '1' } else { $env:TEST_MODE = '0' }
+  $env:PPFD_STATE_ROOT = $stateRoot
   # Ensure the Python script can find the tokens file regardless of working dir
-  $tokens = Join-Path $here 'Groupmetokens.txt'
+  $tokens = Join-Path $stateRoot 'Groupmetokens.txt'
   if (Test-Path $tokens) { $env:GROUPME_TOKENS_FILE = $tokens }
 
   Write-Info "Launching (detached): $python $($argsList -join ' ')"
@@ -285,7 +307,7 @@ try {
   $psi = New-Object System.Diagnostics.ProcessStartInfo
   $psi.FileName = $python
   $psi.Arguments = ($argsList -join ' ')
-  $psi.WorkingDirectory = $here
+  $psi.WorkingDirectory = $stateRoot
   $psi.UseShellExecute = $false
   $psi.CreateNoWindow = $true
 
@@ -312,12 +334,12 @@ try {
   # Kick off GitHub stats sync loop if configured
   if ($env:GITHUB_STATS_REPO -and $env:GITHUB_TOKEN) {
     try {
-      $sync = Join-Path $here 'sync_stats_to_github.ps1'
+      $sync = Join-Path $codeRoot 'sync_stats_to_github.ps1'
       if (Test-Path $sync) {
         $argsSync = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$sync`""
         Write-Info "Starting GitHub stats sync loop ($argsSync)"
         $psExe = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-        Start-Process -FilePath $psExe -ArgumentList $argsSync -WorkingDirectory $here -WindowStyle Hidden | Out-Null
+        Start-Process -FilePath $psExe -ArgumentList $argsSync -WorkingDirectory $stateRoot -WindowStyle Hidden | Out-Null
       }
     } catch {
       Write-Info "WARN: Unable to start GitHub stats sync: $($_.Exception.Message)"
