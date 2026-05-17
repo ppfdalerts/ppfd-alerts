@@ -172,18 +172,17 @@ function Ensure-WorkingCopy {
 
   if ($current -ne $remote) {
     $changedFiles = @(Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('diff', '--name-only', 'HEAD', ("origin/{0}" -f $Branch)))
-    $generatedOnly = $true
+    $restartRequired = $false
     foreach ($rawPath in $changedFiles) {
       $path = ([string]$rawPath).Trim().Replace('\', '/')
       if (-not $path) { continue }
       if (@(
-        'docs/data.json',
-        'data/leaderboards.json',
-        'docs/roster_units.json',
-        'docs/version.json',
-        'docs/backfill_status.json'
-      ) -notcontains $path) {
-        $generatedOnly = $false
+        'start_groupme.ps1',
+        'start_leaderboard.ps1',
+        'ppfd_groupme_alerts_v1.py',
+        'requirements.txt'
+      ) -contains $path) {
+        $restartRequired = $true
         break
       }
     }
@@ -192,7 +191,7 @@ function Ensure-WorkingCopy {
     $current = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
     return [pscustomobject]@{
       Changed = $true
-      RestartRequired = (-not $generatedOnly)
+      RestartRequired = $restartRequired
       Head = $current
     }
   }
