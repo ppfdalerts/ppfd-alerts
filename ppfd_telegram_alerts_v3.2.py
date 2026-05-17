@@ -5,12 +5,31 @@ from typing import Dict, Any, List, Set, Tuple
 from requests.exceptions import ReadTimeout
 
 # --- Log everything to alerts.log (console and errors) ---
+def _open_log_with_retry(filename: str, attempts: int = 15, delay: float = 0.2):
+    import time as _t
+    last_err = None
+    for _ in range(max(1, attempts)):
+        try:
+            return open(filename, "a", encoding='utf-8')
+        except Exception as e:
+            last_err = e
+            try:
+                _t.sleep(delay)
+            except Exception:
+                pass
+    # Fallback to stdout if file can't be opened
+    try:
+        print(f"{datetime.datetime.now():%Y-%m-%d %H:%M:%S}  WARN: log open failed for {filename}: {last_err}")
+    except Exception:
+        pass
+    return sys.stdout
+
 try:
     _HERE = os.path.dirname(os.path.abspath(__file__))
     _LOG_FP = os.path.join(_HERE, "alerts.log")
 except Exception:
     _LOG_FP = "alerts.log"
-sys.stdout = open(_LOG_FP, "a", encoding='utf-8')
+sys.stdout = _open_log_with_retry(_LOG_FP)
 sys.stderr = sys.stdout
 
 def log(msg: str):
@@ -37,6 +56,15 @@ def _load_dotenv(path: str = ".env"):
         try:
             here = os.path.dirname(os.path.abspath(__file__))
             candidates.append(os.path.join(here, ".env"))
+        except Exception:
+            pass
+        # Also check a central config/.env in repo root (both from CWD and relative to this script)
+        try:
+            candidates.append(os.path.join(os.getcwd(), "config", ".env"))
+        except Exception:
+            pass
+        try:
+            candidates.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "config", ".env"))
         except Exception:
             pass
         loaded_any = False
@@ -72,6 +100,12 @@ def _load_dotenv(path: str = ".env"):
 
 _load_dotenv()
 
+# --- Test mode guard ---
+# When TEST_MODE is enabled (env var set to 1/true/yes/on),
+# the script becomes import-safe: it skips starting the main loop
+# and avoids sending the initial status message. This enables unit testing.
+TEST_MODE = str(os.environ.get("TEST_MODE", "0")).strip().lower() in ("1", "true", "yes", "on")
+
 # --- Config (from environment / .env) ---
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 try:
@@ -103,55 +137,68 @@ ID2UNIT = {v: k for k, v in THREAD_IDS.items()}
 # Create a file named `geofences.json` next to this script using the
 # structure shown in `geofences.example.json` (added in repo).
 GEOFENCE_FILE = "geofences.json"
-EARLY_ALERT_ENABLED = True
-EARLY_ALERT_TITLE_PREFIX = "EARLY"
+# Default disabled unless explicitly enabled (per repo policy)
+EARLY_ALERT_ENABLED = str(os.environ.get("ENABLE_EARLY_ALERTS", "0")).strip().lower() in ("1", "true", "yes", "on")
+EARLY_ALERT_TITLE_PREFIX = os.environ.get("EARLY_ALERT_TITLE_PREFIX", "EARLY").strip() or "EARLY"
 EARLY_SEEN: Set[Tuple[str, str]] = set()  # (incident_id, unit)
 
-# --- TAPO SMART PLUG CONFIG ---
-TAPO_PLUG_IP = os.environ.get("TAPO_PLUG_IP", os.environ.get("TAPO_DEVICE_IP", ""))
-TAPO_EMAIL = os.environ.get("TAPO_EMAIL", "")
-TAPO_PASSWORD = os.environ.get("TAPO_PASSWORD", "")
-TAPO_TRIGGER_UNITS = set((os.environ.get("TAPO_TRIGGER_UNITS", "").replace(" ", "") or "").split(",")) - {""}
-try:
-    TAPO_ON_SEC = int(os.environ.get("TAPO_ON_SEC", os.environ.get("TAPO_AUTO_OFF_SEC", "90")))
-except Exception:
-    TAPO_ON_SEC = 90
-
-try:
-    from PyP100 import PyP100
-    tapo_ok = bool(TAPO_EMAIL and TAPO_PASSWORD and TAPO_PLUG_IP)
-except ImportError:
-    log("PyP100 library not found. Smart plug integration disabled.")
-    tapo_ok = False
-
-def tapo_pulse():
-    if not tapo_ok:
-        return
-    try:
-        plug = PyP100.P100(TAPO_PLUG_IP, TAPO_EMAIL, TAPO_PASSWORD)
-        plug.handshake()
-        plug.login()
-        plug.turnOn()
-        log("Tapo plug ON")
-        time.sleep(TAPO_ON_SEC)
-        plug.turnOff()
-        log("Tapo plug OFF")
-    except Exception as e:
-        log(f"Tapo plug error: {e}")
-
 # --- Timezone/Session ---
-TZ = datetime.timezone(datetime.timedelta(hours=-4))
+# Use local system timezone (DST-aware) to avoid 1-hour drift across DST changes.
+TZ = datetime.datetime.now().astimezone().tzinfo
 sess = requests.Session()
 sess.verify = certifi.where()
 sess.headers.update({"User-Agent": "PPFD-Telegram/3.2"})
 
+# Detect whether the target chat supports forum topics (threaded messages).
+# If not, we will omit message_thread_id in Telegram requests.
+def _detect_forum_enabled():
+    try:
+        r = sess.get(f"https://api.telegram.org/bot{BOT_TOKEN}/getChat",
+                     params={"chat_id": CHAT_ID}, timeout=10)
+        j = r.json()
+        if j.get("ok"):
+            res = j.get("result", {})
+            val = bool(res.get("is_forum"))
+            try:
+                log(f"Telegram chat forum support: {'ENABLED' if val else 'DISABLED'}")
+            except Exception:
+                pass
+            return val
+    except Exception as e:
+        try:
+            log(f"Forum detection error (ignored): {e}")
+        except Exception:
+            pass
+    return False
+
+# In test mode, assume forum is enabled to keep tests simple; at runtime detect.
+FORUM_ENABLED = True if TEST_MODE else _detect_forum_enabled()
+
 # --- Persistence ---
 SHIFT_HOUR = 7
+
+# Stats storage directory (default to repo's data/shift_stats, override via SHIFT_STATS_DIR)
+try:
+    _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir))
+except Exception:
+    _REPO_ROOT = os.getcwd()
+DEFAULT_STATS_DIR = os.path.join(_REPO_ROOT, "data", "shift_stats")
+STATS_DIR = os.environ.get("SHIFT_STATS_DIR", DEFAULT_STATS_DIR)
+try:
+    os.makedirs(STATS_DIR, exist_ok=True)
+except Exception as _e:
+    try:
+        log(f"WARN: Could not create stats dir {STATS_DIR}: {_e}")
+    except Exception:
+        pass
+
 def shift_start(now):
     base = now.replace(hour=SHIFT_HOUR, minute=0, second=0, microsecond=0)
     return base if now >= base else base - datetime.timedelta(days=1)
-def stats_file(dt): 
-    return f"shift_stats_{dt:%Y-%m-%d}.json"
+
+def stats_file(dt):
+    return os.path.join(STATS_DIR, f"shift_stats_{dt:%Y-%m-%d}.json")
+
 def load(fp):
     if os.path.exists(fp):
         try:
@@ -174,14 +221,31 @@ def save(fp, calls, dur, after, max_sec):
 
 # Fail fast if required Telegram env missing
 if not BOT_TOKEN or not CHAT_ID:
-    log("ERROR: Missing BOT_TOKEN or CHAT_ID environment variables. Configure .env or system env.")
-    raise SystemExit(2)
+    if TEST_MODE:
+        log("TEST MODE: Skipping BOT_TOKEN/CHAT_ID check.")
+    else:
+        log("ERROR: Missing BOT_TOKEN or CHAT_ID environment variables. Configure .env or system env.")
+        raise SystemExit(2)
 
 NOW = datetime.datetime.now(TZ)
 SHIFT_DT = shift_start(NOW)
 STATS_FN = stats_file(SHIFT_DT)
 CALLS, DUR_SEC, AFTER_0000, MAX_SEC = load(STATS_FN)
 
+
+# Startup announce guard
+START_ANNOUNCED = False
+
+def _announce_start():
+    global START_ANNOUNCED
+    try:
+        post("LOG", "SCRIPT STATUS", "PPFD alert script started successfully at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        START_ANNOUNCED = True
+    except Exception as e:
+        try:
+            log(f"Startup announce error: {e}")
+        except Exception:
+            pass
 
 # --- Leaderboard helpers ---
 STATS_FILENAME_RE = re.compile(r"shift_stats_(\d{4}-\d{2}-\d{2})\.json")
@@ -219,23 +283,31 @@ def aggregate_timeframe_stats(period_key, now=None):
     calls = defaultdict(int)
     dur = defaultdict(int)
     after_midnight = defaultdict(int)
-    for name in os.listdir('.'):
+    try:
+        names = os.listdir(STATS_DIR)
+    except Exception:
+        names = []
+    for name in names:
         match = STATS_FILENAME_RE.fullmatch(name)
         if not match:
             continue
-        file_date = datetime.datetime.strptime(match.group(1), "%Y-%m-%d").date()
+        try:
+            file_date = datetime.datetime.strptime(match.group(1), "%Y-%m-%d").date()
+        except Exception:
+            continue
         if cutoff_date and file_date < cutoff_date:
             continue
-        file_calls, file_dur, file_after = load(name)
+        file_path = os.path.join(STATS_DIR, name)
+        file_calls, file_dur, file_after = load(file_path)
         for unit, count in file_calls.items():
             if unit in WATCH_SET:
-                calls[unit] += count
+                calls[unit] += int(count)
         for unit, seconds in file_dur.items():
             if unit in WATCH_SET:
-                dur[unit] += seconds
+                dur[unit] += int(seconds)
         for unit, count in file_after.items():
             if unit in WATCH_SET:
-                after_midnight[unit] += count
+                after_midnight[unit] += int(count)
     return dict(calls), dict(dur), dict(after_midnight)
 
 def format_leaderboard_body(label, period_key, calls, dur, after_midnight, now):
@@ -377,16 +449,42 @@ TG_SEND = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 TG_EDIT = f"https://api.telegram.org/bot{BOT_TOKEN}/editMessageText"
 def post(unit, title, body):
     tid = THREAD_IDS.get(unit)
-    if tid is None: return
+    if tid is None:
+        return
     payload = {
         "chat_id": CHAT_ID,
-        "message_thread_id": tid,
         "text": f"<b>{title}</b>\n{body}",
-        "parse_mode": "HTML"
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True,
     }
+    if FORUM_ENABLED:
+        payload["message_thread_id"] = tid
     try:
-        sess.post(TG_SEND, json=payload, timeout=15)
-        log(f"SENT [{unit}] {title} - {body.replace(chr(10), ' | ')}")
+        resp = sess.post(TG_SEND, json=payload, timeout=15)
+        try:
+            rj = resp.json()
+            if not rj.get("ok", False):
+                desc = str(rj.get("description", ""))
+                dl = desc.lower()
+                if ("thread not found" in dl) or ("forum topics" in dl) or ("not a forum" in dl) or ("forum is" in dl) or ("topic" in dl and "not" in dl):
+                    # Fallback: send to chat root without thread id
+                    payload2 = dict(payload)
+                    payload2.pop("message_thread_id", None)
+                    r2 = sess.post(TG_SEND, json=payload2, timeout=15).json()
+                    if not r2.get("ok", False):
+                        log(f"Telegram send fallback failed [{unit}] {title}: {r2}")
+                    else:
+                        log(f"SENT (no-thread) [{unit}] {title} - {body.replace(chr(10), ' | ')}")
+                else:
+                    log(f"Telegram send failed [{unit}] {title}: {rj}")
+            else:
+                log(f"SENT [{unit}] {title} - {body.replace(chr(10), ' | ')}")
+        except Exception:
+            # Fall back to status code only if body isn't JSON
+            if resp.status_code >= 400:
+                log(f"Telegram send HTTP {resp.status_code} [{unit}] {title}")
+            else:
+                log(f"SENT [{unit}] {title} - {body.replace(chr(10), ' | ')}")
     except ReadTimeout:
         log("Telegram send timeout (ignored)")
     except Exception as e:
@@ -397,10 +495,12 @@ def post_return_id(unit, title, body):
     if tid is None: return None
     payload = {
         "chat_id": CHAT_ID,
-        "message_thread_id": tid,
         "text": f"<b>{title}</b>\n{body}",
-        "parse_mode": "HTML"
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True,
     }
+    if FORUM_ENABLED:
+        payload["message_thread_id"] = tid
     try:
         r = sess.post(TG_SEND, json=payload, timeout=15).json()
         if r.get("ok") and r.get("result"):
@@ -408,7 +508,19 @@ def post_return_id(unit, title, body):
             log(f"SENT-ID [{unit}] {title} mid={mid}")
             return mid
         else:
-            log(f"Telegram send (no id) resp={r}")
+            desc = str(r.get("description", ""))
+            dl = desc.lower()
+            if ("thread not found" in dl) or ("forum topics" in dl) or ("not a forum" in dl) or ("forum is" in dl) or ("topic" in dl and "not" in dl):
+                payload2 = dict(payload)
+                payload2.pop("message_thread_id", None)
+                r2 = sess.post(TG_SEND, json=payload2, timeout=15).json()
+                if r2.get("ok") and r2.get("result"):
+                    mid = r2["result"].get("message_id")
+                    log(f"SENT-ID (no-thread) [{unit}] {title} mid={mid}")
+                    return mid
+                log(f"Telegram send fallback (no id) resp={r2}")
+            else:
+                log(f"Telegram send (no id) resp={r}")
     except ReadTimeout:
         log("Telegram send timeout (ignored)")
     except Exception as e:
@@ -422,12 +534,25 @@ def edit_message(unit, message_id, title, body):
         "chat_id": CHAT_ID,
         "message_id": message_id,
         "text": f"<b>{title}</b>\n{body}",
-        "parse_mode": "HTML"
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True,
     }
     try:
-        sess.post(TG_EDIT, json=payload, timeout=15)
-        log(f"EDIT [{unit}] {title} mid={message_id}")
-        return True
+        r = sess.post(TG_EDIT, json=payload, timeout=15)
+        try:
+            rj = r.json()
+            if rj.get("ok"):
+                log(f"EDIT [{unit}] {title} mid={message_id}")
+                return True
+            else:
+                log(f"Telegram edit failed mid={message_id}: {rj}")
+                return False
+        except Exception:
+            if r.status_code >= 400:
+                log(f"Telegram edit HTTP {r.status_code} mid={message_id}")
+                return False
+            log(f"EDIT [{unit}] {title} mid={message_id}")
+            return True
     except ReadTimeout:
         log("Telegram edit timeout (ignored)")
     except Exception as e:
@@ -467,7 +592,8 @@ def update_live_leaderboard(now):
     except Exception as e:
         log(f"update_live_leaderboard error: {e}")
 
-post("LOG", "SCRIPT STATUS", "PPFD alert script started successfully at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+if not TEST_MODE:
+    _announce_start()
 
 # --- Recap/Backoff ---
 def next_at(hr, now):
@@ -483,7 +609,7 @@ backoff = POLL_SEC
 SUNSTAR_TRACK: dict[tuple, set] = {}  # (incident_id, fd_unit) -> set of sunstar units
 
 # ===================== MAIN LOOP ====================================
-while True:
+while not TEST_MODE:
     now = datetime.datetime.now(TZ)
     headers = {"Cache-Control": "no-cache"}
     if etag: headers["If-None-Match"] = etag
@@ -497,6 +623,12 @@ while True:
             dbg("feed 304 not modified")
             time.sleep(backoff + random.uniform(0, 1))
             continue
+        # After first successful fetch attempt, ensure startup announce was sent
+        if not START_ANNOUNCED and not TEST_MODE:
+            try:
+                _announce_start()
+            except Exception:
+                pass
 
         etag, last_mod = r.headers.get("ETag", etag), r.headers.get("Last-Modified", last_mod)
 
@@ -506,8 +638,8 @@ while True:
         for it in items:
             iid = str(it.get("IncidentNo") or hashlib.sha1(
                 f"{it.get('Type')}{it.get('Location')}{it.get('Received')}".encode()).hexdigest())
-            units = [u.get("ID", "").strip().upper() for u in it.get("Units", [])]
-            statuses = {u["ID"].upper(): u.get("Status", "").lower() for u in it.get("Units", [])}
+            units = [str(u.get("ID") or "").strip().upper() for u in it.get("Units", [])]
+            statuses = {str(u.get("ID") or "").upper(): str(u.get("Status") or "").lower() for u in it.get("Units", []) if u.get("ID")}
 
             if any(u in WATCH_SET for u in units):
                 try:
@@ -592,11 +724,21 @@ while True:
                 rec = ACTIVE.get(key)
 
                 if rec is None:
-                    ACTIVE[key] = rec = {"status": status, "start": now, "events": [("dispatched", now)]}
-                    if uid in WATCH_SET:
+                    # Shift-aware init: do not credit on-coming shift for calls received before 07:00 local.
+                    rcv = parse_ts(it.get("Received"))
+                    before_shift = False
+                    try:
+                        before_shift = (rcv is not None and rcv < SHIFT_DT)
+                    except Exception:
+                        before_shift = False
+                    ACTIVE[key] = rec = {"status": status, "start": now, "events": [("dispatched", now)], "ignore": bool(before_shift)}
+                    if uid in WATCH_SET and not before_shift:
                         CALLS[uid] += 1
-                        if parse_ts(it.get("Received")).time() < datetime.time(7):
-                            AFTER_0000[uid] += 1
+                        try:
+                            if rcv and rcv.time() < datetime.time(7):
+                                AFTER_0000[uid] += 1
+                        except Exception:
+                            pass
                         save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC)
                         try:
                             dbg(f"stats init uid={uid} calls={CALLS.get(uid,0)} after={AFTER_0000.get(uid,0)} file={STATS_FN}")
@@ -614,7 +756,7 @@ while True:
                     rec["events"].append(("available", now))
                     uid = key[1]
                     LAST_FINISHED[uid] = rec["events"]
-                    if uid in WATCH_SET:
+                    if uid in WATCH_SET and not rec.get("ignore"):
                         dur_sec = (rec["events"][-1][1] - rec["events"][0][1]).total_seconds()
                         DUR_SEC[uid] += dur_sec
                         MAX_SEC[uid] = max(int(MAX_SEC.get(uid, 0)), int(dur_sec))
@@ -656,11 +798,7 @@ while True:
                 post("LOG", title, body)
                 SEEN_MSG.add(iid)
 
-                # Tapo P105 smart plug activation for trigger units
-                if tapo_ok and TAPO_TRIGGER_UNITS.intersection(units):
-                    log(f"Tapo plug triggered for units: {TAPO_TRIGGER_UNITS.intersection(units)}")
-                    import threading
-                    threading.Thread(target=tapo_pulse, daemon=True).start()
+
 
             if len(SEEN_MSG) > 5000:
                 SEEN_MSG = set(list(SEEN_MSG)[-2500:])
@@ -750,10 +888,13 @@ while True:
         for tid in THREAD_IDS:
             post(tid, "CALL COUNT", "\n".join(lines))
         log("Mid-shift recap sent")
-        next_evening += datetime.timedelta(days=1)
+        # Recompute based on current local time to avoid DST drift
+        next_evening = next_at(19, now)
 
     if now >= next_morning:
-        yday = (next_morning - datetime.timedelta(days=1)).strftime('%d %b %Y')
+        # Determine prior shift date using current local time; this keeps rollovers correct across DST
+        current_shift_start = shift_start(now)
+        yday = (current_shift_start - datetime.timedelta(days=1)).strftime('%d %b %Y')
         lines = [f"Daily runs {yday}"]
         for u, c in sorted(CALLS.items(), key=lambda kv: (-kv[1], kv[0])):
             avg = (DUR_SEC[u] / c) / 60 if c else 0
@@ -766,11 +907,13 @@ while True:
         DUR_SEC.clear()
         AFTER_0000.clear()
         MAX_SEC.clear()
-        SHIFT_DT += datetime.timedelta(days=1)
+        # Update shift start to the actual 07:00 local for today (not +24h absolute time)
+        SHIFT_DT = current_shift_start
         STATS_FN = stats_file(SHIFT_DT)
         save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC)
-        next_morning += datetime.timedelta(days=1)
-        next_evening += datetime.timedelta(days=1)
+        # Recompute next triggers relative to now to respect wall-clock time across DST changes
+        next_morning = next_at(7, now)
+        next_evening = next_at(19, now)
     time.sleep(backoff + random.uniform(0, 1))
 
 
