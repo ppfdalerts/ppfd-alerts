@@ -147,6 +147,7 @@ function Ensure-WorkingCopy {
     $head = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
     return [pscustomobject]@{
       Changed = $true
+      RestartRequired = $true
       Head = $head
     }
   }
@@ -160,6 +161,7 @@ function Ensure-WorkingCopy {
     $head = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
     return [pscustomobject]@{
       Changed = $false
+      RestartRequired = $false
       Head = $head
     }
   }
@@ -169,17 +171,35 @@ function Ensure-WorkingCopy {
   $remote = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', ("origin/{0}" -f $Branch)) | Select-Object -First 1).Trim()
 
   if ($current -ne $remote) {
+    $changedFiles = @(Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('diff', '--name-only', 'HEAD', ("origin/{0}" -f $Branch)))
+    $generatedOnly = $true
+    foreach ($rawPath in $changedFiles) {
+      $path = ([string]$rawPath).Trim().Replace('\', '/')
+      if (-not $path) { continue }
+      if (@(
+        'docs/data.json',
+        'data/leaderboards.json',
+        'docs/roster_units.json',
+        'docs/version.json',
+        'docs/backfill_status.json'
+      ) -notcontains $path) {
+        $generatedOnly = $false
+        break
+      }
+    }
     Write-Info "Pulling latest GitHub code ($current -> $remote)"
     Invoke-Git -WorkingDirectory $script:CloneDir -GitArgs @('pull', '--ff-only', 'origin', $Branch)
     $current = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
     return [pscustomobject]@{
       Changed = $true
+      RestartRequired = (-not $generatedOnly)
       Head = $current
     }
   }
 
   return [pscustomobject]@{
     Changed = $false
+    RestartRequired = $false
     Head = $current
   }
 }
@@ -340,8 +360,8 @@ function Ensure-LiveProcesses {
 function Invoke-DeployOnce {
   $sync = Ensure-WorkingCopy
   $tasksChanged = Ensure-LiveTaskRegistration -CodeRoot $script:CloneDir
-  Ensure-LiveProcesses -Restart:($sync.Changed -or $tasksChanged)
-  Write-Info "GitHub live deploy complete at $($sync.Head.Substring(0,7)) (changed=$($sync.Changed))."
+  Ensure-LiveProcesses -Restart:($sync.RestartRequired -or $tasksChanged)
+  Write-Info "GitHub live deploy complete at $($sync.Head.Substring(0,7)) (changed=$($sync.Changed), restart=$($sync.RestartRequired -or $tasksChanged))."
 }
 
 function Install-DeployTask {
