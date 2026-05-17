@@ -489,10 +489,11 @@ function Get-GitHubToken {
   $envTok = ([string]$env:GITHUB_TOKEN).Trim()
   if ($envTok) { return $envTok }
 
-  $here = $script:ScriptRoot
   $candidates = @(
-    (Join-Path $here 'GithubToken.txt'),
-    (Join-Path $here 'Githubclassictoken.txt'),
+    (Join-Path $script:StateRoot 'GithubToken.txt'),
+    (Join-Path $script:StateRoot 'Githubclassictoken.txt'),
+    (Join-Path $script:ScriptRoot 'GithubToken.txt'),
+    (Join-Path $script:ScriptRoot 'Githubclassictoken.txt'),
     (Join-Path (Get-Location) 'GithubToken.txt')
   )
   foreach ($fp in $candidates) {
