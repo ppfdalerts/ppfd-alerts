@@ -21,8 +21,13 @@ def _open_log_with_retry(filename: str, attempts: int = 10, delay: float = 0.2):
 
 try:
     _HERE = os.path.dirname(os.path.abspath(__file__))
-    _LOG_FP = os.path.join(_HERE, "alerts.log")
-    _HANDSHAKE_FP = os.path.join(_HERE, "startup_handshake.json")
+    _RUNTIME_ROOT = (os.environ.get("PPFD_STATE_ROOT", "") or "").strip()
+    if _RUNTIME_ROOT:
+        _RUNTIME_ROOT = os.path.abspath(_RUNTIME_ROOT)
+    else:
+        _RUNTIME_ROOT = _HERE
+    _LOG_FP = os.path.join(_RUNTIME_ROOT, "alerts.log")
+    _HANDSHAKE_FP = os.path.join(_RUNTIME_ROOT, "startup_handshake.json")
 except Exception:
     _LOG_FP = "alerts.log"
     _HANDSHAKE_FP = "startup_handshake.json"
@@ -33,7 +38,10 @@ def log(msg: str):
     ts = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"{ts}  {msg}", flush=True)
 
-LOCK_FP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ppfd_groupme.lock")
+try:
+    LOCK_FP = os.path.join(_RUNTIME_ROOT, "ppfd_groupme.lock")
+except Exception:
+    LOCK_FP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ppfd_groupme.lock")
 
 def _pid_running(pid: int) -> bool:
     """Check if a PID is alive (best-effort, Windows-safe)."""
