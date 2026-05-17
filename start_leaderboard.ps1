@@ -25,6 +25,27 @@ $script:ScriptPath = $MyInvocation.MyCommand.Path
 if (-not $script:ScriptPath) {
   $script:ScriptPath = Join-Path $script:ScriptRoot 'start_leaderboard.ps1'
 }
+$script:StateRoot = ([string]$env:PPFD_STATE_ROOT).Trim()
+if (-not $script:StateRoot) {
+  $script:StateRoot = $script:ScriptRoot
+} else {
+  try {
+    $script:StateRoot = [System.IO.Path]::GetFullPath($script:StateRoot)
+  } catch {}
+}
+if (-not (Test-Path $script:StateRoot)) {
+  New-Item -ItemType Directory -Path $script:StateRoot -Force | Out-Null
+}
+$script:CodeRepoRoot = $script:ScriptRoot
+if (-not (Test-Path (Join-Path $script:CodeRepoRoot 'scripts\generate_leaderboard.py'))) {
+  $candidateRepoRoot = Join-Path $script:ScriptRoot 'ppfd-alerts'
+  if (Test-Path (Join-Path $candidateRepoRoot 'scripts\generate_leaderboard.py')) {
+    $script:CodeRepoRoot = $candidateRepoRoot
+  }
+}
+$stateNorm = $script:StateRoot.TrimEnd('\').ToLowerInvariant()
+$repoNorm = $script:CodeRepoRoot.TrimEnd('\').ToLowerInvariant()
+$script:GeneratedRoot = if ($stateNorm -eq $repoNorm) { $script:CodeRepoRoot } else { Join-Path $script:StateRoot 'github_live_generated' }
 $script:LastErrorAt = $null
 $script:LastErrorMessage = $null
 $script:LastStatsFingerprint = $null
@@ -38,9 +59,9 @@ $script:BackfillStatus = [ordered]@{
   message = 'No backfill run yet.'
   updated_at = (Get-Date).ToUniversalTime().ToString('o')
 }
-$script:RunLockPath = Join-Path $script:ScriptRoot 'leaderboard_sync.lock'
+$script:RunLockPath = Join-Path $script:StateRoot 'leaderboard_sync.lock'
 $script:HasRunLock = $false
-$script:LogPath = Join-Path $script:ScriptRoot 'leaderboard_runner.log'
+$script:LogPath = Join-Path $script:StateRoot 'leaderboard_runner.log'
 
 function Write-Info($msg) {
   $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
