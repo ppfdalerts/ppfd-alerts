@@ -1,41 +1,32 @@
-**Overview**
-- Public GitHub Pages site shows your leaderboard and updates every 1–5 minutes.
-- Telegram alerts remain fast by keeping the Python bot running locally or on a self‑hosted runner.
+﻿**Overview**
+- Public GitHub Pages site shows the leaderboard and refreshes from generated data.
+- The repo now includes both the leaderboard code and the Windows phone-notification runtime scripts.
+- Production alerts still run headlessly on the Windows PC; GitHub stores the source, not the local secrets.
 
-**What’s Included**
-- `docs/index.html`: static page for GitHub Pages.
-- `scripts/generate_leaderboard.py`: builds `docs/data.json` from local `shift_stats_*.json` files.
-- `.github/workflows/pages-data.yml`: scheduled workflow (every 5 minutes) that regenerates and commits `docs/data.json`.
-- `.gitignore`: avoids committing logs, `.env`, stats, and binaries.
+**What's Included**
+- `docs/index.html`: GitHub Pages dashboard UI.
+- `scripts/generate_leaderboard.py`: builds `docs/data.json` from local shift stats.
+- `.github/workflows/pages-data.yml`: scheduled workflow for repo-side regeneration.
+- Runtime Windows scripts in repo root: `start_groupme.ps1`, `start_leaderboard.ps1`, `ppfd_groupme_alerts_v1.py`, task install scripts, and launcher helpers.
+- `ppfd_telegram_alerts_v3.2.py`: Telegram alert variant.
+- `.gitignore`: excludes secrets, logs, runtime caches, and machine-local folders.
 
 **How It Works**
-- Your bot (`ppfd_telegram_alerts_v3.2.py`) already writes `shift_stats_YYYY-MM-DD.json` each shift.
-- A self‑hosted runner on the same Windows machine runs the scheduled workflow. It reads those files and commits `docs/data.json` back to GitHub.
-- GitHub Pages serves `docs/index.html` and `docs/data.json` at a public URL.
+- The local alert process writes `shift_stats_YYYY-MM-DD.json` and related runtime files on the Windows PC.
+- `start_leaderboard.ps1` generates the leaderboard payload and publishes GitHub Pages assets.
+- The same publisher now mirrors the live runtime source files into this repo so the full system is stored in GitHub.
+- GitHub Pages serves `docs/index.html` and `docs/data.json` at the public site URL.
 
-**Setup Steps**
-1) Create a GitHub repo and push this directory.
-2) Settings → Pages → Build and deployment → Deploy from branch → `main`/`master` and folder `docs/`.
-3) Install a self‑hosted runner on the Windows PC that runs the bot:
-   - GitHub → Repo → Settings → Actions → Runners → New self‑hosted runner → Windows → follow steps.
-   - Run the runner as a service so it’s always available.
-4) Repo → Settings → Variables → New variable `SHIFT_STATS_DIR` with the absolute path of your stats folder, e.g.
-   - `C:\Users\County\python alerts`
-5) Enable the scheduled workflow:
-   - Actions tab → “Publish leaderboard data” → Enable workflows → Run workflow (optional for first run).
+**Local-Only Items**
+- `Groupmetokens.txt`
+- `GithubToken.txt` / `Githubclassictoken.txt`
+- `TSlogs/`
+- `venv/`
+- runtime logs, lock files, and machine-specific cache files
 
-Within a few minutes, Pages will serve the site and begin refreshing as `docs/data.json` updates.
+Those files stay on the Windows PC and are intentionally excluded from the repo.
 
-**Telegram Alerts (Fast)**
-- Keep running `ppfd_telegram_alerts_v3.2.py` locally via Task Scheduler/Service (recommended) or as a long‑running job on a self‑hosted runner.
-- Do not publish sensitive tokens. Move `BOT_TOKEN`, `CHAT_ID`, and TAPO credentials to environment variables or a local `.env` only.
-- Rotate the existing bot token before pushing to GitHub if it’s currently hard‑coded.
-
-**Optional: Run the bot on a self‑hosted runner**
-- Create another workflow that runs the bot continuously with `runs-on: self-hosted` and a large `timeout-minutes`.
-- Keep this separate from the scheduled Pages data job, or install a second runner if you want both as Actions jobs.
-
-**Notes**
-- If `shift_stats_*.json` files aren’t present, the page will show “No runs recorded.” Populate them by letting the bot run.
-- You can adjust refresh rate in `docs/index.html` (default 60s) and the cron schedule in `.github/workflows/pages-data.yml`.
-
+**Setup Notes**
+1. Keep the Windows scheduled tasks or headless launchers running locally for live alerts.
+2. Use GitHub Pages with the `docs/` folder for the dashboard.
+3. If you edit repo source from another computer, pull the updated source back to the Windows machine before expecting runtime behavior to change here.
