@@ -92,7 +92,7 @@ function Get-GitExe {
 
 function Invoke-Git {
   param(
-    [string[]]$Args,
+    [string[]]$GitArgs,
     [string]$WorkingDirectory
   )
 
@@ -101,16 +101,16 @@ function Invoke-Git {
   if ($WorkingDirectory) {
     $allArgs += @('-C', $WorkingDirectory)
   }
-  $allArgs += $Args
+  $allArgs += $GitArgs
   & $gitExe @allArgs
   if ($LASTEXITCODE -ne 0) {
-    throw "git failed ($($Args -join ' ')) with exit code $LASTEXITCODE"
+    throw "git failed ($($GitArgs -join ' ')) with exit code $LASTEXITCODE"
   }
 }
 
 function Get-GitOutput {
   param(
-    [string[]]$Args,
+    [string[]]$GitArgs,
     [string]$WorkingDirectory
   )
 
@@ -119,10 +119,10 @@ function Get-GitOutput {
   if ($WorkingDirectory) {
     $allArgs += @('-C', $WorkingDirectory)
   }
-  $allArgs += $Args
+  $allArgs += $GitArgs
   $out = & $gitExe @allArgs
   if ($LASTEXITCODE -ne 0) {
-    throw "git failed ($($Args -join ' ')) with exit code $LASTEXITCODE"
+    throw "git failed ($($GitArgs -join ' ')) with exit code $LASTEXITCODE"
   }
   return @($out)
 }
@@ -132,7 +132,7 @@ function Test-TrackedWorkingTreeClean {
     [Parameter(Mandatory=$true)][string]$RepoRoot
   )
 
-  $status = Get-GitOutput -WorkingDirectory $RepoRoot -Args @('status', '--porcelain', '--untracked-files=no')
+  $status = Get-GitOutput -WorkingDirectory $RepoRoot -GitArgs @('status', '--porcelain', '--untracked-files=no')
   return (-not $status -or $status.Count -eq 0)
 }
 
@@ -143,8 +143,8 @@ function Ensure-WorkingCopy {
       New-Item -ItemType Directory -Path $parent -Force | Out-Null
     }
     Write-Info "Cloning GitHub working copy to $script:CloneDir"
-    Invoke-Git -Args @('clone', '--branch', $Branch, '--single-branch', $RepoUrl, $script:CloneDir)
-    $head = (Get-GitOutput -WorkingDirectory $script:CloneDir -Args @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
+    Invoke-Git -GitArgs @('clone', '--branch', $Branch, '--single-branch', $RepoUrl, $script:CloneDir)
+    $head = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
     return [pscustomobject]@{
       Changed = $true
       Head = $head
@@ -157,21 +157,21 @@ function Ensure-WorkingCopy {
 
   if (-not (Test-TrackedWorkingTreeClean -RepoRoot $script:CloneDir)) {
     Write-Info "WARN: GitHub working copy has tracked local changes; skipping pull until cleaned."
-    $head = (Get-GitOutput -WorkingDirectory $script:CloneDir -Args @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
+    $head = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
     return [pscustomobject]@{
       Changed = $false
       Head = $head
     }
   }
 
-  Invoke-Git -WorkingDirectory $script:CloneDir -Args @('fetch', 'origin', $Branch, '--prune')
-  $current = (Get-GitOutput -WorkingDirectory $script:CloneDir -Args @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
-  $remote = (Get-GitOutput -WorkingDirectory $script:CloneDir -Args @('rev-parse', ("origin/{0}" -f $Branch)) | Select-Object -First 1).Trim()
+  Invoke-Git -WorkingDirectory $script:CloneDir -GitArgs @('fetch', 'origin', $Branch, '--prune')
+  $current = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
+  $remote = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', ("origin/{0}" -f $Branch)) | Select-Object -First 1).Trim()
 
   if ($current -ne $remote) {
     Write-Info "Pulling latest GitHub code ($current -> $remote)"
-    Invoke-Git -WorkingDirectory $script:CloneDir -Args @('pull', '--ff-only', 'origin', $Branch)
-    $current = (Get-GitOutput -WorkingDirectory $script:CloneDir -Args @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
+    Invoke-Git -WorkingDirectory $script:CloneDir -GitArgs @('pull', '--ff-only', 'origin', $Branch)
+    $current = (Get-GitOutput -WorkingDirectory $script:CloneDir -GitArgs @('rev-parse', 'HEAD') | Select-Object -First 1).Trim()
     return [pscustomobject]@{
       Changed = $true
       Head = $current
@@ -231,8 +231,18 @@ function Register-LoopTask {
     -ExecutionTimeLimit (New-TimeSpan -Seconds 0) `
     -Hidden
 
+  $expectedArgs = '"' + $LauncherPath + '"'
   $existing = Get-ScheduledTask -TaskName $Name -ErrorAction SilentlyContinue
   if ($existing) {
+    try {
+      $existingAction = $existing.Actions | Select-Object -First 1
+      if ($existingAction -and
+          $existingAction.Execute -ieq $wscriptExe -and
+          ([string]$existingAction.Arguments).Trim() -eq $expectedArgs -and
+          ([string]$existingAction.WorkingDirectory).Trim() -eq $script:StateRoot) {
+        return $false
+      }
+    } catch {}
     Unregister-ScheduledTask -TaskName $Name -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
   }
 
@@ -240,6 +250,7 @@ function Register-LoopTask {
   $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive
   $task = New-ScheduledTask -Action $action -Trigger $triggers -Settings $settings -Principal $principal -Description $Description
   Register-ScheduledTask -TaskName $Name -InputObject $task -Force | Out-Null
+  return $true
 }
 
 function Stop-LeaderboardProcesses {
@@ -283,14 +294,20 @@ function Ensure-LiveTaskRegistration {
   Write-HiddenLauncher -OutPath $groupmeLauncher -CommandLine $groupmeCmd
   Write-HiddenLauncher -OutPath $leaderboardLauncher -CommandLine $leaderboardCmd
 
-  Register-LoopTask -Name 'PPFD-GroupMe-Alerts' -LauncherPath $groupmeLauncher -Description 'Runs PPFD GroupMe alerts from the GitHub working copy'
-  Register-LoopTask -Name 'PPFD-Leaderboard-Sync' -LauncherPath $leaderboardLauncher -Description 'Runs PPFD leaderboard sync from the GitHub working copy'
+  $changed = $false
+  if (Register-LoopTask -Name 'PPFD-GroupMe-Alerts' -LauncherPath $groupmeLauncher -Description 'Runs PPFD GroupMe alerts from the GitHub working copy') {
+    $changed = $true
+  }
+  if (Register-LoopTask -Name 'PPFD-Leaderboard-Sync' -LauncherPath $leaderboardLauncher -Description 'Runs PPFD leaderboard sync from the GitHub working copy') {
+    $changed = $true
+  }
 
   foreach ($conflict in @('PPFD-Leaderboards', 'PPFD-Leaderboards-Live')) {
     try {
       Disable-ScheduledTask -TaskName $conflict -ErrorAction SilentlyContinue | Out-Null
     } catch {}
   }
+  return $changed
 }
 
 function Ensure-LiveProcesses {
@@ -322,8 +339,8 @@ function Ensure-LiveProcesses {
 
 function Invoke-DeployOnce {
   $sync = Ensure-WorkingCopy
-  Ensure-LiveTaskRegistration -CodeRoot $script:CloneDir
-  Ensure-LiveProcesses -Restart:$sync.Changed
+  $tasksChanged = Ensure-LiveTaskRegistration -CodeRoot $script:CloneDir
+  Ensure-LiveProcesses -Restart:($sync.Changed -or $tasksChanged)
   Write-Info "GitHub live deploy complete at $($sync.Head.Substring(0,7)) (changed=$($sync.Changed))."
 }
 
