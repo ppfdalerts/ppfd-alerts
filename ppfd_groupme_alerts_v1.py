@@ -259,6 +259,62 @@ DEFAULT_THREAD_NAMES = {
 for k in DEFAULT_THREAD_NAMES:
     THREAD_IDS[k] = GM.topic_ids.get(k)
 
+def _tokens_signature(path: str) -> tuple[int, int] | None:
+    try:
+        st = os.stat(path)
+        return (int(st.st_mtime_ns), int(st.st_size))
+    except Exception:
+        return None
+
+def _apply_groupme_config(cfg: GroupMeConfig):
+    GM.access_token = cfg.access_token
+    GM.group_id = cfg.group_id
+    GM.bot_id = cfg.bot_id
+    GM.topic_ids = dict(cfg.topic_ids)
+    for name in DEFAULT_THREAD_NAMES:
+        THREAD_IDS[name] = GM.topic_ids.get(name)
+
+TOKENS_SIG = _tokens_signature(TOKENS_FN)
+GROUPME_LAST_401_LOG_TS = 0.0
+
+def _refresh_groupme_config_if_changed(force: bool = False) -> bool:
+    global TOKENS_SIG
+    sig = _tokens_signature(TOKENS_FN)
+    if (not force) and sig is not None and sig == TOKENS_SIG:
+        return False
+    cfg = load_groupme_config(TOKENS_FN)
+    if not cfg.access_token or not cfg.group_id:
+        return False
+    changed = (
+        cfg.access_token != GM.access_token
+        or cfg.group_id != GM.group_id
+        or cfg.bot_id != GM.bot_id
+        or cfg.topic_ids != GM.topic_ids
+    )
+    _apply_groupme_config(cfg)
+    TOKENS_SIG = sig
+    try:
+        _discover_topic_ids_if_needed()
+    except Exception:
+        pass
+    if changed:
+        log(f"Reloaded GroupMe configuration from {TOKENS_FN}")
+    return changed
+
+def _redact_groupme_url(url: str) -> str:
+    try:
+        return re.sub(r"([?&]token=)[^&]+", r"\1<redacted>", url or "")
+    except Exception:
+        return url
+
+def _log_groupme_unauthorized():
+    global GROUPME_LAST_401_LOG_TS
+    now_ts = time.time()
+    if (now_ts - GROUPME_LAST_401_LOG_TS) < 300:
+        return
+    GROUPME_LAST_401_LOG_TS = now_ts
+    log(f"GroupMe User Token unauthorized. Update {TOKENS_FN} with a valid User Token; the runner will auto-reload it when the file changes.")
+
 # Try to auto-discover subgroup topic IDs from the API if missing
 def _discover_topic_ids_if_needed():
     try:
@@ -388,20 +444,19 @@ def _extract_mid(j: dict | None) -> str | None:
     return None
 
 def gm_post_message(text: str, unit: str | None = None) -> str | None:
-    try:
+    def _send_once() -> tuple[str | None, int | None, list[str], str]:
         message = {"source_guid": str(uuid.uuid4()), "text": text[:10000]}
         sid = THREAD_IDS.get(unit) if unit else None
         # Force LOG to main chat even if a topic id exists
         if unit and unit.upper() == "LOG":
             sid = None
-        # Try subgroup paths first when a topic id exists
-        tried_urls = []
+        tried_urls: list[str] = []
         if sid:
             dbg(f"post -> subgroup sid={sid} unit={unit}")
             paths = [
-                f"/groups/{sid}/messages",                     # subgroup behaves like a group id
-                f"/subgroups/{sid}/messages",                  # alternate
-                f"/groups/{GM.group_id}/subgroups/{sid}/messages",  # legacy/nested
+                f"/groups/{sid}/messages",
+                f"/subgroups/{sid}/messages",
+                f"/groups/{GM.group_id}/subgroups/{sid}/messages",
             ]
             for p in paths:
                 url = _gm_url(p)
@@ -415,10 +470,9 @@ def gm_post_message(text: str, unit: str | None = None) -> str | None:
                 if r.status_code < 400:
                     mid = _extract_mid(j)
                     if mid:
-                        return mid
+                        return mid, r.status_code, tried_urls, ""
                 else:
                     dbg(f"Subgroup send failed {r.status_code} via {p}: {j or r.text}")
-        # Fallback to main group
         if unit and (sid is None or unit.upper() == "LOG"):
             dbg(f"post -> main group fallback (no topic id for {unit})")
         url = _gm_url(f"/groups/{GM.group_id}/messages")
@@ -430,9 +484,31 @@ def gm_post_message(text: str, unit: str | None = None) -> str | None:
         except Exception:
             pass
         if r.status_code >= 400:
-            log(f"GroupMe send HTTP {r.status_code} (tried: {', '.join(tried_urls)}): {j or r.text}")
+            return None, r.status_code, tried_urls, str(j or r.text)
+        return _extract_mid(j), r.status_code, tried_urls, ""
+
+    try:
+        try:
+            _refresh_groupme_config_if_changed()
+        except Exception:
+            pass
+        mid, status_code, tried_urls, err_txt = _send_once()
+        if mid:
+            return mid
+        if status_code == 401:
+            _log_groupme_unauthorized()
+            try:
+                if _refresh_groupme_config_if_changed(force=True):
+                    mid, status_code, tried_urls, err_txt = _send_once()
+                    if mid:
+                        return mid
+            except Exception:
+                pass
+        if status_code and status_code >= 400:
+            safe_urls = ", ".join(_redact_groupme_url(url) for url in tried_urls)
+            log(f"GroupMe send HTTP {status_code} (tried: {safe_urls}): {err_txt}")
             return None
-        return _extract_mid(j)
+        return mid
     except ReadTimeout:
         log("GroupMe send timeout (ignored)")
     except Exception as e:
@@ -441,6 +517,10 @@ def gm_post_message(text: str, unit: str | None = None) -> str | None:
 
 def gm_fetch_recent(unit: str | None, limit: int = 20) -> list[dict]:
     try:
+        try:
+            _refresh_groupme_config_if_changed()
+        except Exception:
+            pass
         params = {"limit": max(1, min(100, int(limit)))}
         # Treat LOG as main group even if a topic id exists, to keep
         # command polling consistent with message sending behaviour.
@@ -1084,6 +1164,10 @@ def _announce_start():
 MY_USER_ID: str | None = None
 def _gm_me_id() -> str | None:
     try:
+        try:
+            _refresh_groupme_config_if_changed()
+        except Exception:
+            pass
         url = f"https://api.groupme.com/v3/users/me?token={GM.access_token}"
         r = sess.get(url, timeout=10)
         j = r.json()
@@ -1133,6 +1217,33 @@ SEEN_MSG: Set[str] = set()
 if not TEST_MODE:
     _announce_start()
 
+def _build_call_alert_title_body(it: dict, units: list[str]) -> tuple[str, str]:
+    ctype = (it.get("Type") or "Call").strip()
+    tac = (it.get("Tac") or "").strip()
+    title = f"{ctype}" + (f"  TAC {tac}" if tac else "")
+    body_parts = []
+    if not ctype.upper().startswith("MEDICAL"):
+        loc = (it.get("Location") or "").strip()
+        lat = it.get("Lat")
+        lon = it.get("Lon")
+        if loc:
+            body_parts.append(loc)
+        if lat and lon:
+            apple = f"https://maps.apple.com/?ll={lat},{lon}"
+            gmap = f"https://www.google.com/maps?q={lat},{lon}"
+            body_parts.append(f"Apple: {apple}\nGoogle: {gmap}")
+    body_parts.append(f"Units: {', '.join(units) if units else 'none yet'}")
+    ts = parse_ts(it.get("Received"))
+    body_parts.append(f"Time:  {ts.strftime('%H:%M') if ts else 'N/A'}")
+    return title, "\n".join(body_parts)
+
+def _build_fd_attach_alert(added_unit: str, it: dict, units: list[str]) -> tuple[str, str]:
+    call_title, call_body = _build_call_alert_title_body(it, units)
+    body_parts = [f"Call: {call_title}"]
+    if call_body:
+        body_parts.append(call_body)
+    return f"[{added_unit}] ADDED TO CALL", "\n".join(body_parts)
+
 def next_at(hr, now):
     tgt = now.replace(hour=hr, minute=0, second=0, microsecond=0)
     return tgt if now < tgt else tgt + datetime.timedelta(days=1)
@@ -1151,6 +1262,7 @@ def api_url():
 
 # Optional SUNSTAR tracking (3-digit)
 SUNSTAR_TRACK: dict[tuple, set] = {}
+FD_UNIT_TRACK: dict[str, set[str]] = {}
 
 while not TEST_MODE:
     now = datetime.datetime.now(TZ)
@@ -1169,8 +1281,10 @@ while not TEST_MODE:
         etag, last_mod = r.headers.get("ETag", etag), r.headers.get("Last-Modified", last_mod)
         data = r.json()
         items = data.get("CallInfo", []) if isinstance(data, dict) else []
+        seen_incidents: Set[str] = set()
         for it in items:
             iid = str(it.get("IncidentNo") or hashlib.sha1(f"{it.get('Type')}{it.get('Location')}{it.get('Received')}".encode()).hexdigest())
+            seen_incidents.add(iid)
             units = [str(u.get("ID") or "").strip().upper() for u in it.get("Units", [])]
             statuses = {str(u.get("ID") or "").upper(): str(u.get("Status") or "").lower() for u in it.get("Units", []) if u.get("ID")}
 
@@ -1211,6 +1325,20 @@ while not TEST_MODE:
 
             fd_units = [u for u in units if (u in WATCH_SET and _unit_is_active(u))]
             sunstar_units = {u for u in units if is_sunstar(u)}
+            current_fd_units = set(fd_units)
+
+            prev_fd_units = FD_UNIT_TRACK.get(iid, set())
+            if prev_fd_units:
+                added_fd_units = sorted(current_fd_units - prev_fd_units)
+                for added_fd in added_fd_units:
+                    title_attach, body_attach = _build_fd_attach_alert(added_fd, it, units)
+                    for recipient in sorted(current_fd_units):
+                        post(recipient, title_attach, body_attach)
+                    post("LOG", title_attach, body_attach)
+            if current_fd_units:
+                FD_UNIT_TRACK[iid] = set(current_fd_units)
+            elif iid in FD_UNIT_TRACK:
+                del FD_UNIT_TRACK[iid]
 
             for fd in fd_units:
                 key = (iid, fd)
@@ -1367,24 +1495,7 @@ while not TEST_MODE:
             except NameError:
                 SEEN_MSG = set()
             if (iid not in SEEN_MSG) and any(u in WATCH_SET for u in units):
-                ctype = (it.get("Type") or "Call").strip()
-                tac = (it.get("Tac") or "").strip()
-                title = f"{ctype}" + (f"  TAC {tac}" if tac else "")
-                body_parts = []
-                if not ctype.upper().startswith("MEDICAL"):
-                    loc = (it.get("Location") or "").strip()
-                    lat = it.get("Lat")
-                    lon = it.get("Lon")
-                    if loc:
-                        body_parts.append(loc)
-                    if lat and lon:
-                        apple = f"https://maps.apple.com/?ll={lat},{lon}"
-                        gmap = f"https://www.google.com/maps?q={lat},{lon}"
-                        body_parts.append(f"Apple: {apple}\nGoogle: {gmap}")
-                body_parts.append(f"Units: {', '.join(units)}")
-                ts = parse_ts(it.get("Received"))
-                body_parts.append(f"Time:  {ts.strftime('%H:%M') if ts else 'N/A'}")
-                body = "\n".join(body_parts)
+                title, body = _build_call_alert_title_body(it, units)
 
                 notified = set()
                 for unit in units:
@@ -1393,6 +1504,13 @@ while not TEST_MODE:
                         notified.add(unit)
                 post("LOG", title, body)
                 SEEN_MSG.add(iid)
+
+        for key in list(SUNSTAR_TRACK):
+            if key[0] not in seen_incidents:
+                del SUNSTAR_TRACK[key]
+        for incident_id in list(FD_UNIT_TRACK):
+            if incident_id not in seen_incidents:
+                del FD_UNIT_TRACK[incident_id]
 
         # Commands from groups/topics
         poll_commands(now)
