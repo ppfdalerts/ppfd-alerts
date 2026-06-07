@@ -295,7 +295,7 @@ try {
 
   # Environment for quieter logging by default
   if (-not $env:DEBUG_VERBOSE) { $env:DEBUG_VERBOSE = '0' }
-  if (-not $env:REQUIRE_STARTUP_CONFIRM) { $env:REQUIRE_STARTUP_CONFIRM = '1' }
+  if (-not $env:REQUIRE_STARTUP_CONFIRM) { $env:REQUIRE_STARTUP_CONFIRM = '0' }
   if ($TestMode) { $env:TEST_MODE = '1' } else { $env:TEST_MODE = '0' }
   $env:PPFD_STATE_ROOT = $stateRoot
   # Ensure the Python script can find the tokens file regardless of working dir
