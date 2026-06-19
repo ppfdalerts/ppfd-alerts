@@ -2,13 +2,13 @@
   "today": {
     "label": "Daily",
     "period": "day",
-    "text": "Daily runs 19 Jun 2026\nR33: 8  |  avg 12.7 min  |  after 00:00: 0\nR34: 4  |  avg 29.1 min  |  after 00:00: 0\nE34: 3  |  avg 7.0 min  |  after 00:00: 0\nE35: 3  |  avg 8.7 min  |  after 00:00: 0\nS36: 3  |  avg 13.7 min  |  after 00:00: 0\nE36: 2  |  avg 27.9 min  |  after 00:00: 0\nT33: 2  |  avg 13.1 min  |  after 00:00: 0",
+    "text": "Daily runs 19 Jun 2026\nR33: 8  |  avg 15.1 min  |  after 00:00: 0\nR34: 4  |  avg 29.1 min  |  after 00:00: 0\nE34: 3  |  avg 7.0 min  |  after 00:00: 0\nE35: 3  |  avg 8.7 min  |  after 00:00: 0\nE36: 3  |  avg 18.6 min  |  after 00:00: 0\nS36: 3  |  avg 13.7 min  |  after 00:00: 0\nT33: 2  |  avg 13.1 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
         "calls": 8,
         "ride_in_count": 0,
-        "avg_min": 12.7,
+        "avg_min": 15.1,
         "after_0000": 0,
         "delta_calls": -3,
         "max_min": 37.7
@@ -41,6 +41,15 @@
         "max_min": 26.2
       },
       {
+        "unit": "E36",
+        "calls": 3,
+        "ride_in_count": 0,
+        "avg_min": 18.6,
+        "after_0000": 0,
+        "delta_calls": -1,
+        "max_min": 32.3
+      },
+      {
         "unit": "S36",
         "calls": 3,
         "ride_in_count": 0,
@@ -48,15 +57,6 @@
         "after_0000": 0,
         "delta_calls": 1,
         "max_min": 41.1
-      },
-      {
-        "unit": "E36",
-        "calls": 2,
-        "ride_in_count": 0,
-        "avg_min": 27.9,
-        "after_0000": 0,
-        "delta_calls": -2,
-        "max_min": 32.3
       },
       {
         "unit": "T33",
@@ -71,7 +71,7 @@
     "meta": {
       "shift_date": "C-Shift 06/19/26"
     },
-    "updated": "2026-06-19T20:43:33.004802Z"
+    "updated": "2026-06-19T21:02:29.339856Z"
   },
   "prior": {
     "label": "Daily",
@@ -154,12 +154,12 @@
     "meta": {
       "shift_date": "B-Shift 06/18/26"
     },
-    "updated": "2026-06-19T20:43:33.004802Z"
+    "updated": "2026-06-19T21:02:29.340941Z"
   },
   "week": {
     "label": "Weekly",
     "period": "week",
-    "text": "Weekly runs 13 Jun 2026 - 19 Jun 2026\nR33: 73  |  avg 21.9 min  |  after 00:00: 8\nR34: 44  |  avg 18.1 min  |  after 00:00: 5\nT33: 39  |  avg 26.8 min  |  after 00:00: 3\nE35: 38  |  avg 26.7 min  |  after 00:00: 7\nE36: 37  |  avg 22.4 min  |  after 00:00: 7\nS36: 36  |  avg 20.6 min  |  after 00:00: 7\nE34: 34  |  avg 14.2 min  |  after 00:00: 2\nD35: 11  |  avg 46.8 min  |  after 00:00: 1\nLR36: 10  |  avg 53.2 min  |  after 00:00: 2\n35FD: 2  |  avg 1.7 min  |  after 00:00: 0",
+    "text": "Weekly runs 13 Jun 2026 - 19 Jun 2026\nR33: 73  |  avg 22.2 min  |  after 00:00: 8\nR34: 44  |  avg 18.1 min  |  after 00:00: 5\nT33: 39  |  avg 26.8 min  |  after 00:00: 3\nE35: 38  |  avg 26.7 min  |  after 00:00: 7\nE36: 38  |  avg 21.8 min  |  after 00:00: 7\nS36: 36  |  avg 20.6 min  |  after 00:00: 7\nE34: 34  |  avg 14.2 min  |  after 00:00: 2\nD35: 11  |  avg 46.8 min  |  after 00:00: 1\nLR36: 10  |  avg 53.2 min  |  after 00:00: 2\n35FD: 2  |  avg 1.7 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
@@ -176,7 +176,7 @@
         "avg_min_abc": [
           31.4,
           29.5,
-          13.2
+          13.7
         ],
         "max_min_abc": [
           167.3,
@@ -334,7 +334,7 @@
         "calls_abc": [
           17,
           8,
-          12
+          13
         ],
         "calls_max_abc": [
           9,
@@ -344,7 +344,7 @@
         "avg_min_abc": [
           17.7,
           46.8,
-          12.6
+          11.6
         ],
         "max_min_abc": [
           82.0,
@@ -366,10 +366,10 @@
           2,
           2
         ],
-        "total_calls": 37,
+        "total_calls": 38,
         "total_after": 7,
         "total_ride_ins": 6,
-        "delta_calls": -11
+        "delta_calls": -10
       },
       {
         "unit": "S36",
@@ -585,12 +585,12 @@
     "meta": {
       "range": "Jun 13 - Jun 19"
     },
-    "updated": "2026-06-19T20:43:33.022182Z"
+    "updated": "2026-06-19T21:02:29.357758Z"
   },
   "month": {
     "label": "Monthly",
     "period": "month",
-    "text": "Monthly runs 21 May 2026 - 19 Jun 2026\nR33: 288  |  avg 20.5 min  |  after 00:00: 49\nR34: 250  |  avg 18.5 min  |  after 00:00: 41\nE35: 193  |  avg 20.5 min  |  after 00:00: 29\nE36: 192  |  avg 18.6 min  |  after 00:00: 27\nS36: 191  |  avg 18.9 min  |  after 00:00: 24\nE34: 174  |  avg 14.2 min  |  after 00:00: 23\nT33: 174  |  avg 19.7 min  |  after 00:00: 17\nLR36: 47  |  avg 32.1 min  |  after 00:00: 6\nD35: 41  |  avg 21.7 min  |  after 00:00: 7\n35FD: 2  |  avg 1.7 min  |  after 00:00: 0",
+    "text": "Monthly runs 21 May 2026 - 19 Jun 2026\nR33: 288  |  avg 20.5 min  |  after 00:00: 49\nR34: 250  |  avg 18.5 min  |  after 00:00: 41\nE35: 193  |  avg 20.5 min  |  after 00:00: 29\nE36: 193  |  avg 18.5 min  |  after 00:00: 27\nS36: 191  |  avg 18.9 min  |  after 00:00: 24\nE34: 174  |  avg 14.2 min  |  after 00:00: 23\nT33: 174  |  avg 19.7 min  |  after 00:00: 17\nLR36: 47  |  avg 32.1 min  |  after 00:00: 6\nD35: 41  |  avg 21.7 min  |  after 00:00: 7\n35FD: 2  |  avg 1.7 min  |  after 00:00: 0",
     "rows": [
       {
         "unit": "R33",
@@ -607,7 +607,7 @@
         "avg_min_abc": [
           22.7,
           19.4,
-          19.6
+          19.8
         ],
         "max_min_abc": [
           167.3,
@@ -723,7 +723,7 @@
         "calls_abc": [
           70,
           59,
-          63
+          64
         ],
         "calls_max_abc": [
           10,
@@ -733,7 +733,7 @@
         "avg_min_abc": [
           19.4,
           20.8,
-          15.6
+          15.4
         ],
         "max_min_abc": [
           82.0,
@@ -755,10 +755,10 @@
           3,
           8
         ],
-        "total_calls": 192,
+        "total_calls": 193,
         "total_after": 27,
         "total_ride_ins": 17,
-        "delta_calls": -17
+        "delta_calls": -16
       },
       {
         "unit": "S36",
@@ -1016,12 +1016,12 @@
     "meta": {
       "range": "May 21 - Jun 19"
     },
-    "updated": "2026-06-19T20:43:33.058126Z"
+    "updated": "2026-06-19T21:02:29.387726Z"
   },
   "year": {
     "label": "Yearly",
     "period": "year",
-    "text": "Yearly runs 18 Jun 2026 - 19 Jun 2026\nR33: 19  |  avg 20.5 min  |  after 00:00: 3\nE35: 12  |  avg 16.8 min  |  after 00:00: 1\nR34: 9  |  avg 18.8 min  |  after 00:00: 0\nE36: 6  |  avg 17.2 min  |  after 00:00: 1\nT33: 6  |  avg 6.0 min  |  after 00:00: 0\nE34: 5  |  avg 14.2 min  |  after 00:00: 0\nS36: 5  |  avg 10.9 min  |  after 00:00: 1\nLR36: 2  |  avg 29.9 min  |  after 00:00: 1",
+    "text": "Yearly runs 18 Jun 2026 - 19 Jun 2026\nR33: 19  |  avg 21.5 min  |  after 00:00: 3\nE35: 12  |  avg 16.8 min  |  after 00:00: 1\nR34: 9  |  avg 18.8 min  |  after 00:00: 0\nE36: 7  |  avg 14.7 min  |  after 00:00: 1\nT33: 6  |  avg 6.0 min  |  after 00:00: 0\nE34: 5  |  avg 14.2 min  |  after 00:00: 0\nS36: 5  |  avg 10.9 min  |  after 00:00: 1\nLR36: 2  |  avg 29.9 min  |  after 00:00: 1",
     "rows": [
       {
         "unit": "R33",
@@ -1038,7 +1038,7 @@
         "avg_min_abc": [
           0.0,
           26.1,
-          12.7
+          15.1
         ],
         "max_min_abc": [
           0.0,
@@ -1154,17 +1154,17 @@
         "calls_abc": [
           0,
           4,
-          2
+          3
         ],
         "calls_max_abc": [
           0,
           4,
-          2
+          3
         ],
         "avg_min_abc": [
           0.0,
           11.8,
-          27.9
+          18.6
         ],
         "max_min_abc": [
           0.0,
@@ -1186,10 +1186,10 @@
           1,
           0
         ],
-        "total_calls": 6,
+        "total_calls": 7,
         "total_after": 1,
         "total_ride_ins": 1,
-        "delta_calls": -10
+        "delta_calls": -9
       },
       {
         "unit": "T33",
@@ -1363,7 +1363,7 @@
     "meta": {
       "range": "2026-06-18 - 2026-06-19"
     },
-    "updated": "2026-06-19T20:43:33.074085Z"
+    "updated": "2026-06-19T21:02:29.401727Z"
   },
   "personnel": {
     "week": {
@@ -1373,7 +1373,7 @@
       "meta": {
         "range": "Jun 13 - Jun 19"
       },
-      "updated": "2026-06-19T20:43:33.092032Z"
+      "updated": "2026-06-19T21:02:29.418455Z"
     },
     "month": {
       "label": "Month",
@@ -1382,7 +1382,7 @@
       "meta": {
         "range": "May 21 - Jun 19"
       },
-      "updated": "2026-06-19T20:43:33.131226Z"
+      "updated": "2026-06-19T21:02:29.455075Z"
     },
     "year": {
       "label": "Year",
@@ -1391,21 +1391,32 @@
       "meta": {
         "range": "2026-06-18 - 2026-06-19"
       },
-      "updated": "2026-06-19T20:43:33.143965Z"
+      "updated": "2026-06-19T21:02:29.467241Z"
     }
   },
   "details": {
-    "generated_at": "2026-06-19T20:43:33.143965Z",
+    "generated_at": "2026-06-19T21:02:29.467241Z",
     "units": {
       "today": {
-        "E35": [
+        "E36": [
           {
             "date": "2026-06-19",
             "shift": "C",
             "calls": 3,
-            "ride_in_count": 1,
-            "avg_min": 8.7,
-            "max_min": 26.2,
+            "ride_in_count": 0,
+            "avg_min": 18.6,
+            "max_min": 32.3,
+            "after_0000": 0
+          }
+        ],
+        "T33": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 2,
+            "ride_in_count": 0,
+            "avg_min": 13.1,
+            "max_min": 26.3,
             "after_0000": 0
           }
         ],
@@ -1420,17 +1431,6 @@
             "after_0000": 0
           }
         ],
-        "E36": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 27.9,
-            "max_min": 32.3,
-            "after_0000": 0
-          }
-        ],
         "S36": [
           {
             "date": "2026-06-19",
@@ -1439,6 +1439,17 @@
             "ride_in_count": 0,
             "avg_min": 13.7,
             "max_min": 41.1,
+            "after_0000": 0
+          }
+        ],
+        "R33": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 8,
+            "ride_in_count": 0,
+            "avg_min": 15.1,
+            "max_min": 37.7,
             "after_0000": 0
           }
         ],
@@ -1453,52 +1464,19 @@
             "after_0000": 0
           }
         ],
-        "R33": [
+        "E35": [
           {
             "date": "2026-06-19",
             "shift": "C",
-            "calls": 8,
-            "ride_in_count": 0,
-            "avg_min": 12.7,
-            "max_min": 37.7,
-            "after_0000": 0
-          }
-        ],
-        "T33": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 13.1,
-            "max_min": 26.3,
+            "calls": 3,
+            "ride_in_count": 1,
+            "avg_min": 8.7,
+            "max_min": 26.2,
             "after_0000": 0
           }
         ]
       },
       "prior": {
-        "E35": [
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 9,
-            "ride_in_count": 1,
-            "avg_min": 19.4,
-            "max_min": 51.2,
-            "after_0000": 1
-          }
-        ],
-        "R34": [
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 2,
-            "avg_min": 10.6,
-            "max_min": 53.2,
-            "after_0000": 0
-          }
-        ],
         "E36": [
           {
             "date": "2026-06-18",
@@ -1508,39 +1486,6 @@
             "avg_min": 11.8,
             "max_min": 47.1,
             "after_0000": 1
-          }
-        ],
-        "S36": [
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 2,
-            "ride_in_count": 1,
-            "avg_min": 6.7,
-            "max_min": 13.4,
-            "after_0000": 1
-          }
-        ],
-        "E34": [
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 24.9,
-            "max_min": 30.4,
-            "after_0000": 0
-          }
-        ],
-        "R33": [
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 11,
-            "ride_in_count": 1,
-            "avg_min": 26.1,
-            "max_min": 66.5,
-            "after_0000": 3
           }
         ],
         "T33": [
@@ -1554,6 +1499,28 @@
             "after_0000": 0
           }
         ],
+        "R34": [
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 5,
+            "ride_in_count": 2,
+            "avg_min": 10.6,
+            "max_min": 53.2,
+            "after_0000": 0
+          }
+        ],
+        "S36": [
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 2,
+            "ride_in_count": 1,
+            "avg_min": 6.7,
+            "max_min": 13.4,
+            "after_0000": 1
+          }
+        ],
         "LR36": [
           {
             "date": "2026-06-18",
@@ -1564,19 +1531,30 @@
             "max_min": 41.0,
             "after_0000": 1
           }
-        ]
-      },
-      "week": {
-        "E35": [
+        ],
+        "R33": [
           {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 3,
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 11,
             "ride_in_count": 1,
-            "avg_min": 8.7,
-            "max_min": 26.2,
+            "avg_min": 26.1,
+            "max_min": 66.5,
+            "after_0000": 3
+          }
+        ],
+        "E34": [
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 2,
+            "ride_in_count": 0,
+            "avg_min": 24.9,
+            "max_min": 30.4,
             "after_0000": 0
-          },
+          }
+        ],
+        "E35": [
           {
             "date": "2026-06-18",
             "shift": "B",
@@ -1585,50 +1563,137 @@
             "avg_min": 19.4,
             "max_min": 51.2,
             "after_0000": 1
+          }
+        ]
+      },
+      "week": {
+        "E36": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 3,
+            "ride_in_count": 0,
+            "avg_min": 18.6,
+            "max_min": 32.3,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 4,
+            "ride_in_count": 1,
+            "avg_min": 11.8,
+            "max_min": 47.1,
+            "after_0000": 1
           },
           {
             "date": "2026-06-17",
             "shift": "A",
-            "calls": 5,
-            "ride_in_count": 3,
-            "avg_min": 30.4,
-            "max_min": 70.0,
-            "after_0000": 2
+            "calls": 9,
+            "ride_in_count": 2,
+            "avg_min": 20.0,
+            "max_min": 82.0,
+            "after_0000": 1
           },
           {
             "date": "2026-06-16",
             "shift": "C",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 22.2,
-            "max_min": 24.2,
-            "after_0000": 1
+            "calls": 7,
+            "ride_in_count": 1,
+            "avg_min": 6.6,
+            "max_min": 24.9,
+            "after_0000": 2
           },
           {
             "date": "2026-06-15",
             "shift": "B",
-            "calls": 5,
+            "calls": 4,
             "ride_in_count": 1,
-            "avg_min": 67.5,
-            "max_min": 228.1,
+            "avg_min": 81.7,
+            "max_min": 255.7,
             "after_0000": 0
           },
           {
             "date": "2026-06-14",
             "shift": "A",
-            "calls": 7,
-            "ride_in_count": 2,
-            "avg_min": 29.6,
-            "max_min": 82.7,
-            "after_0000": 3
+            "calls": 8,
+            "ride_in_count": 0,
+            "avg_min": 15.2,
+            "max_min": 39.6,
+            "after_0000": 2
           },
           {
             "date": "2026-06-13",
             "shift": "C",
+            "calls": 3,
+            "ride_in_count": 1,
+            "avg_min": 16.3,
+            "max_min": 49.0,
+            "after_0000": 1
+          }
+        ],
+        "T33": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 2,
+            "ride_in_count": 0,
+            "avg_min": 13.1,
+            "max_min": 26.3,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 4,
+            "ride_in_count": 0,
+            "avg_min": 2.4,
+            "max_min": 7.4,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-17",
+            "shift": "A",
+            "calls": 7,
+            "ride_in_count": 2,
+            "avg_min": 35.3,
+            "max_min": 71.3,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-16",
+            "shift": "C",
+            "calls": 8,
+            "ride_in_count": 1,
+            "avg_min": 11.7,
+            "max_min": 51.8,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-15",
+            "shift": "B",
+            "calls": 5,
+            "ride_in_count": 0,
+            "avg_min": 59.2,
+            "max_min": 248.3,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-14",
+            "shift": "A",
             "calls": 7,
             "ride_in_count": 0,
-            "avg_min": 10.2,
-            "max_min": 29.5,
+            "avg_min": 39.3,
+            "max_min": 171.3,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-13",
+            "shift": "C",
+            "calls": 6,
+            "ride_in_count": 1,
+            "avg_min": 16.6,
+            "max_min": 47.1,
             "after_0000": 0
           }
         ],
@@ -1697,71 +1762,6 @@
             "after_0000": 1
           }
         ],
-        "E36": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 27.9,
-            "max_min": 32.3,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 4,
-            "ride_in_count": 1,
-            "avg_min": 11.8,
-            "max_min": 47.1,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-17",
-            "shift": "A",
-            "calls": 9,
-            "ride_in_count": 2,
-            "avg_min": 20.0,
-            "max_min": 82.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-16",
-            "shift": "C",
-            "calls": 7,
-            "ride_in_count": 1,
-            "avg_min": 6.6,
-            "max_min": 24.9,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-15",
-            "shift": "B",
-            "calls": 4,
-            "ride_in_count": 1,
-            "avg_min": 81.7,
-            "max_min": 255.7,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-14",
-            "shift": "A",
-            "calls": 8,
-            "ride_in_count": 0,
-            "avg_min": 15.2,
-            "max_min": 39.6,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-13",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 1,
-            "avg_min": 16.3,
-            "max_min": 49.0,
-            "after_0000": 1
-          }
-        ],
         "S36": [
           {
             "date": "2026-06-19",
@@ -1824,6 +1824,127 @@
             "ride_in_count": 0,
             "avg_min": 3.1,
             "max_min": 13.4,
+            "after_0000": 2
+          }
+        ],
+        "LR36": [
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 2,
+            "ride_in_count": 0,
+            "avg_min": 29.9,
+            "max_min": 41.0,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-17",
+            "shift": "A",
+            "calls": 1,
+            "ride_in_count": 0,
+            "avg_min": 31.0,
+            "max_min": 31.0,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-16",
+            "shift": "C",
+            "calls": 1,
+            "ride_in_count": 0,
+            "avg_min": 4.0,
+            "max_min": 4.0,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-15",
+            "shift": "B",
+            "calls": 1,
+            "ride_in_count": 0,
+            "avg_min": 198.5,
+            "max_min": 198.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-14",
+            "shift": "A",
+            "calls": 2,
+            "ride_in_count": 1,
+            "avg_min": 109.2,
+            "max_min": 162.6,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-13",
+            "shift": "C",
+            "calls": 3,
+            "ride_in_count": 0,
+            "avg_min": 6.7,
+            "max_min": 10.1,
+            "after_0000": 0
+          }
+        ],
+        "R33": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 8,
+            "ride_in_count": 0,
+            "avg_min": 15.1,
+            "max_min": 37.7,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 11,
+            "ride_in_count": 1,
+            "avg_min": 26.1,
+            "max_min": 66.5,
+            "after_0000": 3
+          },
+          {
+            "date": "2026-06-17",
+            "shift": "A",
+            "calls": 9,
+            "ride_in_count": 2,
+            "avg_min": 14.6,
+            "max_min": 56.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-16",
+            "shift": "C",
+            "calls": 13,
+            "ride_in_count": 1,
+            "avg_min": 15.1,
+            "max_min": 43.1,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-15",
+            "shift": "B",
+            "calls": 9,
+            "ride_in_count": 1,
+            "avg_min": 33.7,
+            "max_min": 169.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-14",
+            "shift": "A",
+            "calls": 8,
+            "ride_in_count": 3,
+            "avg_min": 50.3,
+            "max_min": 167.3,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-13",
+            "shift": "C",
+            "calls": 15,
+            "ride_in_count": 0,
+            "avg_min": 11.8,
+            "max_min": 30.9,
             "after_0000": 2
           }
         ],
@@ -1939,69 +2060,354 @@
             "after_0000": 0
           }
         ],
-        "R33": [
+        "E35": [
           {
             "date": "2026-06-19",
             "shift": "C",
-            "calls": 8,
-            "ride_in_count": 0,
-            "avg_min": 12.7,
-            "max_min": 37.7,
+            "calls": 3,
+            "ride_in_count": 1,
+            "avg_min": 8.7,
+            "max_min": 26.2,
             "after_0000": 0
           },
           {
             "date": "2026-06-18",
             "shift": "B",
-            "calls": 11,
+            "calls": 9,
             "ride_in_count": 1,
-            "avg_min": 26.1,
-            "max_min": 66.5,
+            "avg_min": 19.4,
+            "max_min": 51.2,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-17",
+            "shift": "A",
+            "calls": 5,
+            "ride_in_count": 3,
+            "avg_min": 30.4,
+            "max_min": 70.0,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-16",
+            "shift": "C",
+            "calls": 2,
+            "ride_in_count": 0,
+            "avg_min": 22.2,
+            "max_min": 24.2,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-15",
+            "shift": "B",
+            "calls": 5,
+            "ride_in_count": 1,
+            "avg_min": 67.5,
+            "max_min": 228.1,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-14",
+            "shift": "A",
+            "calls": 7,
+            "ride_in_count": 2,
+            "avg_min": 29.6,
+            "max_min": 82.7,
             "after_0000": 3
+          },
+          {
+            "date": "2026-06-13",
+            "shift": "C",
+            "calls": 7,
+            "ride_in_count": 0,
+            "avg_min": 10.2,
+            "max_min": 29.5,
+            "after_0000": 0
+          }
+        ],
+        "35FD": [
+          {
+            "date": "2026-06-17",
+            "shift": "A",
+            "calls": 2,
+            "ride_in_count": 0,
+            "avg_min": 1.7,
+            "max_min": 2.7,
+            "after_0000": 0
+          }
+        ]
+      },
+      "month": {
+        "E36": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 3,
+            "ride_in_count": 0,
+            "avg_min": 18.6,
+            "max_min": 32.3,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 4,
+            "ride_in_count": 1,
+            "avg_min": 11.8,
+            "max_min": 47.1,
+            "after_0000": 1
           },
           {
             "date": "2026-06-17",
             "shift": "A",
             "calls": 9,
             "ride_in_count": 2,
-            "avg_min": 14.6,
-            "max_min": 56.5,
-            "after_0000": 0
+            "avg_min": 20.0,
+            "max_min": 82.0,
+            "after_0000": 1
           },
           {
             "date": "2026-06-16",
             "shift": "C",
-            "calls": 13,
+            "calls": 7,
             "ride_in_count": 1,
-            "avg_min": 15.1,
-            "max_min": 43.1,
+            "avg_min": 6.6,
+            "max_min": 24.9,
             "after_0000": 2
           },
           {
             "date": "2026-06-15",
             "shift": "B",
-            "calls": 9,
+            "calls": 4,
             "ride_in_count": 1,
-            "avg_min": 33.7,
-            "max_min": 169.5,
+            "avg_min": 81.7,
+            "max_min": 255.7,
             "after_0000": 0
           },
           {
             "date": "2026-06-14",
             "shift": "A",
             "calls": 8,
-            "ride_in_count": 3,
-            "avg_min": 50.3,
-            "max_min": 167.3,
-            "after_0000": 1
+            "ride_in_count": 0,
+            "avg_min": 15.2,
+            "max_min": 39.6,
+            "after_0000": 2
           },
           {
             "date": "2026-06-13",
             "shift": "C",
-            "calls": 15,
+            "calls": 3,
+            "ride_in_count": 1,
+            "avg_min": 16.3,
+            "max_min": 49.0,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-12",
+            "shift": "B",
+            "calls": 5,
             "ride_in_count": 0,
-            "avg_min": 11.8,
-            "max_min": 30.9,
+            "avg_min": 9.1,
+            "max_min": 24.9,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-11",
+            "shift": "A",
+            "calls": 4,
+            "ride_in_count": 1,
+            "avg_min": 24.7,
+            "max_min": 56.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-10",
+            "shift": "C",
+            "calls": 7,
+            "ride_in_count": 1,
+            "avg_min": 18.6,
+            "max_min": 66.9,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-09",
+            "shift": "B",
+            "calls": 9,
+            "ride_in_count": 0,
+            "avg_min": 11.6,
+            "max_min": 32.2,
+            "after_0000": 3
+          },
+          {
+            "date": "2026-06-08",
+            "shift": "A",
+            "calls": 9,
+            "ride_in_count": 0,
+            "avg_min": 10.1,
+            "max_min": 26.3,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-07",
+            "shift": "C",
+            "calls": 5,
+            "ride_in_count": 0,
+            "avg_min": 10.1,
+            "max_min": 24.9,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-06",
+            "shift": "B",
+            "calls": 9,
+            "ride_in_count": 0,
+            "avg_min": 21.4,
+            "max_min": 54.5,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-05",
+            "shift": "A",
+            "calls": 3,
+            "ride_in_count": 0,
+            "avg_min": 30.3,
+            "max_min": 32.9,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-04",
+            "shift": "C",
+            "calls": 7,
+            "ride_in_count": 2,
+            "avg_min": 25.2,
+            "max_min": 65.2,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-03",
+            "shift": "B",
+            "calls": 6,
+            "ride_in_count": 0,
+            "avg_min": 32.4,
+            "max_min": 49.7,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-02",
+            "shift": "A",
+            "calls": 8,
+            "ride_in_count": 1,
+            "avg_min": 27.2,
+            "max_min": 55.2,
             "after_0000": 2
+          },
+          {
+            "date": "2026-06-01",
+            "shift": "C",
+            "calls": 7,
+            "ride_in_count": 0,
+            "avg_min": 13.9,
+            "max_min": 34.9,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-31",
+            "shift": "B",
+            "calls": 6,
+            "ride_in_count": 1,
+            "avg_min": 15.3,
+            "max_min": 47.0,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-05-30",
+            "shift": "A",
+            "calls": 6,
+            "ride_in_count": 1,
+            "avg_min": 26.7,
+            "max_min": 55.1,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-05-29",
+            "shift": "C",
+            "calls": 3,
+            "ride_in_count": 0,
+            "avg_min": 17.7,
+            "max_min": 28.9,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-28",
+            "shift": "B",
+            "calls": 5,
+            "ride_in_count": 0,
+            "avg_min": 10.5,
+            "max_min": 34.3,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-27",
+            "shift": "A",
+            "calls": 10,
+            "ride_in_count": 0,
+            "avg_min": 18.8,
+            "max_min": 42.4,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-26",
+            "shift": "C",
+            "calls": 12,
+            "ride_in_count": 2,
+            "avg_min": 12.1,
+            "max_min": 31.7,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-05-25",
+            "shift": "B",
+            "calls": 6,
+            "ride_in_count": 0,
+            "avg_min": 17.6,
+            "max_min": 50.4,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-24",
+            "shift": "A",
+            "calls": 6,
+            "ride_in_count": 0,
+            "avg_min": 13.0,
+            "max_min": 39.0,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-23",
+            "shift": "C",
+            "calls": 10,
+            "ride_in_count": 1,
+            "avg_min": 18.1,
+            "max_min": 48.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-05-22",
+            "shift": "B",
+            "calls": 5,
+            "ride_in_count": 0,
+            "avg_min": 13.2,
+            "max_min": 37.0,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-21",
+            "shift": "A",
+            "calls": 7,
+            "ride_in_count": 1,
+            "avg_min": 18.5,
+            "max_min": 33.7,
+            "after_0000": 0
           }
         ],
         "T33": [
@@ -2067,220 +2473,86 @@
             "avg_min": 16.6,
             "max_min": 47.1,
             "after_0000": 0
-          }
-        ],
-        "LR36": [
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 29.9,
-            "max_min": 41.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-17",
-            "shift": "A",
-            "calls": 1,
-            "ride_in_count": 0,
-            "avg_min": 31.0,
-            "max_min": 31.0,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-16",
-            "shift": "C",
-            "calls": 1,
-            "ride_in_count": 0,
-            "avg_min": 4.0,
-            "max_min": 4.0,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-15",
-            "shift": "B",
-            "calls": 1,
-            "ride_in_count": 0,
-            "avg_min": 198.5,
-            "max_min": 198.5,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-14",
-            "shift": "A",
-            "calls": 2,
-            "ride_in_count": 1,
-            "avg_min": 109.2,
-            "max_min": 162.6,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-13",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 0,
-            "avg_min": 6.7,
-            "max_min": 10.1,
-            "after_0000": 0
-          }
-        ],
-        "35FD": [
-          {
-            "date": "2026-06-17",
-            "shift": "A",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 1.7,
-            "max_min": 2.7,
-            "after_0000": 0
-          }
-        ]
-      },
-      "month": {
-        "E35": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 1,
-            "avg_min": 8.7,
-            "max_min": 26.2,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 9,
-            "ride_in_count": 1,
-            "avg_min": 19.4,
-            "max_min": 51.2,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-17",
-            "shift": "A",
-            "calls": 5,
-            "ride_in_count": 3,
-            "avg_min": 30.4,
-            "max_min": 70.0,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-16",
-            "shift": "C",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 22.2,
-            "max_min": 24.2,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-15",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 1,
-            "avg_min": 67.5,
-            "max_min": 228.1,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-14",
-            "shift": "A",
-            "calls": 7,
-            "ride_in_count": 2,
-            "avg_min": 29.6,
-            "max_min": 82.7,
-            "after_0000": 3
-          },
-          {
-            "date": "2026-06-13",
-            "shift": "C",
-            "calls": 7,
-            "ride_in_count": 0,
-            "avg_min": 10.2,
-            "max_min": 29.5,
-            "after_0000": 0
           },
           {
             "date": "2026-06-12",
             "shift": "B",
             "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 39.6,
-            "max_min": 91.5,
+            "ride_in_count": 1,
+            "avg_min": 18.2,
+            "max_min": 32.2,
             "after_0000": 0
           },
           {
             "date": "2026-06-11",
             "shift": "A",
             "calls": 6,
-            "ride_in_count": 2,
-            "avg_min": 37.2,
-            "max_min": 123.1,
+            "ride_in_count": 0,
+            "avg_min": 19.7,
+            "max_min": 35.0,
             "after_0000": 1
           },
           {
             "date": "2026-06-10",
             "shift": "C",
-            "calls": 7,
+            "calls": 3,
             "ride_in_count": 0,
-            "avg_min": 10.4,
-            "max_min": 25.6,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-09",
-            "shift": "B",
-            "calls": 9,
-            "ride_in_count": 0,
-            "avg_min": 14.0,
+            "avg_min": 16.6,
             "max_min": 32.3,
             "after_0000": 0
           },
           {
+            "date": "2026-06-09",
+            "shift": "B",
+            "calls": 8,
+            "ride_in_count": 1,
+            "avg_min": 27.6,
+            "max_min": 94.2,
+            "after_0000": 2
+          },
+          {
             "date": "2026-06-08",
             "shift": "A",
-            "calls": 8,
-            "ride_in_count": 3,
-            "avg_min": 36.7,
-            "max_min": 107.0,
-            "after_0000": 1
+            "calls": 6,
+            "ride_in_count": 2,
+            "avg_min": 13.5,
+            "max_min": 51.1,
+            "after_0000": 0
           },
           {
             "date": "2026-06-07",
             "shift": "C",
-            "calls": 7,
+            "calls": 2,
             "ride_in_count": 0,
-            "avg_min": 10.3,
+            "avg_min": 17.1,
             "max_min": 28.9,
-            "after_0000": 1
+            "after_0000": 0
           },
           {
             "date": "2026-06-06",
             "shift": "B",
-            "calls": 6,
-            "ride_in_count": 0,
-            "avg_min": 15.6,
-            "max_min": 35.0,
+            "calls": 3,
+            "ride_in_count": 2,
+            "avg_min": 91.9,
+            "max_min": 94.1,
             "after_0000": 0
           },
           {
             "date": "2026-06-05",
             "shift": "A",
-            "calls": 7,
+            "calls": 6,
             "ride_in_count": 1,
-            "avg_min": 32.0,
-            "max_min": 76.6,
-            "after_0000": 0
+            "avg_min": 6.1,
+            "max_min": 17.5,
+            "after_0000": 2
           },
           {
             "date": "2026-06-04",
             "shift": "C",
-            "calls": 7,
+            "calls": 5,
             "ride_in_count": 0,
-            "avg_min": 13.1,
-            "max_min": 33.0,
+            "avg_min": 10.5,
+            "max_min": 23.5,
             "after_0000": 0
           },
           {
@@ -2288,125 +2560,125 @@
             "shift": "B",
             "calls": 7,
             "ride_in_count": 0,
-            "avg_min": 29.7,
-            "max_min": 106.8,
-            "after_0000": 1
+            "avg_min": 14.0,
+            "max_min": 28.3,
+            "after_0000": 0
           },
           {
             "date": "2026-06-02",
             "shift": "A",
             "calls": 8,
-            "ride_in_count": 2,
-            "avg_min": 25.2,
-            "max_min": 87.4,
-            "after_0000": 4
+            "ride_in_count": 1,
+            "avg_min": 17.2,
+            "max_min": 74.0,
+            "after_0000": 0
           },
           {
             "date": "2026-06-01",
             "shift": "C",
-            "calls": 10,
+            "calls": 6,
             "ride_in_count": 1,
-            "avg_min": 19.3,
-            "max_min": 66.6,
-            "after_0000": 2
+            "avg_min": 9.4,
+            "max_min": 27.6,
+            "after_0000": 1
           },
           {
             "date": "2026-05-31",
             "shift": "B",
-            "calls": 5,
+            "calls": 4,
             "ride_in_count": 0,
-            "avg_min": 10.9,
-            "max_min": 32.9,
+            "avg_min": 7.9,
+            "max_min": 15.4,
             "after_0000": 0
           },
           {
             "date": "2026-05-30",
             "shift": "A",
-            "calls": 8,
-            "ride_in_count": 1,
-            "avg_min": 22.8,
-            "max_min": 61.8,
+            "calls": 10,
+            "ride_in_count": 0,
+            "avg_min": 19.5,
+            "max_min": 56.5,
             "after_0000": 2
           },
           {
             "date": "2026-05-29",
             "shift": "C",
-            "calls": 6,
+            "calls": 4,
             "ride_in_count": 0,
-            "avg_min": 12.3,
-            "max_min": 30.9,
-            "after_0000": 2
+            "avg_min": 14.6,
+            "max_min": 31.0,
+            "after_0000": 1
           },
           {
             "date": "2026-05-28",
             "shift": "B",
-            "calls": 4,
-            "ride_in_count": 1,
-            "avg_min": 14.6,
-            "max_min": 29.6,
+            "calls": 3,
+            "ride_in_count": 0,
+            "avg_min": 11.8,
+            "max_min": 26.9,
             "after_0000": 0
           },
           {
             "date": "2026-05-27",
             "shift": "A",
-            "calls": 7,
+            "calls": 11,
             "ride_in_count": 1,
-            "avg_min": 7.8,
-            "max_min": 34.3,
+            "avg_min": 16.8,
+            "max_min": 39.0,
             "after_0000": 0
           },
           {
             "date": "2026-05-26",
             "shift": "C",
-            "calls": 11,
-            "ride_in_count": 2,
-            "avg_min": 22.7,
-            "max_min": 114.5,
-            "after_0000": 0
+            "calls": 9,
+            "ride_in_count": 1,
+            "avg_min": 13.4,
+            "max_min": 63.9,
+            "after_0000": 1
           },
           {
             "date": "2026-05-25",
             "shift": "B",
-            "calls": 7,
+            "calls": 5,
             "ride_in_count": 0,
-            "avg_min": 17.7,
-            "max_min": 37.6,
-            "after_0000": 3
+            "avg_min": 37.5,
+            "max_min": 136.5,
+            "after_0000": 1
           },
           {
             "date": "2026-05-24",
             "shift": "A",
-            "calls": 5,
+            "calls": 6,
             "ride_in_count": 0,
-            "avg_min": 0.0,
-            "max_min": 0.0,
+            "avg_min": 6.8,
+            "max_min": 20.2,
             "after_0000": 2
           },
           {
             "date": "2026-05-23",
             "shift": "C",
             "calls": 8,
-            "ride_in_count": 0,
-            "avg_min": 13.4,
-            "max_min": 36.3,
-            "after_0000": 1
+            "ride_in_count": 1,
+            "avg_min": 8.0,
+            "max_min": 31.0,
+            "after_0000": 0
           },
           {
             "date": "2026-05-22",
             "shift": "B",
-            "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 9.8,
-            "max_min": 25.6,
+            "calls": 6,
+            "ride_in_count": 2,
+            "avg_min": 33.5,
+            "max_min": 64.5,
             "after_0000": 1
           },
           {
             "date": "2026-05-21",
             "shift": "A",
-            "calls": 2,
-            "ride_in_count": 1,
-            "avg_min": 0.0,
-            "max_min": 0.0,
+            "calls": 4,
+            "ride_in_count": 0,
+            "avg_min": 1.8,
+            "max_min": 4.6,
             "after_0000": 0
           }
         ],
@@ -2682,278 +2954,6 @@
             "after_0000": 3
           }
         ],
-        "E36": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 27.9,
-            "max_min": 32.3,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 4,
-            "ride_in_count": 1,
-            "avg_min": 11.8,
-            "max_min": 47.1,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-17",
-            "shift": "A",
-            "calls": 9,
-            "ride_in_count": 2,
-            "avg_min": 20.0,
-            "max_min": 82.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-16",
-            "shift": "C",
-            "calls": 7,
-            "ride_in_count": 1,
-            "avg_min": 6.6,
-            "max_min": 24.9,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-15",
-            "shift": "B",
-            "calls": 4,
-            "ride_in_count": 1,
-            "avg_min": 81.7,
-            "max_min": 255.7,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-14",
-            "shift": "A",
-            "calls": 8,
-            "ride_in_count": 0,
-            "avg_min": 15.2,
-            "max_min": 39.6,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-13",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 1,
-            "avg_min": 16.3,
-            "max_min": 49.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-12",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 9.1,
-            "max_min": 24.9,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-11",
-            "shift": "A",
-            "calls": 4,
-            "ride_in_count": 1,
-            "avg_min": 24.7,
-            "max_min": 56.5,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-10",
-            "shift": "C",
-            "calls": 7,
-            "ride_in_count": 1,
-            "avg_min": 18.6,
-            "max_min": 66.9,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-09",
-            "shift": "B",
-            "calls": 9,
-            "ride_in_count": 0,
-            "avg_min": 11.6,
-            "max_min": 32.2,
-            "after_0000": 3
-          },
-          {
-            "date": "2026-06-08",
-            "shift": "A",
-            "calls": 9,
-            "ride_in_count": 0,
-            "avg_min": 10.1,
-            "max_min": 26.3,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-07",
-            "shift": "C",
-            "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 10.1,
-            "max_min": 24.9,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-06",
-            "shift": "B",
-            "calls": 9,
-            "ride_in_count": 0,
-            "avg_min": 21.4,
-            "max_min": 54.5,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-05",
-            "shift": "A",
-            "calls": 3,
-            "ride_in_count": 0,
-            "avg_min": 30.3,
-            "max_min": 32.9,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-04",
-            "shift": "C",
-            "calls": 7,
-            "ride_in_count": 2,
-            "avg_min": 25.2,
-            "max_min": 65.2,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-03",
-            "shift": "B",
-            "calls": 6,
-            "ride_in_count": 0,
-            "avg_min": 32.4,
-            "max_min": 49.7,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-02",
-            "shift": "A",
-            "calls": 8,
-            "ride_in_count": 1,
-            "avg_min": 27.2,
-            "max_min": 55.2,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-01",
-            "shift": "C",
-            "calls": 7,
-            "ride_in_count": 0,
-            "avg_min": 13.9,
-            "max_min": 34.9,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-31",
-            "shift": "B",
-            "calls": 6,
-            "ride_in_count": 1,
-            "avg_min": 15.3,
-            "max_min": 47.0,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-05-30",
-            "shift": "A",
-            "calls": 6,
-            "ride_in_count": 1,
-            "avg_min": 26.7,
-            "max_min": 55.1,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-05-29",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 0,
-            "avg_min": 17.7,
-            "max_min": 28.9,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-28",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 10.5,
-            "max_min": 34.3,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-27",
-            "shift": "A",
-            "calls": 10,
-            "ride_in_count": 0,
-            "avg_min": 18.8,
-            "max_min": 42.4,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-26",
-            "shift": "C",
-            "calls": 12,
-            "ride_in_count": 2,
-            "avg_min": 12.1,
-            "max_min": 31.7,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-05-25",
-            "shift": "B",
-            "calls": 6,
-            "ride_in_count": 0,
-            "avg_min": 17.6,
-            "max_min": 50.4,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-24",
-            "shift": "A",
-            "calls": 6,
-            "ride_in_count": 0,
-            "avg_min": 13.0,
-            "max_min": 39.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-23",
-            "shift": "C",
-            "calls": 10,
-            "ride_in_count": 1,
-            "avg_min": 18.1,
-            "max_min": 48.5,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-05-22",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 13.2,
-            "max_min": 37.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-21",
-            "shift": "A",
-            "calls": 7,
-            "ride_in_count": 1,
-            "avg_min": 18.5,
-            "max_min": 33.7,
-            "after_0000": 0
-          }
-        ],
         "S36": [
           {
             "date": "2026-06-19",
@@ -3224,6 +3224,278 @@
             "avg_min": 13.8,
             "max_min": 35.7,
             "after_0000": 0
+          }
+        ],
+        "R33": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 8,
+            "ride_in_count": 0,
+            "avg_min": 15.1,
+            "max_min": 37.7,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 11,
+            "ride_in_count": 1,
+            "avg_min": 26.1,
+            "max_min": 66.5,
+            "after_0000": 3
+          },
+          {
+            "date": "2026-06-17",
+            "shift": "A",
+            "calls": 9,
+            "ride_in_count": 2,
+            "avg_min": 14.6,
+            "max_min": 56.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-16",
+            "shift": "C",
+            "calls": 13,
+            "ride_in_count": 1,
+            "avg_min": 15.1,
+            "max_min": 43.1,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-15",
+            "shift": "B",
+            "calls": 9,
+            "ride_in_count": 1,
+            "avg_min": 33.7,
+            "max_min": 169.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-14",
+            "shift": "A",
+            "calls": 8,
+            "ride_in_count": 3,
+            "avg_min": 50.3,
+            "max_min": 167.3,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-13",
+            "shift": "C",
+            "calls": 15,
+            "ride_in_count": 0,
+            "avg_min": 11.8,
+            "max_min": 30.9,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-12",
+            "shift": "B",
+            "calls": 11,
+            "ride_in_count": 0,
+            "avg_min": 12.1,
+            "max_min": 44.4,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-11",
+            "shift": "A",
+            "calls": 3,
+            "ride_in_count": 3,
+            "avg_min": 30.7,
+            "max_min": 92.1,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-10",
+            "shift": "C",
+            "calls": 12,
+            "ride_in_count": 2,
+            "avg_min": 25.2,
+            "max_min": 51.2,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-09",
+            "shift": "B",
+            "calls": 15,
+            "ride_in_count": 1,
+            "avg_min": 19.9,
+            "max_min": 59.9,
+            "after_0000": 4
+          },
+          {
+            "date": "2026-06-08",
+            "shift": "A",
+            "calls": 9,
+            "ride_in_count": 1,
+            "avg_min": 28.3,
+            "max_min": 63.8,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-07",
+            "shift": "C",
+            "calls": 9,
+            "ride_in_count": 3,
+            "avg_min": 14.0,
+            "max_min": 43.1,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-06",
+            "shift": "B",
+            "calls": 9,
+            "ride_in_count": 0,
+            "avg_min": 26.8,
+            "max_min": 96.9,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-05",
+            "shift": "A",
+            "calls": 12,
+            "ride_in_count": 2,
+            "avg_min": 9.4,
+            "max_min": 34.3,
+            "after_0000": 3
+          },
+          {
+            "date": "2026-06-04",
+            "shift": "C",
+            "calls": 6,
+            "ride_in_count": 0,
+            "avg_min": 17.7,
+            "max_min": 32.3,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-03",
+            "shift": "B",
+            "calls": 9,
+            "ride_in_count": 0,
+            "avg_min": 15.1,
+            "max_min": 22.8,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-06-02",
+            "shift": "A",
+            "calls": 9,
+            "ride_in_count": 3,
+            "avg_min": 39.8,
+            "max_min": 121.0,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-01",
+            "shift": "C",
+            "calls": 8,
+            "ride_in_count": 0,
+            "avg_min": 20.1,
+            "max_min": 34.3,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-05-31",
+            "shift": "B",
+            "calls": 7,
+            "ride_in_count": 1,
+            "avg_min": 16.3,
+            "max_min": 37.0,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-05-30",
+            "shift": "A",
+            "calls": 8,
+            "ride_in_count": 3,
+            "avg_min": 15.3,
+            "max_min": 76.6,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-05-29",
+            "shift": "C",
+            "calls": 7,
+            "ride_in_count": 1,
+            "avg_min": 31.3,
+            "max_min": 63.8,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-28",
+            "shift": "B",
+            "calls": 6,
+            "ride_in_count": 0,
+            "avg_min": 9.0,
+            "max_min": 20.8,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-05-27",
+            "shift": "A",
+            "calls": 15,
+            "ride_in_count": 3,
+            "avg_min": 20.4,
+            "max_min": 67.2,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-05-26",
+            "shift": "C",
+            "calls": 14,
+            "ride_in_count": 3,
+            "avg_min": 28.0,
+            "max_min": 102.2,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-05-25",
+            "shift": "B",
+            "calls": 10,
+            "ride_in_count": 1,
+            "avg_min": 12.4,
+            "max_min": 124.4,
+            "after_0000": 3
+          },
+          {
+            "date": "2026-05-24",
+            "shift": "A",
+            "calls": 9,
+            "ride_in_count": 3,
+            "avg_min": 17.1,
+            "max_min": 58.5,
+            "after_0000": 3
+          },
+          {
+            "date": "2026-05-23",
+            "shift": "C",
+            "calls": 6,
+            "ride_in_count": 1,
+            "avg_min": 22.8,
+            "max_min": 58.5,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-05-22",
+            "shift": "B",
+            "calls": 13,
+            "ride_in_count": 1,
+            "avg_min": 18.7,
+            "max_min": 77.4,
+            "after_0000": 4
+          },
+          {
+            "date": "2026-05-21",
+            "shift": "A",
+            "calls": 8,
+            "ride_in_count": 0,
+            "avg_min": 13.3,
+            "max_min": 32.3,
+            "after_0000": 1
           }
         ],
         "E34": [
@@ -3725,547 +3997,275 @@
             "after_0000": 0
           }
         ],
-        "R33": [
+        "E35": [
           {
             "date": "2026-06-19",
             "shift": "C",
-            "calls": 8,
-            "ride_in_count": 0,
-            "avg_min": 12.7,
-            "max_min": 37.7,
+            "calls": 3,
+            "ride_in_count": 1,
+            "avg_min": 8.7,
+            "max_min": 26.2,
             "after_0000": 0
           },
           {
             "date": "2026-06-18",
             "shift": "B",
-            "calls": 11,
+            "calls": 9,
             "ride_in_count": 1,
-            "avg_min": 26.1,
-            "max_min": 66.5,
-            "after_0000": 3
+            "avg_min": 19.4,
+            "max_min": 51.2,
+            "after_0000": 1
           },
           {
             "date": "2026-06-17",
             "shift": "A",
-            "calls": 9,
-            "ride_in_count": 2,
-            "avg_min": 14.6,
-            "max_min": 56.5,
-            "after_0000": 0
+            "calls": 5,
+            "ride_in_count": 3,
+            "avg_min": 30.4,
+            "max_min": 70.0,
+            "after_0000": 2
           },
           {
             "date": "2026-06-16",
             "shift": "C",
-            "calls": 13,
-            "ride_in_count": 1,
-            "avg_min": 15.1,
-            "max_min": 43.1,
-            "after_0000": 2
+            "calls": 2,
+            "ride_in_count": 0,
+            "avg_min": 22.2,
+            "max_min": 24.2,
+            "after_0000": 1
           },
           {
             "date": "2026-06-15",
             "shift": "B",
-            "calls": 9,
+            "calls": 5,
             "ride_in_count": 1,
-            "avg_min": 33.7,
-            "max_min": 169.5,
+            "avg_min": 67.5,
+            "max_min": 228.1,
             "after_0000": 0
           },
           {
             "date": "2026-06-14",
             "shift": "A",
-            "calls": 8,
-            "ride_in_count": 3,
-            "avg_min": 50.3,
-            "max_min": 167.3,
-            "after_0000": 1
+            "calls": 7,
+            "ride_in_count": 2,
+            "avg_min": 29.6,
+            "max_min": 82.7,
+            "after_0000": 3
           },
           {
             "date": "2026-06-13",
             "shift": "C",
-            "calls": 15,
+            "calls": 7,
             "ride_in_count": 0,
-            "avg_min": 11.8,
+            "avg_min": 10.2,
+            "max_min": 29.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-12",
+            "shift": "B",
+            "calls": 5,
+            "ride_in_count": 0,
+            "avg_min": 39.6,
+            "max_min": 91.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-11",
+            "shift": "A",
+            "calls": 6,
+            "ride_in_count": 2,
+            "avg_min": 37.2,
+            "max_min": 123.1,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-10",
+            "shift": "C",
+            "calls": 7,
+            "ride_in_count": 0,
+            "avg_min": 10.4,
+            "max_min": 25.6,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-09",
+            "shift": "B",
+            "calls": 9,
+            "ride_in_count": 0,
+            "avg_min": 14.0,
+            "max_min": 32.3,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-08",
+            "shift": "A",
+            "calls": 8,
+            "ride_in_count": 3,
+            "avg_min": 36.7,
+            "max_min": 107.0,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-07",
+            "shift": "C",
+            "calls": 7,
+            "ride_in_count": 0,
+            "avg_min": 10.3,
+            "max_min": 28.9,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-06",
+            "shift": "B",
+            "calls": 6,
+            "ride_in_count": 0,
+            "avg_min": 15.6,
+            "max_min": 35.0,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-05",
+            "shift": "A",
+            "calls": 7,
+            "ride_in_count": 1,
+            "avg_min": 32.0,
+            "max_min": 76.6,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-04",
+            "shift": "C",
+            "calls": 7,
+            "ride_in_count": 0,
+            "avg_min": 13.1,
+            "max_min": 33.0,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-03",
+            "shift": "B",
+            "calls": 7,
+            "ride_in_count": 0,
+            "avg_min": 29.7,
+            "max_min": 106.8,
+            "after_0000": 1
+          },
+          {
+            "date": "2026-06-02",
+            "shift": "A",
+            "calls": 8,
+            "ride_in_count": 2,
+            "avg_min": 25.2,
+            "max_min": 87.4,
+            "after_0000": 4
+          },
+          {
+            "date": "2026-06-01",
+            "shift": "C",
+            "calls": 10,
+            "ride_in_count": 1,
+            "avg_min": 19.3,
+            "max_min": 66.6,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-05-31",
+            "shift": "B",
+            "calls": 5,
+            "ride_in_count": 0,
+            "avg_min": 10.9,
+            "max_min": 32.9,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-05-30",
+            "shift": "A",
+            "calls": 8,
+            "ride_in_count": 1,
+            "avg_min": 22.8,
+            "max_min": 61.8,
+            "after_0000": 2
+          },
+          {
+            "date": "2026-05-29",
+            "shift": "C",
+            "calls": 6,
+            "ride_in_count": 0,
+            "avg_min": 12.3,
             "max_min": 30.9,
             "after_0000": 2
           },
           {
-            "date": "2026-06-12",
+            "date": "2026-05-28",
             "shift": "B",
-            "calls": 11,
-            "ride_in_count": 0,
-            "avg_min": 12.1,
-            "max_min": 44.4,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-11",
-            "shift": "A",
-            "calls": 3,
-            "ride_in_count": 3,
-            "avg_min": 30.7,
-            "max_min": 92.1,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-10",
-            "shift": "C",
-            "calls": 12,
-            "ride_in_count": 2,
-            "avg_min": 25.2,
-            "max_min": 51.2,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-09",
-            "shift": "B",
-            "calls": 15,
+            "calls": 4,
             "ride_in_count": 1,
-            "avg_min": 19.9,
-            "max_min": 59.9,
-            "after_0000": 4
+            "avg_min": 14.6,
+            "max_min": 29.6,
+            "after_0000": 0
           },
           {
-            "date": "2026-06-08",
+            "date": "2026-05-27",
             "shift": "A",
-            "calls": 9,
+            "calls": 7,
             "ride_in_count": 1,
-            "avg_min": 28.3,
-            "max_min": 63.8,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-07",
-            "shift": "C",
-            "calls": 9,
-            "ride_in_count": 3,
-            "avg_min": 14.0,
-            "max_min": 43.1,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-06",
-            "shift": "B",
-            "calls": 9,
-            "ride_in_count": 0,
-            "avg_min": 26.8,
-            "max_min": 96.9,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-05",
-            "shift": "A",
-            "calls": 12,
-            "ride_in_count": 2,
-            "avg_min": 9.4,
+            "avg_min": 7.8,
             "max_min": 34.3,
-            "after_0000": 3
+            "after_0000": 0
           },
           {
-            "date": "2026-06-04",
+            "date": "2026-05-26",
             "shift": "C",
-            "calls": 6,
+            "calls": 11,
+            "ride_in_count": 2,
+            "avg_min": 22.7,
+            "max_min": 114.5,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-05-25",
+            "shift": "B",
+            "calls": 7,
             "ride_in_count": 0,
             "avg_min": 17.7,
-            "max_min": 32.3,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-03",
-            "shift": "B",
-            "calls": 9,
-            "ride_in_count": 0,
-            "avg_min": 15.1,
-            "max_min": 22.8,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-02",
-            "shift": "A",
-            "calls": 9,
-            "ride_in_count": 3,
-            "avg_min": 39.8,
-            "max_min": 121.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-01",
-            "shift": "C",
-            "calls": 8,
-            "ride_in_count": 0,
-            "avg_min": 20.1,
-            "max_min": 34.3,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-05-31",
-            "shift": "B",
-            "calls": 7,
-            "ride_in_count": 1,
-            "avg_min": 16.3,
-            "max_min": 37.0,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-05-30",
-            "shift": "A",
-            "calls": 8,
-            "ride_in_count": 3,
-            "avg_min": 15.3,
-            "max_min": 76.6,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-05-29",
-            "shift": "C",
-            "calls": 7,
-            "ride_in_count": 1,
-            "avg_min": 31.3,
-            "max_min": 63.8,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-28",
-            "shift": "B",
-            "calls": 6,
-            "ride_in_count": 0,
-            "avg_min": 9.0,
-            "max_min": 20.8,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-05-27",
-            "shift": "A",
-            "calls": 15,
-            "ride_in_count": 3,
-            "avg_min": 20.4,
-            "max_min": 67.2,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-05-26",
-            "shift": "C",
-            "calls": 14,
-            "ride_in_count": 3,
-            "avg_min": 28.0,
-            "max_min": 102.2,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-05-25",
-            "shift": "B",
-            "calls": 10,
-            "ride_in_count": 1,
-            "avg_min": 12.4,
-            "max_min": 124.4,
+            "max_min": 37.6,
             "after_0000": 3
           },
           {
             "date": "2026-05-24",
             "shift": "A",
-            "calls": 9,
-            "ride_in_count": 3,
-            "avg_min": 17.1,
-            "max_min": 58.5,
-            "after_0000": 3
+            "calls": 5,
+            "ride_in_count": 0,
+            "avg_min": 0.0,
+            "max_min": 0.0,
+            "after_0000": 2
           },
           {
             "date": "2026-05-23",
             "shift": "C",
-            "calls": 6,
-            "ride_in_count": 1,
-            "avg_min": 22.8,
-            "max_min": 58.5,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-22",
-            "shift": "B",
-            "calls": 13,
-            "ride_in_count": 1,
-            "avg_min": 18.7,
-            "max_min": 77.4,
-            "after_0000": 4
-          },
-          {
-            "date": "2026-05-21",
-            "shift": "A",
             "calls": 8,
             "ride_in_count": 0,
-            "avg_min": 13.3,
-            "max_min": 32.3,
-            "after_0000": 1
-          }
-        ],
-        "T33": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 13.1,
-            "max_min": 26.3,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 4,
-            "ride_in_count": 0,
-            "avg_min": 2.4,
-            "max_min": 7.4,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-17",
-            "shift": "A",
-            "calls": 7,
-            "ride_in_count": 2,
-            "avg_min": 35.3,
-            "max_min": 71.3,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-16",
-            "shift": "C",
-            "calls": 8,
-            "ride_in_count": 1,
-            "avg_min": 11.7,
-            "max_min": 51.8,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-15",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 59.2,
-            "max_min": 248.3,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-14",
-            "shift": "A",
-            "calls": 7,
-            "ride_in_count": 0,
-            "avg_min": 39.3,
-            "max_min": 171.3,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-13",
-            "shift": "C",
-            "calls": 6,
-            "ride_in_count": 1,
-            "avg_min": 16.6,
-            "max_min": 47.1,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-12",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 1,
-            "avg_min": 18.2,
-            "max_min": 32.2,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-11",
-            "shift": "A",
-            "calls": 6,
-            "ride_in_count": 0,
-            "avg_min": 19.7,
-            "max_min": 35.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-06-10",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 0,
-            "avg_min": 16.6,
-            "max_min": 32.3,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-09",
-            "shift": "B",
-            "calls": 8,
-            "ride_in_count": 1,
-            "avg_min": 27.6,
-            "max_min": 94.2,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-08",
-            "shift": "A",
-            "calls": 6,
-            "ride_in_count": 2,
-            "avg_min": 13.5,
-            "max_min": 51.1,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-07",
-            "shift": "C",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 17.1,
-            "max_min": 28.9,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-06",
-            "shift": "B",
-            "calls": 3,
-            "ride_in_count": 2,
-            "avg_min": 91.9,
-            "max_min": 94.1,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-05",
-            "shift": "A",
-            "calls": 6,
-            "ride_in_count": 1,
-            "avg_min": 6.1,
-            "max_min": 17.5,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-06-04",
-            "shift": "C",
-            "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 10.5,
-            "max_min": 23.5,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-03",
-            "shift": "B",
-            "calls": 7,
-            "ride_in_count": 0,
-            "avg_min": 14.0,
-            "max_min": 28.3,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-02",
-            "shift": "A",
-            "calls": 8,
-            "ride_in_count": 1,
-            "avg_min": 17.2,
-            "max_min": 74.0,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-01",
-            "shift": "C",
-            "calls": 6,
-            "ride_in_count": 1,
-            "avg_min": 9.4,
-            "max_min": 27.6,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-31",
-            "shift": "B",
-            "calls": 4,
-            "ride_in_count": 0,
-            "avg_min": 7.9,
-            "max_min": 15.4,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-05-30",
-            "shift": "A",
-            "calls": 10,
-            "ride_in_count": 0,
-            "avg_min": 19.5,
-            "max_min": 56.5,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-05-29",
-            "shift": "C",
-            "calls": 4,
-            "ride_in_count": 0,
-            "avg_min": 14.6,
-            "max_min": 31.0,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-28",
-            "shift": "B",
-            "calls": 3,
-            "ride_in_count": 0,
-            "avg_min": 11.8,
-            "max_min": 26.9,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-05-27",
-            "shift": "A",
-            "calls": 11,
-            "ride_in_count": 1,
-            "avg_min": 16.8,
-            "max_min": 39.0,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-05-26",
-            "shift": "C",
-            "calls": 9,
-            "ride_in_count": 1,
             "avg_min": 13.4,
-            "max_min": 63.9,
+            "max_min": 36.3,
             "after_0000": 1
-          },
-          {
-            "date": "2026-05-25",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 0,
-            "avg_min": 37.5,
-            "max_min": 136.5,
-            "after_0000": 1
-          },
-          {
-            "date": "2026-05-24",
-            "shift": "A",
-            "calls": 6,
-            "ride_in_count": 0,
-            "avg_min": 6.8,
-            "max_min": 20.2,
-            "after_0000": 2
-          },
-          {
-            "date": "2026-05-23",
-            "shift": "C",
-            "calls": 8,
-            "ride_in_count": 1,
-            "avg_min": 8.0,
-            "max_min": 31.0,
-            "after_0000": 0
           },
           {
             "date": "2026-05-22",
             "shift": "B",
-            "calls": 6,
-            "ride_in_count": 2,
-            "avg_min": 33.5,
-            "max_min": 64.5,
+            "calls": 5,
+            "ride_in_count": 0,
+            "avg_min": 9.8,
+            "max_min": 25.6,
             "after_0000": 1
           },
           {
             "date": "2026-05-21",
             "shift": "A",
-            "calls": 4,
-            "ride_in_count": 0,
-            "avg_min": 1.8,
-            "max_min": 4.6,
+            "calls": 2,
+            "ride_in_count": 1,
+            "avg_min": 0.0,
+            "max_min": 0.0,
             "after_0000": 0
           }
         ],
@@ -4491,53 +4491,13 @@
         ]
       },
       "year": {
-        "E35": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 1,
-            "avg_min": 8.7,
-            "max_min": 26.2,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 9,
-            "ride_in_count": 1,
-            "avg_min": 19.4,
-            "max_min": 51.2,
-            "after_0000": 1
-          }
-        ],
-        "R34": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 4,
-            "ride_in_count": 1,
-            "avg_min": 29.1,
-            "max_min": 63.9,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 5,
-            "ride_in_count": 2,
-            "avg_min": 10.6,
-            "max_min": 53.2,
-            "after_0000": 0
-          }
-        ],
         "E36": [
           {
             "date": "2026-06-19",
             "shift": "C",
-            "calls": 2,
+            "calls": 3,
             "ride_in_count": 0,
-            "avg_min": 27.9,
+            "avg_min": 18.6,
             "max_min": 32.3,
             "after_0000": 0
           },
@@ -4549,66 +4509,6 @@
             "avg_min": 11.8,
             "max_min": 47.1,
             "after_0000": 1
-          }
-        ],
-        "S36": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 0,
-            "avg_min": 13.7,
-            "max_min": 41.1,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 2,
-            "ride_in_count": 1,
-            "avg_min": 6.7,
-            "max_min": 13.4,
-            "after_0000": 1
-          }
-        ],
-        "E34": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 3,
-            "ride_in_count": 0,
-            "avg_min": 7.0,
-            "max_min": 20.9,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 2,
-            "ride_in_count": 0,
-            "avg_min": 24.9,
-            "max_min": 30.4,
-            "after_0000": 0
-          }
-        ],
-        "R33": [
-          {
-            "date": "2026-06-19",
-            "shift": "C",
-            "calls": 8,
-            "ride_in_count": 0,
-            "avg_min": 12.7,
-            "max_min": 37.7,
-            "after_0000": 0
-          },
-          {
-            "date": "2026-06-18",
-            "shift": "B",
-            "calls": 11,
-            "ride_in_count": 1,
-            "avg_min": 26.1,
-            "max_min": 66.5,
-            "after_0000": 3
           }
         ],
         "T33": [
@@ -4631,6 +4531,46 @@
             "after_0000": 0
           }
         ],
+        "R34": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 4,
+            "ride_in_count": 1,
+            "avg_min": 29.1,
+            "max_min": 63.9,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 5,
+            "ride_in_count": 2,
+            "avg_min": 10.6,
+            "max_min": 53.2,
+            "after_0000": 0
+          }
+        ],
+        "S36": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 3,
+            "ride_in_count": 0,
+            "avg_min": 13.7,
+            "max_min": 41.1,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 2,
+            "ride_in_count": 1,
+            "avg_min": 6.7,
+            "max_min": 13.4,
+            "after_0000": 1
+          }
+        ],
         "LR36": [
           {
             "date": "2026-06-18",
@@ -4639,6 +4579,66 @@
             "ride_in_count": 0,
             "avg_min": 29.9,
             "max_min": 41.0,
+            "after_0000": 1
+          }
+        ],
+        "R33": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 8,
+            "ride_in_count": 0,
+            "avg_min": 15.1,
+            "max_min": 37.7,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 11,
+            "ride_in_count": 1,
+            "avg_min": 26.1,
+            "max_min": 66.5,
+            "after_0000": 3
+          }
+        ],
+        "E34": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 3,
+            "ride_in_count": 0,
+            "avg_min": 7.0,
+            "max_min": 20.9,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 2,
+            "ride_in_count": 0,
+            "avg_min": 24.9,
+            "max_min": 30.4,
+            "after_0000": 0
+          }
+        ],
+        "E35": [
+          {
+            "date": "2026-06-19",
+            "shift": "C",
+            "calls": 3,
+            "ride_in_count": 1,
+            "avg_min": 8.7,
+            "max_min": 26.2,
+            "after_0000": 0
+          },
+          {
+            "date": "2026-06-18",
+            "shift": "B",
+            "calls": 9,
+            "ride_in_count": 1,
+            "avg_min": 19.4,
+            "max_min": 51.2,
             "after_0000": 1
           }
         ]
@@ -4655,20 +4655,20 @@
     "start_date": "2026-06-18",
     "end_date": "2026-06-19",
     "next_reset_date": "2027-06-18",
-    "units_total_calls": 64,
+    "units_total_calls": 65,
     "personnel_total_calls": 0,
     "units_total_ride_ins": 8,
     "personnel_total_ride_ins": 0,
-    "generated_at": "2026-06-19T20:43:33.201095Z"
+    "generated_at": "2026-06-19T21:02:29.523450Z"
   },
   "integrity_checks": {
     "status": "warn",
     "checks": [
       {
         "period": "week",
-        "unit_total_calls": 324,
+        "unit_total_calls": 325,
         "personnel_total_calls": 0,
-        "difference_calls": -324,
+        "difference_calls": -325,
         "personnel_to_unit_ratio": 0.0,
         "status": "warn",
         "issues": [
@@ -4678,9 +4678,9 @@
       },
       {
         "period": "month",
-        "unit_total_calls": 1552,
+        "unit_total_calls": 1553,
         "personnel_total_calls": 0,
-        "difference_calls": -1552,
+        "difference_calls": -1553,
         "personnel_to_unit_ratio": 0.0,
         "status": "warn",
         "issues": [
@@ -4690,9 +4690,9 @@
       },
       {
         "period": "year",
-        "unit_total_calls": 64,
+        "unit_total_calls": 65,
         "personnel_total_calls": 0,
-        "difference_calls": -64,
+        "difference_calls": -65,
         "personnel_to_unit_ratio": 0.0,
         "status": "warn",
         "issues": [
@@ -4701,7 +4701,7 @@
         ]
       }
     ],
-    "generated_at": "2026-06-19T20:43:33.201095Z"
+    "generated_at": "2026-06-19T21:02:29.523450Z"
   },
   "backfill_health": {
     "latest_stats_date": "2026-06-19",
@@ -5175,10 +5175,10 @@
       "status": "success",
       "action": "full",
       "message": "Full personnel backfill completed for gap days (2025-06-18..2026-06-19).",
-      "updated_at": "2026-06-19T20:43:32.5442913Z",
+      "updated_at": "2026-06-19T21:02:28.8782584Z",
       "start_date": "2025-06-18",
       "end_date": "2026-06-19"
     },
-    "generated_at": "2026-06-19T20:43:34.297257Z"
+    "generated_at": "2026-06-19T21:02:30.631307Z"
   }
 }
