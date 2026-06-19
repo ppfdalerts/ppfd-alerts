@@ -1,4 +1,4 @@
-name: Publish leaderboard data
+﻿name: Publish leaderboard data
 
 on:
   schedule:
@@ -25,7 +25,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Continue'
           if (-not $env:SHIFT_STATS_DIR -or -not (Test-Path $env:SHIFT_STATS_DIR)) {
-            Write-Host "SHIFT_STATS_DIR not set or not found. Set a repo variable named SHIFT_STATS_DIR to the directory containing shift_stats_*.json (e.g., C:\\Users\\County\\python alerts)."
+            Write-Host "SHIFT_STATS_DIR not set or not found. Set a repo variable named SHIFT_STATS_DIR to the directory containing shift_stats_*.json (e.g., C:\Users\County\python alerts)."
             exit 0
           }
           Write-Host "Using SHIFT_STATS_DIR=$env:SHIFT_STATS_DIR"
@@ -33,6 +33,28 @@ jobs:
           python --version
           python scripts/generate_leaderboard.py --stats-dir "$env:SHIFT_STATS_DIR" --out docs/data.json
           if ($LASTEXITCODE -ne 0) { Write-Host "Generator returned non-zero ($LASTEXITCODE). Continuing without failure."; exit 0 }
+
+      - name: Refresh version metadata
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $head = (git rev-parse HEAD).Trim()
+          if (-not $head) { $head = 'unknown' }
+          $short = if ($head.Length -ge 7) { $head.Substring(0, 7) } else { $head }
+          $generatedAt = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+          $buildId = (Get-Date).ToUniversalTime().ToString('yyyyMMddHHmmss') + '-' + $short
+          $dataSha = (Get-FileHash -Path 'docs/data.json' -Algorithm SHA256).Hash.ToLowerInvariant()
+          $indexSha = (Get-FileHash -Path 'docs/index.html' -Algorithm SHA256).Hash.ToLowerInvariant()
+          $payload = [ordered]@{
+            generated_at = $generatedAt
+            commit = $head
+            commit_short = $short
+            build_id = $buildId
+            data_sha256 = $dataSha
+            index_sha256 = $indexSha
+          }
+          $json = $payload | ConvertTo-Json -Depth 4
+          $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+          [System.IO.File]::WriteAllText((Join-Path $PWD 'docs/version.json'), $json, $utf8NoBom)
 
       - name: Commit and push (if changed)
         env:
@@ -43,11 +65,10 @@ jobs:
           git config --global --add safe.directory $PWD
           git remote -v
           git status
-          git add docs/data.json
+          git add docs/data.json docs/version.json
           if (git diff --cached --quiet) {
             Write-Host "No changes to commit"
           } else {
-            # Ensure push uses token auth
             git remote set-url origin "https://x-access-token:${env:GITHUB_TOKEN}@github.com/${env:GITHUB_REPOSITORY}.git"
             git status
             git commit -m "Update leaderboard data [skip ci]"
