@@ -1,8 +1,6 @@
 ﻿name: Publish leaderboard data
 
 on:
-  schedule:
-    - cron: "*/5 * * * *"
   workflow_dispatch: {}
 
 permissions:
