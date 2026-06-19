@@ -26,6 +26,7 @@ TIMEFRAME_LENGTHS = {
     "week": 7,
     "month": 30,
     "year": 365,
+    "rolling_year": 365,
 }
 
 
@@ -38,15 +39,17 @@ def load_stats(fp: Path):
     try:
         with fp.open("r", encoding="utf-8") as f:
             j = json.load(f)
+            duration_known = j.get("duration_known_calls")
             return (
                 defaultdict(int, j.get("calls", {})),
                 defaultdict(int, j.get("dur_sec", {})),
                 defaultdict(int, j.get("after_0000", {})),
                 defaultdict(int, j.get("max_sec", {})),
                 defaultdict(int, j.get("ride_in_count", {})),
+                (defaultdict(int, duration_known) if isinstance(duration_known, dict) else None),
             )
     except Exception:
-        return defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int)
+        return defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int), None
 
 
 def load_personnel_stats(fp: Path):
@@ -63,6 +66,24 @@ def load_personnel_stats(fp: Path):
             )
     except Exception:
         return {}, defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int)
+
+
+def _duration_denominator(unit: str, calls: dict, duration_known_calls: dict | None) -> int:
+    if duration_known_calls is None:
+        return int(calls.get(unit, 0) or 0)
+    return int(duration_known_calls.get(unit, 0) or 0)
+
+
+def _avg_minutes(total_seconds: int | float, known_calls: int) -> float | None:
+    if known_calls <= 0:
+        return None
+    return round((float(total_seconds) / float(known_calls)) / 60.0, 1)
+
+
+def _max_minutes(max_seconds: int | float, known_calls: int) -> float | None:
+    if known_calls <= 0:
+        return None
+    return round(float(max_seconds) / 60.0, 1)
 
 
 def _safe_parent(path: Path, idx: int):
@@ -324,7 +345,7 @@ def _compute_shift_personnel_from_roster(
     stats_path: Path,
     roster_payload: dict,
 ) -> tuple[dict, dict, dict, dict, dict]:
-    calls, dur, after, max_sec, _ride_in = load_stats(stats_path)
+    calls, dur, after, max_sec, _ride_in, _duration_known = load_stats(stats_path)
     roster_map = _build_roster_map(roster_payload, shift_date)
 
     names: dict[str, str] = {}
@@ -584,16 +605,15 @@ def compute_personnel_period(stats_dir: Path, period_key: str, now: datetime.dat
         })
     rows.sort(key=lambda r: (-r.get("total_calls", 0), r.get("name", "")))
     meta = {}
-    if period_key in ("week", "month", "year"):
+    if period_key in ("week", "month", "year", "rolling_year"):
         end_date = shift_start(now).date()
-        days = TIMEFRAME_LENGTHS[period_key]
-        start_date = end_date - datetime.timedelta(days=days - 1)
-        if period_key == "year":
+        start_date, end_date = _date_range_for_period(now, period_key)
+        if period_key in ("year", "rolling_year"):
             meta["range"] = _format_range(start_date, end_date)
         else:
             meta["range"] = f"{start_date:%b %d} - {end_date:%b %d}"
     return {
-        "label": period_key.title(),
+        "label": {"week": "Week", "month": "Month", "year": "Year to Date", "rolling_year": "Last 365 Days"}.get(period_key, period_key.title()),
         "period": period_key,
         "rows": rows,
         "meta": meta,
@@ -643,20 +663,29 @@ def compute_personnel_period_hybrid(
         )
     rows.sort(key=lambda r: (-r.get("total_calls", 0), r.get("name", "")))
     meta = {}
-    if period_key in ("week", "month", "year"):
+    partial = False
+    if period_key in ("week", "month", "year", "rolling_year"):
         if start_date and end_date:
             start_val = start_date
             end_val = end_date
         else:
-            end_val = shift_start(now).date()
-            days = TIMEFRAME_LENGTHS[period_key]
-            start_val = end_val - datetime.timedelta(days=days - 1)
-        if period_key == "year":
+            start_val, end_val = _date_range_for_period(now, period_key)
+        if period_key in ("year", "rolling_year"):
             meta["range"] = _format_range(start_val, end_val)
         else:
             meta["range"] = f"{start_val:%b %d} - {end_val:%b %d}"
+    available_start = _available_personnel_start_date(roster_dir, personnel_dir)
+    available_end = _available_personnel_end_date(roster_dir, personnel_dir)
+    if available_start and start_date and start_date < available_start:
+        partial = True
+        meta["available_start"] = available_start.isoformat()
+    if available_end and end_date and end_date > available_end:
+        partial = True
+        meta["available_end"] = available_end.isoformat()
+    if partial:
+        meta["partial"] = True
     return {
-        "label": period_key.title(),
+        "label": {"week": "Week", "month": "Month", "year": "Year to Date", "rolling_year": "Last 365 Days"}.get(period_key, period_key.title()),
         "period": period_key,
         "rows": rows,
         "meta": meta,
@@ -682,8 +711,9 @@ def aggregate_timeframe_stats(
     after_midnight = defaultdict(int)
     max_sec = defaultdict(int)
     ride_in = defaultdict(int)
+    duration_known_calls = defaultdict(int)
     if not stats_dir.exists():
-        return dict(calls), dict(dur), dict(after_midnight), dict(max_sec), dict(ride_in)
+        return dict(calls), dict(dur), dict(after_midnight), dict(max_sec), dict(ride_in), dict(duration_known_calls)
     for name in os.listdir(stats_dir):
         m = STATS_FILENAME_RE.fullmatch(name)
         if not m:
@@ -698,10 +728,11 @@ def aggregate_timeframe_stats(
             continue
         if cutoff_date and file_date < cutoff_date:
             continue
-        file_calls, file_dur, file_after, file_max, file_ride_in = load_stats(stats_dir / name)
+        file_calls, file_dur, file_after, file_max, file_ride_in, file_duration_known = load_stats(stats_dir / name)
         for unit, count in file_calls.items():
             if unit in WATCH_SET:
                 calls[unit] += int(count)
+                duration_known_calls[unit] += _duration_denominator(unit, file_calls, file_duration_known)
         for unit, seconds in file_dur.items():
             if unit in WATCH_SET:
                 dur[unit] += int(seconds)
@@ -715,11 +746,15 @@ def aggregate_timeframe_stats(
         for unit, count in file_ride_in.items():
             if unit in WATCH_SET:
                 ride_in[unit] += int(count)
-    return dict(calls), dict(dur), dict(after_midnight), dict(max_sec), dict(ride_in)
+    return dict(calls), dict(dur), dict(after_midnight), dict(max_sec), dict(ride_in), dict(duration_known_calls)
 
 
 def _date_range_for_period(now: datetime.datetime, period_key: str) -> tuple[datetime.date, datetime.date]:
     end_date = shift_start(now).date()
+    if period_key == "year":
+        return datetime.date(end_date.year, 1, 1), end_date
+    if period_key == "rolling_year":
+        return end_date - datetime.timedelta(days=364), end_date
     days = TIMEFRAME_LENGTHS[period_key]
     start_date = end_date - datetime.timedelta(days=days - 1)
     return start_date, end_date
@@ -776,7 +811,7 @@ def _list_personnel_dates(personnel_dir: Path | None) -> list[datetime.date]:
 
 def _sum_unit_calls_for_date(stats_dir: Path, day: datetime.date) -> int:
     stats_path = stats_dir / f"shift_stats_{day:%Y-%m-%d}.json"
-    calls, _, _, _, _ride_in = load_stats(stats_path)
+    calls, _, _, _, _ride_in, _duration_known = load_stats(stats_path)
     total = 0
     for unit, count in calls.items():
         if unit in WATCH_SET:
@@ -810,7 +845,7 @@ def _load_json_file(path: Path | None):
 def _first_call_date(stats_dir: Path) -> datetime.date | None:
     for date_obj in _list_shift_stat_dates(stats_dir):
         stats_path = stats_dir / f"shift_stats_{date_obj:%Y-%m-%d}.json"
-        calls, _, _, _, _ride_in = load_stats(stats_path)
+        calls, _, _, _, _ride_in, _duration_known = load_stats(stats_path)
         total_calls = 0
         for unit, count in calls.items():
             if unit in WATCH_SET:
@@ -842,14 +877,48 @@ def _resolve_yearly_cycle(
     stats_dir: Path,
     now: datetime.datetime,
 ) -> tuple[datetime.date, datetime.date, datetime.date]:
-    shift_date = shift_start(now).date()
-    first_date = _first_call_date(stats_dir)
-    if not first_date:
-        start_date = shift_date
-        end_date = shift_date
-        next_reset = start_date + datetime.timedelta(days=365)
-        return start_date, end_date, next_reset
-    return _yearly_cycle_bounds(first_date, shift_date, 365)
+    end_date = shift_start(now).date()
+    start_date = datetime.date(end_date.year, 1, 1)
+    next_reset = datetime.date(end_date.year + 1, 1, 1)
+    return start_date, end_date, next_reset
+
+
+def _available_personnel_start_date(
+    roster_dir: Path | None,
+    personnel_dir: Path | None,
+) -> datetime.date | None:
+    candidates: list[datetime.date] = []
+    roster_dates = _list_roster_dates(roster_dir)
+    personnel_dates = _list_personnel_dates(personnel_dir)
+    if roster_dates:
+        candidates.append(roster_dates[0])
+    if personnel_dates:
+        candidates.append(personnel_dates[0])
+    return min(candidates) if candidates else None
+
+
+def _latest_personnel_nonzero_date(personnel_dir: Path | None) -> datetime.date | None:
+    if not personnel_dir or not personnel_dir.exists():
+        return None
+    latest: datetime.date | None = None
+    for day in _list_personnel_dates(personnel_dir):
+        if _sum_personnel_calls_for_date(personnel_dir, day) > 0:
+            latest = day
+    return latest
+
+
+def _available_personnel_end_date(
+    roster_dir: Path | None,
+    personnel_dir: Path | None,
+) -> datetime.date | None:
+    candidates: list[datetime.date] = []
+    roster_dates = _list_roster_dates(roster_dir)
+    latest_nonzero_personnel = _latest_personnel_nonzero_date(personnel_dir)
+    if roster_dates:
+        candidates.append(roster_dates[-1])
+    if latest_nonzero_personnel:
+        candidates.append(latest_nonzero_personnel)
+    return max(candidates) if candidates else None
 
 
 def compute_yearly_summary(
@@ -860,47 +929,64 @@ def compute_yearly_summary(
     cycle_bounds: tuple[datetime.date, datetime.date, datetime.date] | None = None,
 ):
     start_date, end_date, next_reset = cycle_bounds or _resolve_yearly_cycle(stats_dir, now)
-    unit_calls, _, _, _, unit_ride_in = aggregate_timeframe_stats(
+    unit_calls, _, _, _, unit_ride_in, _unit_known = aggregate_timeframe_stats(
         stats_dir,
         "year",
         now,
         start_date=start_date,
         end_date=end_date,
     )
-    (
-        _names,
-        personnel_calls,
-        _dur,
-        _after,
-        _max,
-        personnel_ride_in,
-        _max_calls,
-        _max_after,
-    ) = aggregate_personnel_timeframe_stats_hybrid(
-        shift_stats_dir=stats_dir,
-        roster_dir=roster_dir,
-        personnel_dir=personnel_dir,
-        period_key="year",
-        now=now,
-        start_date=start_date,
-        end_date=end_date,
-    )
     units_total_calls = int(sum(int(v) for v in unit_calls.values()))
-    personnel_total_calls = int(sum(int(v) for v in personnel_calls.values()))
     units_total_ride_ins = int(sum(int(v) for v in unit_ride_in.values()))
-    personnel_total_ride_ins = int(sum(int(v) for v in personnel_ride_in.values()))
+    personnel_available_start = _available_personnel_start_date(roster_dir, personnel_dir)
+    personnel_available_end = _available_personnel_end_date(roster_dir, personnel_dir)
+    personnel_partial = (
+        (personnel_available_start is not None and start_date < personnel_available_start)
+        or (personnel_available_end is not None and end_date > personnel_available_end)
+        or personnel_available_end is None
+    )
+    personnel_total_calls = None
+    personnel_total_ride_ins = None
+    if not personnel_partial:
+        (
+            _names,
+            personnel_calls,
+            _dur,
+            _after,
+            _max,
+            personnel_ride_in,
+            _max_calls,
+            _max_after,
+        ) = aggregate_personnel_timeframe_stats_hybrid(
+            shift_stats_dir=stats_dir,
+            roster_dir=roster_dir,
+            personnel_dir=personnel_dir,
+            period_key="year",
+            now=now,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        personnel_total_calls = int(sum(int(v) for v in personnel_calls.values()))
+        personnel_total_ride_ins = int(sum(int(v) for v in personnel_ride_in.values()))
 
-    return {
-        "label": "Yearly Cycle",
+    payload = {
+        "label": "Year to Date",
         "start_date": start_date.isoformat(),
         "end_date": end_date.isoformat(),
         "next_reset_date": next_reset.isoformat(),
         "units_total_calls": int(units_total_calls),
-        "personnel_total_calls": int(personnel_total_calls),
+        "personnel_total_calls": personnel_total_calls,
         "units_total_ride_ins": int(units_total_ride_ins),
-        "personnel_total_ride_ins": int(personnel_total_ride_ins),
+        "personnel_total_ride_ins": personnel_total_ride_ins,
         "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
     }
+    if personnel_partial:
+        payload["personnel_partial"] = True
+    if personnel_available_start:
+        payload["personnel_available_start"] = personnel_available_start.isoformat()
+    if personnel_available_end:
+        payload["personnel_available_end"] = personnel_available_end.isoformat()
+    return payload
 
 
 def compute_shift_breakdown(
@@ -935,7 +1021,7 @@ def compute_shift_breakdown(
         if not (start_date <= d <= end_date):
             continue
         letter = _shift_letter_for(d)
-        file_calls, file_dur, file_after, file_max, file_ride_in = load_stats(stats_dir / name)
+        file_calls, file_dur, file_after, file_max, file_ride_in, file_duration_known = load_stats(stats_dir / name)
         for unit in (set(file_calls) | set(file_dur) | set(file_after) | set(file_max) | set(file_ride_in)):
             if unit not in WATCH_SET:
                 continue
@@ -944,11 +1030,12 @@ def compute_shift_breakdown(
             a = int(file_after.get(unit, 0))
             mx = int(file_max.get(unit, 0))
             ri = int(file_ride_in.get(unit, 0))
+            known_calls = _duration_denominator(unit, file_calls, file_duration_known)
             sum_calls[unit][letter] += c
             if c > max_calls[unit][letter]:
                 max_calls[unit][letter] = c
             sum_dur[unit][letter] += s
-            sum_dur_calls[unit][letter] += c
+            sum_dur_calls[unit][letter] += known_calls
             if mx > max_dur[unit][letter]:
                 max_dur[unit][letter] = mx
             sum_after[unit][letter] += a
@@ -961,11 +1048,8 @@ def compute_shift_breakdown(
     for unit in units:
         calls_abc = [int(sum_calls[unit][l]) for l in letters]
         calls_max_abc = [int(max_calls[unit][l]) for l in letters]
-        avg_min_abc = []
-        for l in letters:
-            denom = sum_dur_calls[unit][l]
-            avg_min_abc.append(round((sum_dur[unit][l] / denom) / 60.0, 1) if denom else 0.0)
-        max_min_abc = [round(max_dur[unit][l] / 60.0, 1) if max_dur[unit][l] else 0.0 for l in letters]
+        avg_min_abc = [_avg_minutes(sum_dur[unit][l], sum_dur_calls[unit][l]) for l in letters]
+        max_min_abc = [_max_minutes(max_dur[unit][l], sum_dur_calls[unit][l]) for l in letters]
         after_abc = [int(sum_after[unit][l]) for l in letters]
         after_max_abc = [int(max_after[unit][l]) for l in letters]
         ride_in_abc = [int(sum_ride_in[unit][l]) for l in letters]
@@ -994,21 +1078,23 @@ def _rows_from(
     after_midnight: dict,
     max_sec: dict | None = None,
     ride_in: dict | None = None,
+    duration_known_calls: dict | None = None,
     delta_map: dict | None = None,
 ):
     rows = []
     for unit, count in sorted(calls.items(), key=lambda kv: (-kv[1], kv[0])):
-        avg_min = (dur.get(unit, 0) / count) / 60 if count else 0.0
+        known_calls = _duration_denominator(unit, calls, duration_known_calls)
+        avg_min = _avg_minutes(dur.get(unit, 0), known_calls)
         r = {
             "unit": unit,
             "calls": int(count),
             "ride_in_count": int((ride_in or {}).get(unit, 0)),
-            "avg_min": round(avg_min, 1),
+            "avg_min": avg_min,
             "after_0000": int(after_midnight.get(unit, 0)),
             "delta_calls": int((delta_map or {}).get(unit, 0)),
         }
         if max_sec is not None:
-            r["max_min"] = round(int(max_sec.get(unit, 0)) / 60.0, 1)
+            r["max_min"] = _max_minutes(int(max_sec.get(unit, 0)), known_calls)
         rows.append(r)
     return rows
 
@@ -1020,6 +1106,7 @@ def format_leaderboard_body(
     dur: dict,
     after_midnight: dict,
     now: datetime.datetime,
+    duration_known_calls: dict | None = None,
     start_date: datetime.date | None = None,
     end_date: datetime.date | None = None,
 ) -> str:
@@ -1039,8 +1126,9 @@ def format_leaderboard_body(
     if not calls:
         lines.append("No runs recorded.")
     else:
-        for r in _rows_from(calls, dur, after_midnight):
-            lines.append(f"{r['unit']}: {r['calls']}  |  avg {r['avg_min']:.1f} min  |  after 00:00: {r['after_0000']}")
+        for r in _rows_from(calls, dur, after_midnight, duration_known_calls=duration_known_calls):
+            avg_text = f"{r['avg_min']:.1f}" if r.get("avg_min") is not None else "--"
+            lines.append(f"{r['unit']}: {r['calls']}  |  avg {avg_text} min  |  after 00:00: {r['after_0000']}")
     return "\n".join(lines)
 
 
@@ -1095,14 +1183,14 @@ def _unit_delta_map(
     cur_start, cur_end = _normalize_period_bounds(now, period_key, start_date, end_date)
     prev_start, prev_end = _previous_bounds(cur_start, cur_end)
 
-    cur_calls, _, _, _, _cur_ride_in = aggregate_timeframe_stats(
+    cur_calls, _, _, _, _cur_ride_in, _cur_known = aggregate_timeframe_stats(
         stats_dir,
         period_key,
         now,
         start_date=cur_start,
         end_date=cur_end,
     )
-    prev_calls, _, _, _, _prev_ride_in = aggregate_timeframe_stats(
+    prev_calls, _, _, _, _prev_ride_in, _prev_known = aggregate_timeframe_stats(
         stats_dir,
         period_key,
         now,
@@ -1175,7 +1263,7 @@ def _unit_shift_detail_map(
     for day in all_dates:
         if day < start_date or day > end_date:
             continue
-        calls, dur, after, max_sec, ride_in = load_stats(stats_dir / f"shift_stats_{day:%Y-%m-%d}.json")
+        calls, dur, after, max_sec, ride_in, duration_known = load_stats(stats_dir / f"shift_stats_{day:%Y-%m-%d}.json")
         units = set(calls.keys()) | set(dur.keys()) | set(after.keys()) | set(max_sec.keys()) | set(ride_in.keys())
         for unit in units:
             if unit not in WATCH_SET:
@@ -1185,6 +1273,7 @@ def _unit_shift_detail_map(
             a = int(after.get(unit, 0))
             mx = int(max_sec.get(unit, 0))
             ri = int(ride_in.get(unit, 0))
+            known_calls = _duration_denominator(unit, calls, duration_known)
             if c <= 0 and s <= 0 and a <= 0 and mx <= 0 and ri <= 0:
                 continue
             out[unit].append(
@@ -1193,8 +1282,8 @@ def _unit_shift_detail_map(
                     "shift": _shift_letter_for(day),
                     "calls": c,
                     "ride_in_count": ri,
-                    "avg_min": round((s / c) / 60.0, 1) if c else 0.0,
-                    "max_min": round(mx / 60.0, 1) if mx else 0.0,
+                    "avg_min": _avg_minutes(s, known_calls),
+                    "max_min": _max_minutes(mx, known_calls),
                     "after_0000": a,
                 }
             )
@@ -1291,7 +1380,7 @@ def _period_total_calls(period_payload: dict) -> int:
     rows = period_payload.get("rows", []) or []
     period = period_payload.get("period")
     total = 0
-    if period in ("week", "month", "year"):
+    if period in ("week", "month", "year", "rolling_year"):
         for row in rows:
             total += int(row.get("total_calls", 0))
     else:
@@ -1315,17 +1404,21 @@ def compute_integrity_checks(payload: dict) -> dict:
     severity = "ok"
     for period_key in ("week", "month", "year"):
         unit_total = _period_total_calls(payload.get(period_key) or {})
-        personnel_total = _personnel_total_calls((payload.get("personnel") or {}).get(period_key) or {})
+        personnel_payload = (payload.get("personnel") or {}).get(period_key) or {}
+        personnel_total = _personnel_total_calls(personnel_payload)
+        personnel_partial = bool(((personnel_payload.get("meta") or {}).get("partial")))
         ratio = (float(personnel_total) / float(unit_total)) if unit_total > 0 else None
         issues = []
         status = "ok"
-        if unit_total > 0 and personnel_total <= 0:
+        if personnel_partial:
+            issues.append("personnel coverage partial")
+        elif unit_total > 0 and personnel_total <= 0:
             status = "warn"
             issues.append("personnel totals missing")
-        if unit_total > 0 and personnel_total < unit_total:
+        if (not personnel_partial) and unit_total > 0 and personnel_total < unit_total:
             status = "warn"
             issues.append("personnel calls below unit calls")
-        if ratio is not None and ratio > 25.0:
+        if (not personnel_partial) and ratio is not None and ratio > 25.0:
             status = "warn"
             issues.append("personnel-to-unit ratio unusually high")
         if status == "warn":
@@ -1341,6 +1434,7 @@ def compute_integrity_checks(payload: dict) -> dict:
                 "personnel_total_calls": int(personnel_total),
                 "difference_calls": int(personnel_total - unit_total),
                 "personnel_to_unit_ratio": round(ratio, 2) if ratio is not None else None,
+                "personnel_partial": personnel_partial,
                 "status": status,
                 "issues": issues,
             }
@@ -1364,17 +1458,23 @@ def compute_backfill_health(
 
     latest_stats = stats_dates[-1] if stats_dates else None
     latest_roster = roster_dates[-1] if roster_dates else None
-    latest_personnel = personnel_dates[-1] if personnel_dates else None
+    latest_personnel = _available_personnel_end_date(roster_dir, personnel_dir)
+    earliest_roster = roster_dates[0] if roster_dates else None
+    earliest_personnel = _available_personnel_start_date(roster_dir, personnel_dir)
 
     missing_roster_days: list[str] = []
     missing_personnel_days: list[str] = []
 
     roster_set = set(roster_dates)
     for day in stats_dates:
+        if earliest_roster and day < earliest_roster:
+            continue
         if day not in roster_set:
             missing_roster_days.append(day.isoformat())
 
     for day in stats_dates:
+        if earliest_personnel and day < earliest_personnel:
+            continue
         unit_calls = _sum_unit_calls_for_date(stats_dir, day)
         if unit_calls <= 0:
             continue
@@ -1429,9 +1529,14 @@ def compute_period(
         end_date=period_end,
     )
     label = {
-        "day": "Daily", "week": "Weekly", "month": "Monthly", "year": "Yearly", "alltime": "All-time"
+        "day": "Daily",
+        "week": "Weekly",
+        "month": "Monthly",
+        "year": "Year to Date",
+        "rolling_year": "Last 365 Days",
+        "alltime": "All-time",
     }.get(period_key, "Daily")
-    calls, dur, after, max_sec, ride_in = aggregate_timeframe_stats(
+    calls, dur, after, max_sec, ride_in, duration_known_calls = aggregate_timeframe_stats(
         stats_dir,
         period_key,
         now,
@@ -1445,10 +1550,11 @@ def compute_period(
         dur,
         after,
         now,
+        duration_known_calls=duration_known_calls,
         start_date=(period_start if period_key != "day" else None),
         end_date=(period_end if period_key != "day" else None),
     )
-    if period_key in ("week", "month", "year"):
+    if period_key in ("week", "month", "year", "rolling_year"):
         rows = compute_shift_breakdown(
             stats_dir,
             period_key,
@@ -1458,20 +1564,18 @@ def compute_period(
             delta_map=delta_map,
         )
     else:
-        rows = _rows_from(calls, dur, after, max_sec, ride_in=ride_in, delta_map=delta_map)
+        rows = _rows_from(calls, dur, after, max_sec, ride_in=ride_in, duration_known_calls=duration_known_calls, delta_map=delta_map)
     meta = {}
     if period_key == 'day':
         sd = shift_start(now).date()
         meta['shift_date'] = f"{_shift_letter_for(sd)}-Shift {sd:%m/%d/%y}"
-    elif period_key in ('week', 'month', 'year'):
+    elif period_key in ('week', 'month', 'year', 'rolling_year'):
         if start_date and end_date:
             start_val = start_date
             end_val = end_date
         else:
-            end_val = shift_start(now).date()
-            days = TIMEFRAME_LENGTHS[period_key]
-            start_val = end_val - datetime.timedelta(days=days - 1)
-        if period_key == 'year':
+            start_val, end_val = _date_range_for_period(now, period_key)
+        if period_key in ('year', 'rolling_year'):
             meta['range'] = _format_range(start_val, end_val)
         else:
             meta['range'] = f"{start_val:%b %d} - {end_val:%b %d}"
@@ -1491,8 +1595,8 @@ def compute_prior(stats_dir: Path, now: datetime.datetime | None = None):
     prev_prev_date = prev_date - datetime.timedelta(days=1)
     fn = stats_dir / f"shift_stats_{prev_date:%Y-%m-%d}.json"
     fn_prev = stats_dir / f"shift_stats_{prev_prev_date:%Y-%m-%d}.json"
-    calls, dur, after, max_sec, ride_in = load_stats(fn)
-    prev_calls, _, _, _, _prev_ride_in = load_stats(fn_prev)
+    calls, dur, after, max_sec, ride_in, duration_known_calls = load_stats(fn)
+    prev_calls, _, _, _, _prev_ride_in, _prev_duration_known = load_stats(fn_prev)
     calls = {k: int(v) for k, v in calls.items() if k in WATCH_SET}
     dur = {k: int(v) for k, v in dur.items() if k in WATCH_SET}
     after = {k: int(v) for k, v in after.items() if k in WATCH_SET}
@@ -1500,8 +1604,8 @@ def compute_prior(stats_dir: Path, now: datetime.datetime | None = None):
     delta_map = {}
     for unit in set(calls.keys()) | set(prev_calls.keys()):
         delta_map[unit] = int(calls.get(unit, 0)) - int(prev_calls.get(unit, 0))
-    text = format_leaderboard_body("Daily", "day", calls, dur, after, now)
-    rows = _rows_from(calls, dur, after, max_sec, ride_in=ride_in, delta_map=delta_map)
+    text = format_leaderboard_body("Daily", "day", calls, dur, after, now, duration_known_calls=duration_known_calls)
+    rows = _rows_from(calls, dur, after, max_sec, ride_in=ride_in, duration_known_calls=duration_known_calls, delta_map=delta_map)
     return {
         "label": "Daily",
         "period": "day",
@@ -1528,6 +1632,7 @@ def main():
     personnel_dir = _default_personnel_stats_dir(stats_dir)
     roster_dir = Path(args.roster_dir) if args.roster_dir else _default_roster_dir(stats_dir)
     year_start, year_end, year_reset = _resolve_yearly_cycle(stats_dir, now)
+    rolling_year_start, rolling_year_end = _date_range_for_period(now, "rolling_year")
     cycle_bounds = (year_start, year_end, year_reset)
     shift_day = shift_start(now).date()
     prior_day = shift_day - datetime.timedelta(days=1)
@@ -1544,6 +1649,13 @@ def main():
         now=now,
         start_date=year_start,
         end_date=year_end,
+    )
+    rolling_year_period = compute_period(
+        stats_dir,
+        "rolling_year",
+        now=now,
+        start_date=rolling_year_start,
+        end_date=rolling_year_end,
     )
 
     personnel_week = compute_personnel_period_hybrid(
@@ -1600,6 +1712,24 @@ def main():
             end_date=year_end,
         ),
     )
+    personnel_rolling_year = compute_personnel_period_hybrid(
+        stats_dir,
+        roster_dir,
+        personnel_dir,
+        "rolling_year",
+        now,
+        start_date=rolling_year_start,
+        end_date=rolling_year_end,
+        delta_map=_personnel_delta_map(
+            stats_dir,
+            roster_dir,
+            personnel_dir,
+            now,
+            "rolling_year",
+            start_date=rolling_year_start,
+            end_date=rolling_year_end,
+        ),
+    )
 
     details_payload = {
         "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
@@ -1609,11 +1739,13 @@ def main():
             "week": _unit_shift_detail_map(stats_dir, week_start, week_end),
             "month": _unit_shift_detail_map(stats_dir, month_start, month_end),
             "year": _unit_shift_detail_map(stats_dir, year_start, year_end),
+            "rolling_year": _unit_shift_detail_map(stats_dir, rolling_year_start, rolling_year_end),
         },
         "personnel": {
             "week": _personnel_shift_detail_map(stats_dir, roster_dir, personnel_dir, week_start, week_end),
             "month": _personnel_shift_detail_map(stats_dir, roster_dir, personnel_dir, month_start, month_end),
             "year": _personnel_shift_detail_map(stats_dir, roster_dir, personnel_dir, year_start, year_end),
+            "rolling_year": _personnel_shift_detail_map(stats_dir, roster_dir, personnel_dir, rolling_year_start, rolling_year_end),
         },
     }
 
@@ -1623,10 +1755,12 @@ def main():
         "week": week_period,
         "month": month_period,
         "year": year_period,
+        "rolling_year": rolling_year_period,
         "personnel": {
             "week": personnel_week,
             "month": personnel_month,
             "year": personnel_year,
+            "rolling_year": personnel_rolling_year,
         },
     }
 

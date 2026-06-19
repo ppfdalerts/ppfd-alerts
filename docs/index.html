@@ -138,6 +138,7 @@
   .health-grid .v{color:#e5e7eb}
   .mini-btn{background:#1f2937; border:1px solid #111722; color:#d1d5db; padding:2px 8px; border-radius:999px; font-size:11px; cursor:pointer; text-transform:none; letter-spacing:0}
   .mini-btn:hover{background:#223047}
+  .mini-select{background:#0f141a; border:1px solid #223047; color:var(--text); padding:2px 8px; border-radius:999px; font-size:11px}
   #panel-personnel{display:flex; z-index:5}
   .panel .hdr .dot.personnel{background:var(--indigo)}
   .personnel-controls{display:flex; gap:12px; align-items:center; margin:8px 0 10px; font-size:12px; color:var(--muted)}
@@ -164,7 +165,7 @@
   <div class="toolbar">
     <div class="pill">PPFD Leaderboards</div>
     <div id="buildInfo" class="pill">Build: -- | Commit: -------</div>
-    <div id="yearlySummary" class="pill">Yearly Cycle | Calls U:-- P:-- | Ride-Ins U:-- P:-- | Started: ---- -- -- | Resets: ---- -- --</div>
+    <div id="yearlySummary" class="pill">Year to Date | Calls U:-- P:-- | Ride-Ins U:-- P:-- | Started: ---- -- -- | Resets: ---- -- --</div>
     <div id="integritySummary" class="pill">Integrity: --</div>
     <div class="pill">Auto refresh
       <label style="margin-left:4px"><input id="auto" type="checkbox" checked></label>
@@ -236,7 +237,7 @@
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-year" style="left:2vw; top:68vh; width:96vw; height:14vh">
-      <div class="hdr"><span class="dot year"></span><span>Year</span><span id="hdr-year" class="sub">--</span><button class="mini-btn csv-btn" data-panel="year">CSV</button></div>
+      <div class="hdr"><span class="dot year"></span><span>Year</span><select id="yearMode" class="mini-select" aria-label="Year mode"><option value="year">YTD</option><option value="rolling_year">Last 365 Days</option></select><span id="hdr-year" class="sub">--</span><button class="mini-btn csv-btn" data-panel="year">CSV</button></div>
       <div class="body"><table id="board-year"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
@@ -271,7 +272,8 @@
             <select id="personnelPeriod">
               <option value="week">Week</option>
               <option value="month">Month</option>
-              <option value="year">Year</option>
+              <option value="year">Year to Date</option>
+              <option value="rolling_year">Last 365 Days</option>
             </select>
           </label>
           <label>Filter
@@ -323,6 +325,7 @@
     week: document.getElementById('board-week'),
     month: document.getElementById('board-month'),
     year: document.getElementById('board-year'),
+    yearMode: document.getElementById('yearMode'),
     hdrToday: document.getElementById('hdr-today'),
     hdrPrior: document.getElementById('hdr-prior'),
     hdrWeek: document.getElementById('hdr-week'),
@@ -418,7 +421,8 @@
   var appState = {
     version: null,
     cacheToken: 'init',
-    payload: null
+    payload: null,
+    yearMode: 'year'
   };
 
   function renderBuildInfo(version){
@@ -432,22 +436,75 @@
   function renderYearlySummary(summary){
     if(!el || !el.yearlySummary) return;
     if(!summary || typeof summary !== 'object'){
-      el.yearlySummary.textContent = 'Yearly Cycle | Calls U:-- P:-- | Ride-Ins U:-- P:-- | Started: ---- -- -- | Resets: ---- -- --';
+      el.yearlySummary.textContent = 'Year to Date | Calls U:-- P:-- | Ride-Ins U:-- P:-- | Started: ---- -- -- | Resets: ---- -- --';
       return;
     }
     var units = Number(summary.units_total_calls || 0);
-    var personnel = Number(summary.personnel_total_calls || 0);
+    var hasPersonnel = summary.personnel_total_calls != null;
+    var personnel = hasPersonnel ? Number(summary.personnel_total_calls || 0) : null;
     var unitsRideIns = Number(summary.units_total_ride_ins || 0);
-    var personnelRideIns = Number(summary.personnel_total_ride_ins || 0);
+    var hasPersonnelRideIns = summary.personnel_total_ride_ins != null;
+    var personnelRideIns = hasPersonnelRideIns ? Number(summary.personnel_total_ride_ins || 0) : null;
     var started = formatIsoDate(summary.start_date);
     var resets = formatIsoDate(summary.next_reset_date);
-    el.yearlySummary.textContent =
-      'Yearly Cycle | Calls U:' + units.toLocaleString() +
-      ' P:' + personnel.toLocaleString() +
+    var text =
+      'Year to Date | Calls U:' + units.toLocaleString() +
+      ' P:' + (hasPersonnel ? personnel.toLocaleString() : '--') +
       ' | Ride-Ins U:' + unitsRideIns.toLocaleString() +
-      ' P:' + personnelRideIns.toLocaleString() +
+      ' P:' + (hasPersonnelRideIns ? personnelRideIns.toLocaleString() : '--') +
       ' | Started: ' + started +
       ' | Resets: ' + resets;
+    if(summary.personnel_partial && summary.personnel_available_end){
+      text += ' | Personnel thru ' + formatIsoDate(summary.personnel_available_end);
+    }
+    el.yearlySummary.textContent = text;
+  }
+
+  function formatMaybeFloat(value){
+    if(value == null) return '--';
+    var num = Number(value);
+    if(!isFinite(num)) return '--';
+    return num.toFixed(1);
+  }
+
+  function csvMaybeFloat(value){
+    if(value == null) return '';
+    var num = Number(value);
+    if(!isFinite(num)) return '';
+    return num.toFixed(1);
+  }
+
+  function formatPeriodLabel(period){
+    if(period === 'year') return 'YTD';
+    if(period === 'rolling_year') return 'Last 365 Days';
+    if(period === 'week') return 'Week';
+    if(period === 'month') return 'Month';
+    if(period === 'day') return 'Day';
+    return String(period || '--').toUpperCase();
+  }
+
+  function resolveYearMode(data){
+    var payload = data || appState.payload || {};
+    var mode = appState.yearMode || 'year';
+    if(payload[mode]) return mode;
+    if(payload.year){
+      appState.yearMode = 'year';
+      if(el.yearMode) el.yearMode.value = 'year';
+      return 'year';
+    }
+    if(payload.rolling_year){
+      appState.yearMode = 'rolling_year';
+      if(el.yearMode) el.yearMode.value = 'rolling_year';
+      return 'rolling_year';
+    }
+    if(el.yearMode) el.yearMode.value = mode;
+    return mode;
+  }
+
+  function currentYearPayload(data){
+    var payload = data || appState.payload || {};
+    var mode = resolveYearMode(payload);
+    return payload[mode] || null;
   }
 
   function formatDelta(value){
@@ -555,12 +612,11 @@
       else { tdR.textContent='0'; tdR.style.color='#9ca3af'; }
       tr.appendChild(tdR);
       var tdD=document.createElement('td'); tdD.className='col-calls ' + deltaClass(r.delta_calls||0); tdD.textContent=formatDelta(r.delta_calls||0); tr.appendChild(tdD);
-      var tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML='<span class="pill-badge avg-badge">'+((r.avg_min||0).toFixed(1))+'</span>'; tr.appendChild(tdA);
+      var tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML='<span class="pill-badge avg-badge">'+formatMaybeFloat(r.avg_min)+'</span>'; tr.appendChild(tdA);
       var thCount=table.querySelectorAll('thead th').length;
       if(thCount>=5){
         var tdX=document.createElement('td'); tdX.className='col-max';
-        var show=(r.max_min&&r.max_min>0)? r.max_min.toFixed(1):'--';
-        tdX.innerHTML='<span class="pill-badge avg-badge">'+show+'</span>';
+        tdX.innerHTML='<span class="pill-badge avg-badge">'+formatMaybeFloat(r.max_min)+'</span>';
         tr.appendChild(tdX);
       }
       var tdM=document.createElement('td'); tdM.className='col-after';
@@ -579,11 +635,17 @@
     if(!data || !Array.isArray(data.rows) || data.rows.length===0){
       var tr=document.createElement('tr'); var td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
-    function fnum(v,isFloat){ return isFloat ? ((isFinite(v)? Number(v).toFixed(1):'0.0')) : (v||0); }
+    function fnum(v,isFloat){
+      if(isFloat) return formatMaybeFloat(v);
+      return (v || 0);
+    }
     function winnerIndex(arr, lowest, allowZero){
       var bestIdx=-1, bestVal=null;
       for(var i=0;i<3;i++){
-        var v=Number((arr && arr[i]!=null) ? arr[i] : 0);
+        var raw=(arr && arr[i]!=null) ? arr[i] : null;
+        if(raw == null) continue;
+        var v=Number(raw);
+        if(!isFinite(v)) continue;
         if(lowest){
           if(!allowZero && !(v>0)) continue;
           if(bestIdx===-1 || v<bestVal){ bestVal=v; bestIdx=i; }
@@ -608,7 +670,8 @@
           var wi = winnerIndex(arr, lowestWins, allowZero);
           for(var i=0;i<3;i++){
             var td=document.createElement('td'); td.className=classes[i];
-            var t = fnum(((arr||[])[i]||0), isFloat);
+            var raw = (arr || [])[i];
+            var t = fnum(raw, isFloat);
             if(wi===i){ td.innerHTML = '<span class="win">'+t+'</span>'; } else { td.textContent = t; }
             tr.appendChild(td);
           }
@@ -638,7 +701,7 @@
     open: null
   };
   var personnelState = {
-    data: { week: null, month: null, year: null },
+    data: { week: null, month: null, year: null, rolling_year: null },
     period: 'week',
     sortKey: 'total_calls',
     sortDir: 'desc',
@@ -864,7 +927,7 @@
     var title = (kind === 'personnel' ? 'Personnel Detail' : 'Unit Detail');
     var subtitle = label || key;
     if(el.detailTitle){ el.detailTitle.textContent = title + ' - ' + subtitle; }
-    if(el.detailMeta){ el.detailMeta.textContent = (period || '').toUpperCase() + ' | Recent Shift Activity'; }
+    if(el.detailMeta){ el.detailMeta.textContent = formatPeriodLabel(period) + ' | Recent Shift Activity'; }
     if(!rows.length){
       el.detailBody.innerHTML = '<div class=\"roster-empty\">No detail rows available for this selection.</div>';
       return;
@@ -876,8 +939,8 @@
         + '<td>' + (r.shift || '--') + '</td>'
         + '<td>' + String(r.calls || 0) + '</td>'
         + '<td>' + String(r.ride_in_count || 0) + '</td>'
-        + '<td>' + Number(r.avg_min || 0).toFixed(1) + '</td>'
-        + '<td>' + Number(r.max_min || 0).toFixed(1) + '</td>'
+        + '<td>' + formatMaybeFloat(r.avg_min) + '</td>'
+        + '<td>' + formatMaybeFloat(r.max_min) + '</td>'
         + '<td>' + String(r.after_0000 || 0) + '</td>'
         + '</tr>';
     });
@@ -978,7 +1041,16 @@
       td.style.color = '#9ca3af';
       tr.appendChild(td);
       tbody.appendChild(tr);
-      if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : '--'; }
+      if(el.hdrPersonnel){
+        var emptyHdr = (data && data.meta && data.meta.range) ? data.meta.range : '--';
+        if(data && data.meta && data.meta.partial && data.meta.available_start){
+          emptyHdr += ' | Partial since ' + data.meta.available_start;
+        }
+        if(data && data.meta && data.meta.partial && data.meta.available_end){
+          emptyHdr += ' | Through ' + data.meta.available_end;
+        }
+        el.hdrPersonnel.textContent = emptyHdr;
+      }
       updatePersonnelSortIndicators();
       applyPageScrollLayout();
       return;
@@ -1005,8 +1077,8 @@
       addCell(String(r.total_calls || 0));
       addCell(String(r.ride_in_count || 0));
       addCell(String(r.single_shift_max_calls || 0));
-      addCell((r.avg_call_duration_mins != null ? Number(r.avg_call_duration_mins).toFixed(1) : '0.0'));
-      addCell((r.highest_call_duration_mins != null ? Number(r.highest_call_duration_mins).toFixed(1) : '0.0'));
+      addCell(formatMaybeFloat(r.avg_call_duration_mins));
+      addCell(formatMaybeFloat(r.highest_call_duration_mins));
       addCell(String(r.total_calls_after_midnight || 0));
       addCell(String(r.single_shift_max_after_midnight || 0));
       addCell((r.total_call_hours != null ? Number(r.total_call_hours).toFixed(1) : '0.0'));
@@ -1014,7 +1086,16 @@
       tbody.appendChild(tr);
     });
 
-    if(el.hdrPersonnel){ el.hdrPersonnel.textContent = (data && data.meta && data.meta.range) ? data.meta.range : '--'; }
+    if(el.hdrPersonnel){
+      var hdr = (data && data.meta && data.meta.range) ? data.meta.range : '--';
+      if(data && data.meta && data.meta.partial && data.meta.available_start){
+        hdr += ' | Partial since ' + data.meta.available_start;
+      }
+      if(data && data.meta && data.meta.partial && data.meta.available_end){
+        hdr += ' | Through ' + data.meta.available_end;
+      }
+      el.hdrPersonnel.textContent = hdr;
+    }
     updatePersonnelSortIndicators();
     applyPageScrollLayout();
   }
@@ -1024,6 +1105,7 @@
     personnelState.data.week = personnel.week || null;
     personnelState.data.month = personnel.month || null;
     personnelState.data.year = personnel.year || null;
+    personnelState.data.rolling_year = personnel.rolling_year || null;
     if(!personnelState.data[personnelState.period]){
       if(personnelState.data.week){
         personnelState.period = 'week';
@@ -1031,10 +1113,25 @@
         personnelState.period = 'month';
       } else if(personnelState.data.year){
         personnelState.period = 'year';
+      } else if(personnelState.data.rolling_year){
+        personnelState.period = 'rolling_year';
       }
       if(el.personnelPeriod){ el.personnelPeriod.value = personnelState.period; }
     }
     renderPersonnelTable();
+  }
+
+  function renderYearPanel(data){
+    var payload = currentYearPayload(data);
+    var mode = resolveYearMode(data);
+    if(el.yearMode){ el.yearMode.value = mode; }
+    if(payload){
+      renderWeekMonth(el.year, payload, mode);
+      if(el.hdrYear){ el.hdrYear.textContent = (payload.meta && payload.meta.range) ? payload.meta.range : '--'; }
+    } else {
+      renderWeekMonth(el.year, null, mode);
+      if(el.hdrYear){ el.hdrYear.textContent = '--'; }
+    }
   }
 
   function setPanelShift(panelId, letter){ var p=document.getElementById(panelId); if(!p||!letter) return; p.classList.remove('shift-a','shift-b','shift-c'); var l=(letter+'').toUpperCase(); if(l==='A') p.classList.add('shift-a'); if(l==='B') p.classList.add('shift-b'); if(l==='C') p.classList.add('shift-c'); }
@@ -1049,8 +1146,7 @@
     if(data.prior){ safe('Prior', function(){ renderTable(el.prior, data.prior, 'prior'); el.hdrPrior.textContent=(data.prior.meta&&data.prior.meta.shift_date)||new Date(data.prior.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-prior', letterFromMeta(data.prior.meta)); }); }
     if(data.week){ safe('Week', function(){ renderWeekMonth(el.week, data.week, 'week'); el.hdrWeek.textContent=(data.week.meta&&data.week.meta.range)||new Date(data.week.updated||Date.now()).toLocaleTimeString(); }); }
     if(data.month){ safe('Month', function(){ renderWeekMonth(el.month, data.month, 'month'); el.hdrMonth.textContent=(data.month.meta&&data.month.meta.range)||new Date(data.month.updated||Date.now()).toLocaleTimeString(); }); }
-    if(data.year){ safe('Year', function(){ renderWeekMonth(el.year, data.year, 'year'); el.hdrYear.textContent=(data.year.meta&&data.year.meta.range)||new Date(data.year.updated||Date.now()).toLocaleTimeString(); }); }
-    else { safe('Year', function(){ renderWeekMonth(el.year, null, 'year'); el.hdrYear.textContent='--'; }); }
+    safe('Year', function(){ renderYearPanel(data); });
     if(data.personnel){ safe('Personnel', function(){ applyPersonnel(data.personnel); }); }
     safe('BackfillHealth', function(){ renderBackfillHealth(data.backfill_health, data.integrity_checks); });
     if(detailState.open){
@@ -1122,25 +1218,30 @@
     if(panel === 'today' || panel === 'prior'){
       var p = data[panel] || {rows:[]};
       var rows = (p.rows || []).map(function(r){
-        return [r.unit || '', Number(r.calls || 0), Number(r.ride_in_count || 0), Number(r.delta_calls || 0), Number(r.avg_min || 0).toFixed(1), Number(r.max_min || 0).toFixed(1), Number(r.after_0000 || 0)];
+        return [r.unit || '', Number(r.calls || 0), Number(r.ride_in_count || 0), Number(r.delta_calls || 0), csvMaybeFloat(r.avg_min), csvMaybeFloat(r.max_min), Number(r.after_0000 || 0)];
       });
       downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
       return;
     }
     if(panel === 'week' || panel === 'month' || panel === 'year'){
+      var exportKey = panel;
       var w = data[panel] || {rows:[]};
+      if(panel === 'year'){
+        exportKey = resolveYearMode(data);
+        w = currentYearPayload(data) || {rows:[]};
+      }
       var rowsW = (w.rows || []).map(function(r){
         var c = r.calls_abc || [0,0,0];
         var cm = r.calls_max_abc || [0,0,0];
-        var a = r.avg_min_abc || [0,0,0];
-        var m = r.max_min_abc || [0,0,0];
+        var a = r.avg_min_abc || [null,null,null];
+        var m = r.max_min_abc || [null,null,null];
         var af = r.after_abc || [0,0,0];
         var afm = r.after_max_abc || [0,0,0];
         var ri = r.ride_in_abc || [0,0,0];
-        return [r.unit || '', c[0], c[1], c[2], cm[0], cm[1], cm[2], a[0], a[1], a[2], m[0], m[1], m[2], af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2], Number(r.delta_calls || 0)];
+        return [r.unit || '', c[0], c[1], c[2], cm[0], cm[1], cm[2], csvMaybeFloat(a[0]), csvMaybeFloat(a[1]), csvMaybeFloat(a[2]), csvMaybeFloat(m[0]), csvMaybeFloat(m[1]), csvMaybeFloat(m[2]), af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2], Number(r.delta_calls || 0)];
       });
       downloadCsv(
-        'ppfd_' + panel + '_' + ts + '.csv',
+        'ppfd_' + exportKey + '_' + ts + '.csv',
         ['Unit','Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Ride-Ins A','Ride-Ins B','Ride-Ins C','Change vs Last Period'],
         rowsW
       );
@@ -1155,8 +1256,8 @@
           Number(r.ride_in_count || 0),
           Number(r.delta_calls || 0),
           Number(r.single_shift_max_calls || 0),
-          Number(r.avg_call_duration_mins || 0).toFixed(1),
-          Number(r.highest_call_duration_mins || 0).toFixed(1),
+          csvMaybeFloat(r.avg_call_duration_mins),
+          csvMaybeFloat(r.highest_call_duration_mins),
           Number(r.total_calls_after_midnight || 0),
           Number(r.single_shift_max_after_midnight || 0),
           Number(r.total_call_hours || 0).toFixed(1)
@@ -1198,7 +1299,7 @@
       var cacheToken = encodeURIComponent(appState.cacheToken || String(Date.now()));
       var r=await fetch('data.json?v='+cacheToken+'&t='+Date.now(), {cache:'no-store'});
       if(!r.ok){ el.status.style.display='inline-block'; el.status.textContent='Fetch error: '+r.status+' '+r.statusText; return; }
-      var j=await r.json(); if(!j || (!j.today && !j.week && !j.prior && !j.month && !j.year)){ el.status.style.display='inline-block'; el.status.textContent='No data in payload'; return; }
+      var j=await r.json(); if(!j || (!j.today && !j.week && !j.prior && !j.month && !j.year && !j.rolling_year)){ el.status.style.display='inline-block'; el.status.textContent='No data in payload'; return; }
       apply(j);
     }catch(e){ console.error('fetch error', e); el.status.style.display='inline-block'; el.status.textContent='Fetch error (network/parse)'; }
     finally{
@@ -1223,6 +1324,19 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
     el.personnelPeriod.onchange=function(){
       personnelState.period = el.personnelPeriod.value || 'week';
       renderPersonnelTable();
+    };
+  }
+  if(el.yearMode){
+    el.yearMode.onchange=function(){
+      appState.yearMode = el.yearMode.value || 'year';
+      if(appState.payload){
+        renderYearPanel(appState.payload);
+        if(detailState.open && detailState.open.kind === 'units' && (detailState.open.period === 'year' || detailState.open.period === 'rolling_year')){
+          detailState.open.period = appState.yearMode;
+          renderDetailPopup(detailState.open.kind, detailState.open.period, detailState.open.key, detailState.open.label);
+        }
+        applyPageScrollLayout();
+      }
     };
   }
   if(el.personnelFilter){
