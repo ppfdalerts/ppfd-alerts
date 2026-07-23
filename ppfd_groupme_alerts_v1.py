@@ -1057,12 +1057,17 @@ def update_live_leaderboard(now):
     except Exception as e:
         log(f"update_live_leaderboard error: {e}")
 
-def parse_ts(hms):
+def parse_ts(hms, reference=None):
     if not hms: return None
     try:
         h, m, s = map(int, hms.split(":"))
-        d = datetime.date.today()
-        return datetime.datetime(d.year, d.month, d.day, h, m, s, tzinfo=TZ)
+        ref = reference or datetime.datetime.now(TZ)
+        d = ref.date()
+        parsed = datetime.datetime(d.year, d.month, d.day, h, m, s, tzinfo=TZ)
+        # The feed supplies a clock time only; a time ahead of the poll is from yesterday.
+        if parsed > ref + datetime.timedelta(minutes=2):
+            parsed -= datetime.timedelta(days=1)
+        return parsed
     except Exception:
         return None
 
@@ -1375,7 +1380,7 @@ while not TEST_MODE:
                 status = statuses.get(uid, "")
                 rec = ACTIVE.get(key)
                 if rec is None:
-                    rcv = parse_ts(it.get("Received"))
+                    rcv = parse_ts(it.get("Received"), now)
                     before_shift = False
                     try: before_shift = (rcv is not None and rcv < SHIFT_DT)
                     except Exception: before_shift = False
