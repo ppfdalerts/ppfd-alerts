@@ -52,6 +52,7 @@ $script:LastStatsFingerprint = $null
 $script:LastRunFingerprint = $null
 $script:LastSourceSyncFingerprint = $null
 $script:LastBackfillFingerprint = $null
+$script:LastSuccessfulBackfillGapSignature = $null
 $script:FullBackfillCompleted = $false
 $script:BackfillStatus = [ordered]@{
   status = 'unknown'
@@ -993,10 +994,16 @@ function Invoke-BackfillCatchup {
   if ($badDates.Count -gt 0) {
     $firstBad = ($badDates | Select-Object -First 1).ToString('yyyy-MM-dd')
     $lastBad = ($badDates | Select-Object -Last 1).ToString('yyyy-MM-dd')
+    $gapSignature = (($badDates | ForEach-Object { $_.ToString('yyyy-MM-dd') }) -join ',')
+    if ($script:FullBackfillCompleted -and $script:LastSuccessfulBackfillGapSignature -eq $gapSignature) {
+      Set-BackfillStatus -Status 'skipped' -Action 'none' -Message "Known personnel gap unchanged ($firstBad..$lastBad); backfill already attempted."
+      return
+    }
     Write-Info "Detected $($badDates.Count) personnel gap day(s) ($firstBad..$lastBad); running full backfill."
     $ok = Invoke-BackfillPersonnelScript -Python $Python -StatsDir $StatsDir -RosterDir $RosterDir -PersonnelDir $PersonnelDir
     if ($ok) {
       $script:FullBackfillCompleted = $true
+      $script:LastSuccessfulBackfillGapSignature = $gapSignature
       Write-Info "Full personnel backfill completed."
       Set-BackfillStatus -Status 'success' -Action 'full' -Message "Full personnel backfill completed for gap days ($firstBad..$lastBad)." -StartDate (($badDates | Select-Object -First 1)) -EndDate (($badDates | Select-Object -Last 1))
     } else {
