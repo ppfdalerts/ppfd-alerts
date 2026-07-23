@@ -1400,15 +1400,20 @@ while not TEST_MODE:
                         "ride_in_recorded": False,
                     }
                     if uid in WATCH_SET and not before_shift:
-                        CALLS[uid] += 1
-                        try:
-                            if rcv and rcv.time() < datetime.time(7): AFTER_0000[uid] += 1
-                        except Exception: pass
+                        counted_key = f"{iid}|{uid}"
+                        already_counted = counted_key in COUNTED_CALLS
                         personnel = _lookup_staffing(uid, now)
                         if personnel:
                             rec["personnel_keys"] = [p[0] for p in personnel]
                             for pkey, pname in personnel:
                                 PERSONNEL_NAMES[pkey] = pname
+                        if not already_counted:
+                            COUNTED_CALLS.add(counted_key)
+                            CALLS[uid] += 1
+                            try:
+                                if rcv and rcv.time() < datetime.time(7): AFTER_0000[uid] += 1
+                            except Exception: pass
+                            for pkey, pname in personnel:
                                 P_CALLS[pkey] += 1
                                 try:
                                     if rcv and rcv.time() < datetime.time(7):
@@ -1416,7 +1421,8 @@ while not TEST_MODE:
                                 except Exception:
                                     pass
                         unit_status_changed, personnel_status_changed = _record_ride_in_status(uid, rec, status)
-                        _stats_save(
+                        if (not already_counted) or unit_status_changed or personnel_status_changed:
+                            _stats_save(
                             STATS_FN,
                             CALLS,
                             DUR_SEC,
@@ -1426,8 +1432,9 @@ while not TEST_MODE:
                             AT_HOSPITAL_COUNT,
                             RIDE_IN_COUNT,
                             DURATION_KNOWN_CALLS,
-                        )
-                        stats_dirty = True
+                            COUNTED_CALLS,
+                            )
+                            stats_dirty = True
                         if personnel or personnel_status_changed:
                             _pstats_save(
                                 P_STATS_FN,
@@ -1455,6 +1462,7 @@ while not TEST_MODE:
                             AT_HOSPITAL_COUNT,
                             RIDE_IN_COUNT,
                             DURATION_KNOWN_CALLS,
+                            COUNTED_CALLS,
                         )
                     if personnel_status_changed:
                         _pstats_save(
@@ -1493,6 +1501,7 @@ while not TEST_MODE:
                             AT_HOSPITAL_COUNT,
                             RIDE_IN_COUNT,
                             DURATION_KNOWN_CALLS,
+                            COUNTED_CALLS,
                         )
                         stats_dirty = True
                         pkeys = rec.get("personnel_keys") or []
@@ -1570,7 +1579,7 @@ while not TEST_MODE:
         dest_unit = _leaderboard_target_unit()
         post(dest_unit, "CALL COUNT", "\n".join(lines))
         log(f"End-of-shift recap sent to {dest_unit}")
-        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS)
+        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS, COUNTED_CALLS)
         _pstats_save(
             P_STATS_FN,
             PERSONNEL_NAMES,
@@ -1583,10 +1592,10 @@ while not TEST_MODE:
             P_RIDE_IN_COUNT,
         )
         CALLS.clear(); DUR_SEC.clear(); AFTER_0000.clear(); MAX_SEC.clear(); TRANSPORTING_COUNT.clear(); AT_HOSPITAL_COUNT.clear(); RIDE_IN_COUNT.clear()
-        PERSONNEL_NAMES.clear(); P_CALLS.clear(); P_DUR_SEC.clear(); P_AFTER_0000.clear(); P_MAX_SEC.clear(); P_TRANSPORTING_COUNT.clear(); P_AT_HOSPITAL_COUNT.clear(); P_RIDE_IN_COUNT.clear(); DURATION_KNOWN_CALLS.clear()
+        PERSONNEL_NAMES.clear(); P_CALLS.clear(); P_DUR_SEC.clear(); P_AFTER_0000.clear(); P_MAX_SEC.clear(); P_TRANSPORTING_COUNT.clear(); P_AT_HOSPITAL_COUNT.clear(); P_RIDE_IN_COUNT.clear(); DURATION_KNOWN_CALLS.clear(); COUNTED_CALLS.clear()
         SHIFT_DT = current_shift_start
         STATS_FN = stats_file(SHIFT_DT)
-        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS)
+        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS, COUNTED_CALLS)
         P_STATS_FN = personnel_stats_file(SHIFT_DT)
         _pstats_save(
             P_STATS_FN,
@@ -1604,7 +1613,7 @@ while not TEST_MODE:
 
     # Ensure GitHub Pages live leaderboard data gets a periodic refresh write
     if now >= next_stats_refresh:
-        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS)
+        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS, COUNTED_CALLS)
         _pstats_save(
             P_STATS_FN,
             PERSONNEL_NAMES,
