@@ -639,6 +639,7 @@ def _stats_load(fp):
                     duration_known_dd = defaultdict(int, duration_known)
                 else:
                     duration_known_dd = defaultdict(int, j.get("calls", {}))
+                counted_calls = set(str(v) for v in (j.get("counted_calls") or []))
                 return (defaultdict(int, j.get("calls", {})),
                         defaultdict(int, j.get("dur_sec", {})),
                         defaultdict(int, j.get("after_0000", {})),
@@ -646,7 +647,8 @@ def _stats_load(fp):
                         defaultdict(int, j.get("transporting_count", {})),
                         defaultdict(int, j.get("at_hospital_count", {})),
                         defaultdict(int, j.get("ride_in_count", {})),
-                        duration_known_dd)
+                        duration_known_dd,
+                        counted_calls)
         except Exception:
             pass
     return (
@@ -658,14 +660,16 @@ def _stats_load(fp):
         defaultdict(int),
         defaultdict(int),
         defaultdict(int),
+        set(),
     )
 
-def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hospital_count=None, ride_in_count=None, duration_known_calls=None):
+def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hospital_count=None, ride_in_count=None, duration_known_calls=None, counted_calls=None):
     try:
         transporting_count = transporting_count if transporting_count is not None else {}
         at_hospital_count = at_hospital_count if at_hospital_count is not None else {}
         ride_in_count = ride_in_count if ride_in_count is not None else {}
         duration_known_calls = duration_known_calls if duration_known_calls is not None else calls
+        counted_calls = sorted(str(v) for v in (counted_calls or []))
         os.makedirs(os.path.dirname(fp), exist_ok=True)
         with open(fp + ".tmp", "w") as f:
             json.dump(
@@ -678,6 +682,7 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
                     "at_hospital_count": at_hospital_count,
                     "ride_in_count": ride_in_count,
                     "duration_known_calls": duration_known_calls,
+                    "counted_calls": counted_calls,
                 },
                 f,
             )
@@ -1220,7 +1225,7 @@ def _leaderboard_target_unit() -> str:
 NOW = datetime.datetime.now(TZ)
 SHIFT_DT = shift_start(NOW)
 STATS_FN = stats_file(SHIFT_DT)
-CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS = _stats_load(STATS_FN)
+CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS, COUNTED_CALLS = _stats_load(STATS_FN)
 P_STATS_FN = personnel_stats_file(SHIFT_DT)
 PERSONNEL_NAMES, P_CALLS, P_DUR_SEC, P_AFTER_0000, P_MAX_SEC, P_TRANSPORTING_COUNT, P_AT_HOSPITAL_COUNT, P_RIDE_IN_COUNT = _pstats_load(P_STATS_FN)
 
