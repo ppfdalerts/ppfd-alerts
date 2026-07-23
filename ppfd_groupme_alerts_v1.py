@@ -634,13 +634,19 @@ def _stats_load(fp):
         try:
             with open(fp) as f:
                 j = json.load(f)
+                duration_known = j.get("duration_known_calls")
+                if isinstance(duration_known, dict):
+                    duration_known_dd = defaultdict(int, duration_known)
+                else:
+                    duration_known_dd = defaultdict(int, j.get("calls", {}))
                 return (defaultdict(int, j.get("calls", {})),
                         defaultdict(int, j.get("dur_sec", {})),
                         defaultdict(int, j.get("after_0000", {})),
                         defaultdict(int, j.get("max_sec", {})),
                         defaultdict(int, j.get("transporting_count", {})),
                         defaultdict(int, j.get("at_hospital_count", {})),
-                        defaultdict(int, j.get("ride_in_count", {})))
+                        defaultdict(int, j.get("ride_in_count", {})),
+                        duration_known_dd)
         except Exception:
             pass
     return (
@@ -651,13 +657,15 @@ def _stats_load(fp):
         defaultdict(int),
         defaultdict(int),
         defaultdict(int),
+        defaultdict(int),
     )
 
-def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hospital_count=None, ride_in_count=None):
+def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hospital_count=None, ride_in_count=None, duration_known_calls=None):
     try:
         transporting_count = transporting_count if transporting_count is not None else {}
         at_hospital_count = at_hospital_count if at_hospital_count is not None else {}
         ride_in_count = ride_in_count if ride_in_count is not None else {}
+        duration_known_calls = duration_known_calls if duration_known_calls is not None else calls
         os.makedirs(os.path.dirname(fp), exist_ok=True)
         with open(fp + ".tmp", "w") as f:
             json.dump(
@@ -669,6 +677,7 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
                     "transporting_count": transporting_count,
                     "at_hospital_count": at_hospital_count,
                     "ride_in_count": ride_in_count,
+                    "duration_known_calls": duration_known_calls,
                 },
                 f,
             )
@@ -972,7 +981,7 @@ def aggregate_timeframe_stats(period_key, now=None):
         if cutoff_date and file_date < cutoff_date:
             continue
         file_path = os.path.join(STATS_DIR, name)
-        file_calls, file_dur, file_after, _file_max, _file_transporting, _file_at_hospital, _file_ride_in = _stats_load(file_path)
+        file_calls, file_dur, file_after, _file_max, _file_transporting, _file_at_hospital, _file_ride_in, _file_duration_known = _stats_load(file_path)
         for unit, count in file_calls.items():
             if unit in WATCH_SET:
                 calls[unit] += int(count)
@@ -1206,7 +1215,7 @@ def _leaderboard_target_unit() -> str:
 NOW = datetime.datetime.now(TZ)
 SHIFT_DT = shift_start(NOW)
 STATS_FN = stats_file(SHIFT_DT)
-CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT = _stats_load(STATS_FN)
+CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS = _stats_load(STATS_FN)
 P_STATS_FN = personnel_stats_file(SHIFT_DT)
 PERSONNEL_NAMES, P_CALLS, P_DUR_SEC, P_AFTER_0000, P_MAX_SEC, P_TRANSPORTING_COUNT, P_AT_HOSPITAL_COUNT, P_RIDE_IN_COUNT = _pstats_load(P_STATS_FN)
 
@@ -1370,10 +1379,11 @@ while not TEST_MODE:
                     before_shift = False
                     try: before_shift = (rcv is not None and rcv < SHIFT_DT)
                     except Exception: before_shift = False
+                    start_time = rcv or now
                     ACTIVE[key] = rec = {
                         "status": status,
-                        "start": now,
-                        "events": [("dispatched", now)],
+                        "start": start_time,
+                        "events": [("dispatched", start_time)],
                         "ignore": bool(before_shift),
                         "transporting_recorded": False,
                         "at_hospital_recorded": False,
@@ -1405,6 +1415,7 @@ while not TEST_MODE:
                             TRANSPORTING_COUNT,
                             AT_HOSPITAL_COUNT,
                             RIDE_IN_COUNT,
+                            DURATION_KNOWN_CALLS,
                         )
                         stats_dirty = True
                         if personnel or personnel_status_changed:
@@ -1433,6 +1444,7 @@ while not TEST_MODE:
                             TRANSPORTING_COUNT,
                             AT_HOSPITAL_COUNT,
                             RIDE_IN_COUNT,
+                            DURATION_KNOWN_CALLS,
                         )
                     if personnel_status_changed:
                         _pstats_save(
@@ -1460,6 +1472,7 @@ while not TEST_MODE:
                         dur_sec = (rec["events"][-1][1] - rec["events"][0][1]).total_seconds()
                         DUR_SEC[uid] += dur_sec
                         MAX_SEC[uid] = max(int(MAX_SEC.get(uid, 0)), int(dur_sec))
+                        DURATION_KNOWN_CALLS[uid] += 1
                         _stats_save(
                             STATS_FN,
                             CALLS,
@@ -1469,6 +1482,7 @@ while not TEST_MODE:
                             TRANSPORTING_COUNT,
                             AT_HOSPITAL_COUNT,
                             RIDE_IN_COUNT,
+                            DURATION_KNOWN_CALLS,
                         )
                         stats_dirty = True
                         pkeys = rec.get("personnel_keys") or []
@@ -1546,7 +1560,7 @@ while not TEST_MODE:
         dest_unit = _leaderboard_target_unit()
         post(dest_unit, "CALL COUNT", "\n".join(lines))
         log(f"End-of-shift recap sent to {dest_unit}")
-        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT)
+        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS)
         _pstats_save(
             P_STATS_FN,
             PERSONNEL_NAMES,
@@ -1559,10 +1573,10 @@ while not TEST_MODE:
             P_RIDE_IN_COUNT,
         )
         CALLS.clear(); DUR_SEC.clear(); AFTER_0000.clear(); MAX_SEC.clear(); TRANSPORTING_COUNT.clear(); AT_HOSPITAL_COUNT.clear(); RIDE_IN_COUNT.clear()
-        PERSONNEL_NAMES.clear(); P_CALLS.clear(); P_DUR_SEC.clear(); P_AFTER_0000.clear(); P_MAX_SEC.clear(); P_TRANSPORTING_COUNT.clear(); P_AT_HOSPITAL_COUNT.clear(); P_RIDE_IN_COUNT.clear()
+        PERSONNEL_NAMES.clear(); P_CALLS.clear(); P_DUR_SEC.clear(); P_AFTER_0000.clear(); P_MAX_SEC.clear(); P_TRANSPORTING_COUNT.clear(); P_AT_HOSPITAL_COUNT.clear(); P_RIDE_IN_COUNT.clear(); DURATION_KNOWN_CALLS.clear()
         SHIFT_DT = current_shift_start
         STATS_FN = stats_file(SHIFT_DT)
-        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT)
+        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS)
         P_STATS_FN = personnel_stats_file(SHIFT_DT)
         _pstats_save(
             P_STATS_FN,
@@ -1580,7 +1594,7 @@ while not TEST_MODE:
 
     # Ensure GitHub Pages live leaderboard data gets a periodic refresh write
     if now >= next_stats_refresh:
-        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT)
+        _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS)
         _pstats_save(
             P_STATS_FN,
             PERSONNEL_NAMES,
