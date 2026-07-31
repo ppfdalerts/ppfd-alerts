@@ -1644,9 +1644,9 @@ while not TEST_MODE:
                 notified = set()
                 for unit in units:
                     if unit in WATCH_SET and unit not in notified:
-                        post(unit, title, body)
+                        post(unit, title, body, allow_main_fallback=False)
                         notified.add(unit)
-                post("LOG", title, body)
+                post_main_once((iid, "new_call"), title, body)
                 SEEN_MSG.add(iid)
 
         for key in list(SUNSTAR_TRACK):
