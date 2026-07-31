@@ -28,15 +28,94 @@ try:
         _RUNTIME_ROOT = _HERE
     _LOG_FP = os.path.join(_RUNTIME_ROOT, "alerts.log")
     _HANDSHAKE_FP = os.path.join(_RUNTIME_ROOT, "startup_handshake.json")
+    _FEED_HEALTH_FP = os.path.join(_RUNTIME_ROOT, "feed_health.json")
 except Exception:
     _LOG_FP = "alerts.log"
     _HANDSHAKE_FP = "startup_handshake.json"
+    _FEED_HEALTH_FP = "feed_health.json"
 sys.stdout = _open_log_with_retry(_LOG_FP)
 sys.stderr = sys.stdout
 
 def log(msg: str):
     ts = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"{ts}  {msg}", flush=True)
+
+FEED_HEALTH_THRESHOLD_SEC = 20 * 60
+
+def _utc_iso(value=None):
+    value = value or datetime.datetime.utcnow()
+    return value.replace(microsecond=0).isoformat() + "Z"
+
+def _feed_health_epoch(value):
+    try:
+        return datetime.datetime.fromisoformat(str(value).replace("Z", "+00:00")).timestamp()
+    except Exception:
+        return None
+
+def _feed_payload_fingerprint(data):
+    try:
+        raw = json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+    except Exception:
+        return None
+
+def _load_feed_health_file():
+    try:
+        with open(_FEED_HEALTH_FP, "r", encoding="utf-8") as handle:
+            value = json.load(handle)
+            return value if isinstance(value, dict) else {}
+    except Exception:
+        return {}
+
+def _save_feed_health_file(payload):
+    try:
+        tmp = _FEED_HEALTH_FP + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, indent=2, sort_keys=True)
+        os.replace(tmp, _FEED_HEALTH_FP)
+    except Exception as exc:
+        log(f"WARN: feed health write failed: {exc}")
+
+def update_feed_health(success, payload=None, http_status=None, error=None):
+    now = datetime.datetime.utcnow()
+    health = _load_feed_health_file()
+    health["threshold_seconds"] = FEED_HEALTH_THRESHOLD_SEC
+    health["checked_at"] = _utc_iso(now)
+    if success:
+        health["last_success_at"] = _utc_iso(now)
+        health["last_http_status"] = http_status
+        fingerprint = _feed_payload_fingerprint(payload) if payload is not None else None
+        if fingerprint and fingerprint != health.get("payload_fingerprint"):
+            health["payload_fingerprint"] = fingerprint
+            health["last_traffic_at"] = _utc_iso(now)
+        elif not health.get("last_traffic_at"):
+            health["last_traffic_at"] = _utc_iso(now)
+        health["last_error"] = None
+    else:
+        health["last_error"] = str(error or "feed request failed")
+        health["last_error_at"] = _utc_iso(now)
+
+    now_epoch = now.timestamp()
+    success_age = None
+    traffic_age = None
+    success_epoch = _feed_health_epoch(health.get("last_success_at"))
+    traffic_epoch = _feed_health_epoch(health.get("last_traffic_at"))
+    if success_epoch is not None:
+        success_age = max(0, int(now_epoch - success_epoch))
+    if traffic_epoch is not None:
+        traffic_age = max(0, int(now_epoch - traffic_epoch))
+    health["success_age_seconds"] = success_age
+    health["age_seconds"] = traffic_age if traffic_age is not None else success_age
+    if success_age is None or success_age >= FEED_HEALTH_THRESHOLD_SEC:
+        health["status"] = "down"
+        health["message"] = "911 traffic feed has not responded for 20 minutes."
+    elif traffic_age is not None and traffic_age >= FEED_HEALTH_THRESHOLD_SEC:
+        health["status"] = "stale"
+        health["message"] = "911 traffic feed has not sent updated traffic for 20 minutes."
+    else:
+        health["status"] = "ok"
+        health["message"] = "911 traffic feed is updating."
+    _save_feed_health_file(health)
 
 try:
     LOCK_FP = os.path.join(_RUNTIME_ROOT, "ppfd_groupme.lock")
