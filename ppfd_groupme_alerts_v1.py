@@ -1372,12 +1372,14 @@ while not TEST_MODE:
         url = api_url(); dbg(f"fetch {url}")
         r = sess.get(url, headers=headers, timeout=20)
         if r.status_code == 304:
+            update_feed_health(True, payload=None, http_status=304)
             time.sleep(POLL_SEC + random.uniform(0,1)); continue
         if not START_ANNOUNCED:
             try: _announce_start()
             except Exception: pass
         etag, last_mod = r.headers.get("ETag", etag), r.headers.get("Last-Modified", last_mod)
         data = r.json()
+        update_feed_health(True, payload=data, http_status=r.status_code)
         items = data.get("CallInfo", []) if isinstance(data, dict) else []
         seen_incidents: Set[str] = set()
         for it in items:
@@ -1628,8 +1630,10 @@ while not TEST_MODE:
         poll_commands(now)
 
     except ReadTimeout:
+        update_feed_health(False, error="feed request timeout")
         log("Feed fetch timeout (ignored)")
     except Exception as e:
+        update_feed_health(False, error=e)
         log(f"Feed error: {e}")
 
     if LIVE.get("active") and (stats_dirty or now >= next_live):
