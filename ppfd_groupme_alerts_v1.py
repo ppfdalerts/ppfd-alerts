@@ -1477,12 +1477,14 @@ while not TEST_MODE:
                         title_ss = f"[{fd}] SUNSTAR {ss} ADDED TO CALL"
                         body_ss = f"FD unit: {fd}\nSunstar unit: {ss}\nCall units: {', '.join(units) if units else 'none'}"
                         post(fd, title_ss, body_ss, allow_main_fallback=False)
-                        post_main_once((iid, "sunstar_added", ss), "SUNSTAR %s ADDED TO CALL" % ss, body_ss)
+                        body_main = f"FD units: {', '.join(sorted(current_fd_units))}\nSunstar unit: {ss}\nCall units: {', '.join(units) if units else 'none'}"
+                        post_main_once((iid, "sunstar_added", ss), "SUNSTAR %s ADDED TO CALL" % ss, body_main)
                     for ss in removed:
                         title_ss = f"[{fd}] SUNSTAR {ss} REMOVED FROM THE CALL"
                         body_ss = f"FD unit: {fd}\nSunstar unit: {ss}\nCall units: {', '.join(units) if units else 'none'}"
                         post(fd, title_ss, body_ss, allow_main_fallback=False)
-                        post_main_once((iid, "sunstar_removed", ss), "SUNSTAR %s REMOVED FROM CALL" % ss, body_ss)
+                        body_main = f"FD units: {', '.join(sorted(current_fd_units))}\nSunstar unit: {ss}\nCall units: {', '.join(units) if units else 'none'}"
+                        post_main_once((iid, "sunstar_removed", ss), "SUNSTAR %s REMOVED FROM CALL" % ss, body_main)
                 if sunstar_units:
                     SUNSTAR_TRACK[key] = set(sunstar_units)
                 elif key in SUNSTAR_TRACK:
