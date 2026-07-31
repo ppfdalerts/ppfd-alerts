@@ -68,6 +68,8 @@
   .grid{display:none}
   .timestamp{margin-left:auto; color:var(--muted); font-size:12px}
   .status{display:none; margin-left:8px; font-size:12px; background:rgba(239,68,68,.15); color:#fecaca; border:1px solid rgba(239,68,68,.35); padding:3px 8px; border-radius:999px}
+  .feed-banner{margin:0 0 8px; padding:9px 12px; border:1px solid rgba(239,68,68,.7); border-radius:8px; background:rgba(127,29,29,.42); color:#fecaca; font-size:13px; font-weight:700}
+  .feed-banner[hidden]{display:none}
   .footer{position:absolute; left:10px; bottom:8px; color:var(--muted); font-size:12px}
   .panel .hdr .dot.today{background:var(--gold)}
   .panel .hdr .dot.prior{background:var(--accent)}
@@ -191,6 +193,7 @@
     <div id="status" class="status"></div><div id="ts" class="timestamp">--</div>
   </div>
   </div>
+  <div id="feedBanner" class="feed-banner" role="status" hidden></div>
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
@@ -354,6 +357,7 @@
     upd: document.getElementById('updated'),
     buildInfo: document.getElementById('buildInfo'),
     yearlySummary: document.getElementById('yearlySummary'),
+    feedBanner: document.getElementById('feedBanner'),
     integritySummary: document.getElementById('integritySummary'),
     status: document.getElementById('status'),
     auto: document.getElementById('auto'),
@@ -513,6 +517,21 @@
       text += ' | Personnel thru ' + formatIsoDate(summary.personnel_available_end);
     }
     el.yearlySummary.textContent = text;
+  }
+
+  function renderFeedHealth(health){
+    if(!el || !el.feedBanner) return;
+    var status = health && String(health.status || '').toLowerCase();
+    if(!health || status === 'ok' || !status){
+      el.feedBanner.hidden = true;
+      el.feedBanner.textContent = '';
+      return;
+    }
+    var message = health.message || '911 traffic feed has not sent updated traffic for 20 minutes.';
+    var age = Number(health.age_seconds);
+    var suffix = isFinite(age) && age >= 60 ? ' Last update was ' + Math.floor(age / 60) + ' minutes ago.' : '';
+    el.feedBanner.textContent = '911 feed warning: ' + message + suffix;
+    el.feedBanner.hidden = false;
   }
 
   function formatMaybeFloat(value){
@@ -1213,6 +1232,7 @@
     appState.payload = data || null;
     var errors=[]; function safe(label,fn){ try{ fn(); } catch(e){ console.error('render error',label,e); errors.push(label); } }
     safe('YearlySummary', function(){ renderYearlySummary(data.yearly_summary); });
+    safe('FeedHealth', function(){ renderFeedHealth(data.feed_health); });
     safe('IntegritySummary', function(){ renderIntegritySummary(data.integrity_checks); });
     if(data.today){ safe('Today', function(){ renderTable(el.today, data.today, 'today'); el.hdrToday.textContent=(data.today.meta&&data.today.meta.shift_date)||new Date(data.today.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-today', letterFromMeta(data.today.meta)); }); }
     if(data.prior){ safe('Prior', function(){ renderTable(el.prior, data.prior, 'prior'); el.hdrPrior.textContent=(data.prior.meta&&data.prior.meta.shift_date)||new Date(data.prior.updated||Date.now()).toLocaleTimeString(); setPanelShift('panel-prior', letterFromMeta(data.prior.meta)); }); }
