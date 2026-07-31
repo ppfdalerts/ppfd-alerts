@@ -403,6 +403,23 @@ function Get-FileFingerprint {
   }
 }
 
+function Get-FeedHealthFingerprint {
+  param(
+    [Parameter(Mandatory=$true)][string]$Path
+  )
+
+  if (-not $Path -or -not (Test-Path $Path)) { return 'missing' }
+  try {
+    $health = Get-Content -Path $Path -Raw -ErrorAction Stop | ConvertFrom-Json
+    $status = ([string]$health.status).Trim().ToLowerInvariant()
+    $traffic = ([string]$health.last_traffic_at).Trim()
+    $errorAt = ([string]$health.last_error_at).Trim()
+    return ('{0}|{1}|{2}' -f $status, $traffic, $errorAt)
+  } catch {
+    return 'error'
+  }
+}
+
 function Get-SystemSourceMappings {
   param(
     [Parameter(Mandatory=$true)][string]$WorkspaceRoot,
@@ -1233,6 +1250,7 @@ function Invoke-LeaderboardRun {
     Write-BackfillStatusFile -Path $backfillStatusOut
     $runFingerprint = @(
       $fp,
+      (Get-FeedHealthFingerprint -Path $feedHealth),
       (Get-FileFingerprint -Path $genScript),
       (Get-FileFingerprint -Path $indexOut)
     ) -join ';;'
