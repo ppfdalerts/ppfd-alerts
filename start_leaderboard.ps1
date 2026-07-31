@@ -411,10 +411,22 @@ function Get-FeedHealthFingerprint {
   if (-not $Path -or -not (Test-Path $Path)) { return 'missing' }
   try {
     $health = Get-Content -Path $Path -Raw -ErrorAction Stop | ConvertFrom-Json
-    $status = ([string]$health.status).Trim().ToLowerInvariant()
+    $threshold = [int]$health.threshold_seconds
+    if ($threshold -le 0) { $threshold = 1200 }
+    $nowUtc = [DateTime]::UtcNow
+    $successAge = $null
+    $trafficAge = $null
+    try { $successAge = ($nowUtc - [DateTime]::Parse([string]$health.last_success_at).ToUniversalTime()).TotalSeconds } catch {}
+    try { $trafficAge = ($nowUtc - [DateTime]::Parse([string]$health.last_traffic_at).ToUniversalTime()).TotalSeconds } catch {}
+    if ($null -eq $successAge -or $successAge -ge $threshold) {
+      $status = 'down'
+    } elseif ($null -ne $trafficAge -and $trafficAge -ge $threshold) {
+      $status = 'stale'
+    } else {
+      $status = 'ok'
+    }
     $traffic = ([string]$health.last_traffic_at).Trim()
-    $errorAt = ([string]$health.last_error_at).Trim()
-    return ('{0}|{1}|{2}' -f $status, $traffic, $errorAt)
+    return ('{0}|{1}' -f $status, $traffic)
   } catch {
     return 'error'
   }
