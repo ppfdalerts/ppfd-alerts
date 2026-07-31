@@ -522,7 +522,7 @@ def _extract_mid(j: dict | None) -> str | None:
         return None
     return None
 
-def gm_post_message(text: str, unit: str | None = None) -> str | None:
+def gm_post_message(text: str, unit: str | None = None, allow_main_fallback: bool = True) -> str | None:
     def _send_once() -> tuple[str | None, int | None, list[str], str]:
         message = {"source_guid": str(uuid.uuid4()), "text": text[:10000]}
         sid = THREAD_IDS.get(unit) if unit else None
@@ -552,6 +552,8 @@ def gm_post_message(text: str, unit: str | None = None) -> str | None:
                         return mid, r.status_code, tried_urls, ""
                 else:
                     dbg(f"Subgroup send failed {r.status_code} via {p}: {j or r.text}")
+        if not allow_main_fallback:
+            return None, None, tried_urls, "topic unavailable"
         if unit and (sid is None or unit.upper() == "LOG"):
             dbg(f"post -> main group fallback (no topic id for {unit})")
         url = _gm_url(f"/groups/{GM.group_id}/messages")
@@ -662,9 +664,9 @@ def gm_wait_for_message(unit: str | None, message_id: str, timeout_sec: int = 30
             break
     return False
 
-def post(unit: str, title: str, body: str):
+def post(unit: str, title: str, body: str, allow_main_fallback: bool = True):
     text = f"{title}\n{body}" if body else title
-    mid = gm_post_message(text, unit)
+    mid = gm_post_message(text, unit, allow_main_fallback=allow_main_fallback)
     if mid:
         try:
             log(f"SENT [{unit}] {title} - {body.replace(chr(10), ' | ')}")
@@ -1311,6 +1313,15 @@ PERSONNEL_NAMES, P_CALLS, P_DUR_SEC, P_AFTER_0000, P_MAX_SEC, P_TRANSPORTING_COU
 ACTIVE: dict[Tuple[str, str], dict] = {}
 LAST_FINISHED: dict[str, list] = {}
 SEEN_MSG: Set[str] = set()
+MAIN_EVENT_SEEN: Set[tuple] = set()
+
+def post_main_once(event_key: tuple, title: str, body: str):
+    """Send one main-chat copy for an event even when several units share a call."""
+    key = tuple(event_key)
+    if key in MAIN_EVENT_SEEN:
+        return
+    MAIN_EVENT_SEEN.add(key)
+    post("LOG", title, body)
 
 if not TEST_MODE:
     _announce_start()
@@ -1335,12 +1346,15 @@ def _build_call_alert_title_body(it: dict, units: list[str]) -> tuple[str, str]:
     body_parts.append(f"Time:  {ts.strftime('%H:%M') if ts else 'N/A'}")
     return title, "\n".join(body_parts)
 
-def _build_fd_attach_alert(added_unit: str, it: dict, units: list[str]) -> tuple[str, str]:
+def _build_fd_change_alert(changed_unit: str, action: str, it: dict, units: list[str]) -> tuple[str, str]:
     call_title, call_body = _build_call_alert_title_body(it, units)
-    body_parts = [f"Call: {call_title}"]
+    body_parts = [f"Changed unit: {changed_unit}", f"Call: {call_title}"]
     if call_body:
         body_parts.append(call_body)
-    return f"[{added_unit}] ADDED TO CALL", "\n".join(body_parts)
+    return f"[{changed_unit}] {action} CALL", "\n".join(body_parts)
+
+def _build_fd_attach_alert(added_unit: str, it: dict, units: list[str]) -> tuple[str, str]:
+    return _build_fd_change_alert(added_unit, "ADDED TO", it, units)
 
 def next_at(hr, now):
     tgt = now.replace(hour=hr, minute=0, second=0, microsecond=0)
@@ -1408,7 +1422,12 @@ while not TEST_MODE:
                         if grid: body_parts.append(f"Grid: {grid}")
                         body_parts.append(f"Units: {', '.join(units) if units else 'none yet'}")
                         ts = parse_ts(it.get("Received")); body_parts.append(f"Time:  {ts.strftime('%H:%M') if ts else 'N/A'}")
-                        post(unit, title, "\n".join(body_parts))
+                        post(unit, title, "\n".join(body_parts), allow_main_fallback=False)
+                        post_main_once(
+                            (iid, "early", unit),
+                            f"[{unit}] {title}",
+                            f"Target unit: {unit}\n" + "\n".join(body_parts),
+                        )
                         EARLY_SEEN.add(key_early)
 
             def is_sunstar(uid: str) -> bool:
@@ -1433,8 +1452,13 @@ while not TEST_MODE:
                 for added_fd in added_fd_units:
                     title_attach, body_attach = _build_fd_attach_alert(added_fd, it, units)
                     for recipient in sorted(current_fd_units):
-                        post(recipient, title_attach, body_attach)
-                    post("LOG", title_attach, body_attach)
+                        post(recipient, title_attach, body_attach, allow_main_fallback=False)
+                    post_main_once((iid, "fd_added", added_fd), title_attach, body_attach)
+                removed_fd_units = sorted(prev_fd_units - current_fd_units)
+                for removed_fd in removed_fd_units:
+                    title_removed, body_removed = _build_fd_change_alert(removed_fd, "REMOVED FROM", it, units)
+                    post(removed_fd, title_removed, body_removed, allow_main_fallback=False)
+                    post_main_once((iid, "fd_removed", removed_fd), title_removed, body_removed)
             if current_fd_units:
                 FD_UNIT_TRACK[iid] = set(current_fd_units)
             elif iid in FD_UNIT_TRACK:
@@ -1447,9 +1471,15 @@ while not TEST_MODE:
                 removed = prev - sunstar_units
                 if prev:
                     for ss in added:
-                        post(fd, f"[{fd}] SUNSTAR {ss} ADDED TO CALL", f"FD UNIT: {fd}")
+                        title_ss = f"[{fd}] SUNSTAR {ss} ADDED TO CALL"
+                        body_ss = f"FD unit: {fd}\nSunstar unit: {ss}\nCall units: {', '.join(units) if units else 'none'}"
+                        post(fd, title_ss, body_ss, allow_main_fallback=False)
+                        post_main_once((iid, "sunstar_added", ss), "SUNSTAR %s ADDED TO CALL" % ss, body_ss)
                     for ss in removed:
-                        post(fd, f"[{fd}] SUNSTAR {ss} REMOVED FROM THE CALL", f"FD UNIT: {fd}")
+                        title_ss = f"[{fd}] SUNSTAR {ss} REMOVED FROM THE CALL"
+                        body_ss = f"FD unit: {fd}\nSunstar unit: {ss}\nCall units: {', '.join(units) if units else 'none'}"
+                        post(fd, title_ss, body_ss, allow_main_fallback=False)
+                        post_main_once((iid, "sunstar_removed", ss), "SUNSTAR %s REMOVED FROM CALL" % ss, body_ss)
                 if sunstar_units:
                     SUNSTAR_TRACK[key] = set(sunstar_units)
                 elif key in SUNSTAR_TRACK:
