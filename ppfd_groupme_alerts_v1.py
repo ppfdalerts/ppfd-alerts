@@ -95,7 +95,7 @@ def update_feed_health(success, payload=None, http_status=None, error=None):
         health["last_error"] = str(error or "feed request failed")
         health["last_error_at"] = _utc_iso(now)
 
-    now_epoch = now.timestamp()
+    now_epoch = datetime.datetime.now(datetime.timezone.utc).timestamp()
     success_age = None
     traffic_age = None
     success_epoch = _feed_health_epoch(health.get("last_success_at"))
