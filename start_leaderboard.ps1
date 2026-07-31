@@ -1217,6 +1217,7 @@ function Invoke-LeaderboardRun {
     $indexOut = Join-Path $repoRoot 'docs\index.html'
     $outData = Join-Path $generatedRoot 'docs\data.json'
     $outRoster = Join-Path $generatedRoot 'docs\roster_units.json'
+    $feedHealth = Join-Path $stateRoot 'feed_health.json'
     $versionOut = Join-Path $generatedRoot 'docs\version.json'
     $backfillStatusOut = Join-Path $generatedRoot 'docs\backfill_status.json'
     $legacyCalc = Join-Path $here 'ppfd_leaderboard_calculator.py'
@@ -1278,7 +1279,7 @@ function Invoke-LeaderboardRun {
       if ($statsDir) { Write-Info "  SHIFT_STATS_DIR=$statsDir" }
       Write-Info "  OUT=$outData"
 
-      & $python $genScript --stats-dir $statsDir --out $outData --roster-out $outRoster
+      & $python $genScript --stats-dir $statsDir --out $outData --roster-out $outRoster --feed-health $feedHealth
       if ($LASTEXITCODE -ne 0) {
         $hex = if ($LASTEXITCODE -lt 0) { ('0x{0:X8}' -f ([uint32]$LASTEXITCODE)) } else { $null }
         if ($hex) { throw "Leaderboard generator failed (exit $LASTEXITCODE / $hex)." }
