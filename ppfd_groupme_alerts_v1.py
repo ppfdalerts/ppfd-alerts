@@ -1395,6 +1395,9 @@ while not TEST_MODE:
         data = r.json()
         update_feed_health(True, payload=data, http_status=r.status_code)
         items = data.get("CallInfo", []) if isinstance(data, dict) else []
+        # State-delta tracking already suppresses repeats across polls; this set
+        # only deduplicates main-chat copies within the current feed snapshot.
+        MAIN_EVENT_SEEN.clear()
         seen_incidents: Set[str] = set()
         for it in items:
             iid = str(it.get("IncidentNo") or hashlib.sha1(f"{it.get('Type')}{it.get('Location')}{it.get('Received')}".encode()).hexdigest())
