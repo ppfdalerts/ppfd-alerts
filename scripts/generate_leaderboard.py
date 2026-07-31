@@ -52,6 +52,52 @@ def load_stats(fp: Path):
         return defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int), None
 
 
+def load_feed_health(path: Path | None):
+    """Load and re-evaluate live feed freshness at generation time."""
+    if not path or not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+        if not isinstance(payload, dict):
+            return None
+    except Exception:
+        return None
+
+    def age_seconds(value):
+        try:
+            stamp = datetime.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+            if stamp.tzinfo:
+                stamp = stamp.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+            return max(0, int((datetime.datetime.utcnow() - stamp).total_seconds()))
+        except Exception:
+            return None
+
+    threshold = int(payload.get("threshold_seconds") or 1200)
+    success_age = age_seconds(payload.get("last_success_at"))
+    traffic_age = age_seconds(payload.get("last_traffic_at"))
+    if success_age is None or success_age >= threshold:
+        status = "down"
+        message = "911 traffic feed has not responded for 20 minutes."
+    elif traffic_age is not None and traffic_age >= threshold:
+        status = "stale"
+        message = "911 traffic feed has not sent updated traffic for 20 minutes."
+    else:
+        status = "ok"
+        message = "911 traffic feed is updating."
+
+    return {
+        "status": status,
+        "message": message,
+        "last_success_at": payload.get("last_success_at"),
+        "last_traffic_at": payload.get("last_traffic_at"),
+        "age_seconds": traffic_age if traffic_age is not None else success_age,
+        "success_age_seconds": success_age,
+        "threshold_seconds": threshold,
+        "checked_at": payload.get("checked_at"),
+        "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+    }
+
+
 def load_personnel_stats(fp: Path):
     try:
         with fp.open("r", encoding="utf-8") as f:
@@ -1622,6 +1668,7 @@ def main():
     parser.add_argument('--out', default=str(Path('docs') / 'data.json'), help='Output path for data.json')
     parser.add_argument('--roster-dir', default=os.environ.get('ROSTER_DIR', ''), help='Directory containing roster_units_*.json files')
     parser.add_argument('--roster-out', default=str(Path('docs') / 'roster_units.json'), help='Output path for roster_units.json')
+    parser.add_argument('--feed-health', default=os.environ.get('PPFD_FEED_HEALTH_PATH', ''), help='Path to the live 911 feed health JSON file')
     parser.add_argument('--no-roster', action='store_true', help='Skip generating roster_units.json')
     args = parser.parse_args()
 
@@ -1780,6 +1827,9 @@ def main():
         personnel_dir=personnel_dir,
         backfill_status_path=(out_path.parent / "backfill_status.json"),
     )
+    feed_health = load_feed_health(Path(args.feed_health) if args.feed_health else None)
+    if feed_health is not None:
+        payload["feed_health"] = feed_health
 
     tmp = out_path.with_suffix('.json.tmp')
     with tmp.open('w', encoding='utf-8') as f:
