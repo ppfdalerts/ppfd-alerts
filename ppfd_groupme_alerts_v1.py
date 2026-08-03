@@ -1457,11 +1457,6 @@ while not TEST_MODE:
                     for recipient in sorted(current_fd_units):
                         post(recipient, title_attach, body_attach, allow_main_fallback=False)
                     post_main_once((iid, "fd_added", added_fd), title_attach, body_attach)
-                removed_fd_units = sorted(prev_fd_units - current_fd_units)
-                for removed_fd in removed_fd_units:
-                    title_removed, body_removed = _build_fd_change_alert(removed_fd, "REMOVED FROM", it, units)
-                    post(removed_fd, title_removed, body_removed, allow_main_fallback=False)
-                    post_main_once((iid, "fd_removed", removed_fd), title_removed, body_removed)
             if current_fd_units:
                 FD_UNIT_TRACK[iid] = set(current_fd_units)
             elif iid in FD_UNIT_TRACK:
@@ -1682,9 +1677,7 @@ while not TEST_MODE:
         for u, c in sorted(CALLS.items(), key=lambda kv: (-kv[1], kv[0])):
             avg = (DUR_SEC[u] / c) / 60 if c else 0
             lines.append(f"{u}: {c}  |  avg {avg:.1f} min  |  after 00:00: {AFTER_0000.get(u,0)}")
-        dest_unit = _leaderboard_target_unit()
-        post(dest_unit, "CALL COUNT", "\n".join(lines))
-        log(f"Mid-shift recap sent to {dest_unit}")
+        # Scheduled GroupMe leaderboard recaps are intentionally disabled.
         next_evening = next_at(19, now)
 
     if now >= next_morning:
@@ -1694,9 +1687,7 @@ while not TEST_MODE:
         for u, c in sorted(CALLS.items(), key=lambda kv: (-kv[1], kv[0])):
             avg = (DUR_SEC[u] / c) / 60 if c else 0
             lines.append(f"{u}: {c}  |  avg {avg:.1f} min  |  after 00:00: {AFTER_0000.get(u,0)}")
-        dest_unit = _leaderboard_target_unit()
-        post(dest_unit, "CALL COUNT", "\n".join(lines))
-        log(f"End-of-shift recap sent to {dest_unit}")
+        # Scheduled GroupMe leaderboard recaps are intentionally disabled.
         _stats_save(STATS_FN, CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS, COUNTED_CALLS)
         _pstats_save(
             P_STATS_FN,
