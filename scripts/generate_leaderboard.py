@@ -387,11 +387,36 @@ def _build_roster_map(roster_payload: dict, shift_date: datetime.date) -> dict:
 
 
 def _roster_personnel_hours(roster_payload: dict, shift_date: datetime.date) -> dict[str, float]:
-    """Return rostered hours by person for one 24-hour shift."""
+    """Return rostered hours by person for one 24-hour shift.
+
+    The roster document provides an explicit hours value. Use it instead of
+    clipping 07:30-to-07:30 assignments to the leaderboard's 07:00 call
+    boundary, which would incorrectly turn a full shift into 23.5 hours.
+    """
     worked: dict[str, float] = defaultdict(float)
-    for crew in _build_roster_map(roster_payload, shift_date).values():
-        for pkey, info in crew.items():
-            worked[pkey] += float(info.get("total_sec", 0) or 0) / 3600.0
+    seen: set[tuple[str, str, str, str]] = set()
+    for unit in roster_payload.get("units", []) or []:
+        unit_code = _normalize_unit_code(unit.get("unit_code"))
+        for entry in unit.get("entries", []) or []:
+            pkey = _person_key(entry)
+            if not unit_code or not pkey:
+                continue
+            key = (
+                unit_code,
+                pkey,
+                str(entry.get("from") or ""),
+                str(entry.get("through") or ""),
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            hours = _parse_hours(entry.get("hours"))
+            if hours is None:
+                interval = _entry_interval(entry, shift_date, datetime.datetime.combine(shift_date, datetime.time(SHIFT_HOUR, 0)))
+                if interval:
+                    hours = max(0.0, (interval[1] - interval[0]).total_seconds() / 3600.0)
+            if hours is not None and hours > 0:
+                worked[pkey] += hours
     return dict(worked)
 
 
