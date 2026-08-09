@@ -386,6 +386,15 @@ def _build_roster_map(roster_payload: dict, shift_date: datetime.date) -> dict:
     return by_unit
 
 
+def _roster_personnel_hours(roster_payload: dict, shift_date: datetime.date) -> dict[str, float]:
+    """Return rostered hours by person for one 24-hour shift."""
+    worked: dict[str, float] = defaultdict(float)
+    for crew in _build_roster_map(roster_payload, shift_date).values():
+        for pkey, info in crew.items():
+            worked[pkey] += float(info.get("total_sec", 0) or 0) / 3600.0
+    return dict(worked)
+
+
 def _compute_shift_personnel_from_roster(
     shift_date: datetime.date,
     stats_path: Path,
@@ -465,6 +474,7 @@ def aggregate_personnel_timeframe_stats_hybrid(
     after_midnight: dict[str, int] = defaultdict(int)
     max_sec: dict[str, int] = defaultdict(int)
     ride_in: dict[str, int] = defaultdict(int)
+    worked_hours: dict[str, float] = defaultdict(float)
     single_shift_max_calls: dict[str, int] = defaultdict(int)
     single_shift_max_after: dict[str, int] = defaultdict(int)
 
@@ -476,6 +486,7 @@ def aggregate_personnel_timeframe_stats_hybrid(
             dict(after_midnight),
             dict(max_sec),
             dict(ride_in),
+            dict(worked_hours),
             dict(single_shift_max_calls),
             dict(single_shift_max_after),
         )
@@ -502,6 +513,7 @@ def aggregate_personnel_timeframe_stats_hybrid(
         shift_after: dict[str, int] = {}
         shift_max: dict[str, int] = {}
         shift_ride_in: dict[str, int] = {}
+        shift_worked_hours: dict[str, float] = {}
 
         roster_payload = None
         personnel_path = None
@@ -516,6 +528,7 @@ def aggregate_personnel_timeframe_stats_hybrid(
                 stats_path,
                 roster_payload,
             )
+            shift_worked_hours = _roster_personnel_hours(roster_payload, file_date)
             if personnel_path and personnel_path.exists():
                 (
                     file_names,
@@ -565,6 +578,8 @@ def aggregate_personnel_timeframe_stats_hybrid(
                 max_sec[pid] = int(mx)
         for pid, count in shift_ride_in.items():
             ride_in[pid] += int(count)
+        for pid, hours in shift_worked_hours.items():
+            worked_hours[pid] += float(hours)
 
     return (
         dict(names),
@@ -573,6 +588,7 @@ def aggregate_personnel_timeframe_stats_hybrid(
         dict(after_midnight),
         dict(max_sec),
         dict(ride_in),
+        dict(worked_hours),
         dict(single_shift_max_calls),
         dict(single_shift_max_after),
     )
@@ -677,7 +693,7 @@ def compute_personnel_period_hybrid(
     end_date: datetime.date | None = None,
     delta_map: dict[str, int] | None = None,
 ):
-    names, calls, dur, after, max_sec, ride_in, max_calls, max_after = aggregate_personnel_timeframe_stats_hybrid(
+    names, calls, dur, after, max_sec, ride_in, worked_hours, max_calls, max_after = aggregate_personnel_timeframe_stats_hybrid(
         shift_stats_dir=shift_stats_dir,
         roster_dir=roster_dir,
         personnel_dir=personnel_dir,
@@ -698,6 +714,7 @@ def compute_personnel_period_hybrid(
                 "name": names.get(pid, pid),
                 "total_calls": c,
                 "ride_in_count": int(ride_in.get(pid, 0)),
+                "total_hours_worked": round(float(worked_hours.get(pid, 0.0)), 1),
                 "single_shift_max_calls": int(max_calls.get(pid, 0)),
                 "avg_call_duration_mins": round(avg_min, 1),
                 "highest_call_duration_mins": round(max_min, 1),
@@ -1001,6 +1018,7 @@ def compute_yearly_summary(
             _after,
             _max,
             personnel_ride_in,
+            _worked_hours,
             _max_calls,
             _max_after,
         ) = aggregate_personnel_timeframe_stats_hybrid(
@@ -1266,6 +1284,7 @@ def _personnel_delta_map(
         _cur_after,
         _cur_max,
         _cur_ride_in,
+        _cur_worked_hours,
         _cur_max_calls,
         _cur_max_after,
     ) = aggregate_personnel_timeframe_stats_hybrid(
@@ -1284,6 +1303,7 @@ def _personnel_delta_map(
         _prev_after,
         _prev_max,
         _prev_ride_in,
+        _prev_worked_hours,
         _prev_max_calls,
         _prev_max_after,
     ) = aggregate_personnel_timeframe_stats_hybrid(
@@ -1343,10 +1363,10 @@ def _load_personnel_for_date_hybrid(
     roster_dir: Path | None,
     personnel_dir: Path | None,
     day: datetime.date,
-) -> tuple[dict, dict, dict, dict, dict, dict]:
+) -> tuple[dict, dict, dict, dict, dict, dict, dict]:
     stats_path = shift_stats_dir / f"shift_stats_{day:%Y-%m-%d}.json"
     if not stats_path.exists():
-        return {}, {}, {}, {}, {}, {}
+        return {}, {}, {}, {}, {}, {}, {}
 
     roster_payload = None
     personnel_path = None
@@ -1356,6 +1376,7 @@ def _load_personnel_for_date_hybrid(
         roster_payload = _load_roster_payload(_roster_path_for_date(roster_dir, day))
     if roster_payload:
         names, calls, dur, after, max_sec = _compute_shift_personnel_from_roster(day, stats_path, roster_payload)
+        worked_hours = _roster_personnel_hours(roster_payload, day)
         ride_in = {}
         if personnel_path and personnel_path.exists():
             file_names, _file_calls, _file_dur, _file_after, _file_max, file_ride_in = load_personnel_stats(personnel_path)
@@ -1363,12 +1384,13 @@ def _load_personnel_for_date_hybrid(
                 if nm and pid not in names:
                     names[pid] = nm
             ride_in = {k: int(v) for k, v in file_ride_in.items()}
-        return names, calls, dur, after, max_sec, ride_in
+        return names, calls, dur, after, max_sec, ride_in, worked_hours
 
     if personnel_dir and personnel_dir.exists():
         if personnel_path.exists():
-            return load_personnel_stats(personnel_path)
-    return {}, {}, {}, {}, {}, {}
+            names, calls, dur, after, max_sec, ride_in = load_personnel_stats(personnel_path)
+            return names, calls, dur, after, max_sec, ride_in, {}
+    return {}, {}, {}, {}, {}, {}, {}
 
 
 def _personnel_shift_detail_map(
@@ -1383,20 +1405,21 @@ def _personnel_shift_detail_map(
     for day in all_dates:
         if day < start_date or day > end_date:
             continue
-        names, calls, dur, after, max_sec, ride_in = _load_personnel_for_date_hybrid(
+        names, calls, dur, after, max_sec, ride_in, worked_hours = _load_personnel_for_date_hybrid(
             shift_stats_dir=shift_stats_dir,
             roster_dir=roster_dir,
             personnel_dir=personnel_dir,
             day=day,
         )
-        people = set(calls.keys()) | set(dur.keys()) | set(after.keys()) | set(max_sec.keys()) | set(ride_in.keys())
+        people = set(calls.keys()) | set(dur.keys()) | set(after.keys()) | set(max_sec.keys()) | set(ride_in.keys()) | set(worked_hours.keys())
         for pid in people:
             c = int(calls.get(pid, 0))
             s = int(dur.get(pid, 0))
             a = int(after.get(pid, 0))
             mx = int(max_sec.get(pid, 0))
             ri = int(ride_in.get(pid, 0))
-            if c <= 0 and s <= 0 and a <= 0 and mx <= 0 and ri <= 0:
+            hours = float(worked_hours.get(pid, 0.0) or 0.0)
+            if c <= 0 and s <= 0 and a <= 0 and mx <= 0 and ri <= 0 and hours <= 0:
                 continue
             rec = out.setdefault(
                 str(pid),
@@ -1410,6 +1433,7 @@ def _personnel_shift_detail_map(
                     "shift": _shift_letter_for(day),
                     "calls": c,
                     "ride_in_count": ri,
+                    "hours_worked": round(hours, 1),
                     "avg_min": round((s / c) / 60.0, 1) if c else 0.0,
                     "max_min": round(mx / 60.0, 1) if mx else 0.0,
                     "after_0000": a,
