@@ -393,8 +393,9 @@ def _roster_personnel_hours(roster_payload: dict, shift_date: datetime.date) -> 
     clipping 07:30-to-07:30 assignments to the leaderboard's 07:00 call
     boundary, which would incorrectly turn a full shift into 23.5 hours.
     """
-    worked: dict[str, float] = defaultdict(float)
+    intervals: dict[str, list[tuple[float, float]]] = defaultdict(list)
     seen: set[tuple[str, str, str, str]] = set()
+    roster_start_minute = 7 * 60 + 30
     for unit in roster_payload.get("units", []) or []:
         unit_code = _normalize_unit_code(unit.get("unit_code"))
         for entry in unit.get("entries", []) or []:
@@ -411,13 +412,30 @@ def _roster_personnel_hours(roster_payload: dict, shift_date: datetime.date) -> 
                 continue
             seen.add(key)
             hours = _parse_hours(entry.get("hours"))
-            if hours is None:
-                interval = _entry_interval(entry, shift_date, datetime.datetime.combine(shift_date, datetime.time(SHIFT_HOUR, 0)))
-                if interval:
-                    hours = max(0.0, (interval[1] - interval[0]).total_seconds() / 3600.0)
-            if hours is not None and hours > 0:
-                worked[pkey] += hours
-    return dict(worked)
+            start_minute = _parse_time_to_minutes(entry.get("from"))
+            if hours is None or start_minute is None or hours <= 0:
+                continue
+            if hours >= 24:
+                intervals[pkey].append((0.0, 1440.0))
+                continue
+            start = float((start_minute - roster_start_minute) % 1440)
+            end = start + hours * 60.0
+            if end <= 1440:
+                intervals[pkey].append((start, end))
+            else:
+                intervals[pkey].append((start, 1440.0))
+                intervals[pkey].append((0.0, end - 1440.0))
+
+    worked: dict[str, float] = {}
+    for pkey, spans in intervals.items():
+        merged: list[list[float]] = []
+        for start, end in sorted(spans):
+            if not merged or start > merged[-1][1]:
+                merged.append([start, end])
+            else:
+                merged[-1][1] = max(merged[-1][1], end)
+        worked[pkey] = round(sum(end - start for start, end in merged) / 60.0, 2)
+    return worked
 
 
 def _compute_shift_personnel_from_roster(
