@@ -305,6 +305,7 @@
             <tr>
               <th data-sort="name">Name</th>
               <th data-sort="total_calls">Total Calls</th>
+              <th data-sort="total_hours_worked">Hours Worked</th>
               <th data-sort="ride_in_count">Ride-Ins</th>
               <th data-sort="single_shift_max_calls">Single-Shift Max Calls</th>
               <th data-sort="avg_call_duration_mins">Avg. Call Duration (Mins)</th>
@@ -1023,12 +1024,13 @@
       el.detailBody.innerHTML = '<div class=\"roster-empty\">No detail rows available for this selection.</div>';
       return;
     }
-    var html = '<table><thead><tr><th>Date</th><th>Shift</th><th>Calls</th><th>Ride-Ins</th><th>Avg Min</th><th>Max Min</th><th>After 00:00</th></tr></thead><tbody>';
+    var html = '<table><thead><tr><th>Date</th><th>Shift</th><th>Calls</th><th>Hours Worked</th><th>Ride-Ins</th><th>Avg Min</th><th>Max Min</th><th>After 00:00</th></tr></thead><tbody>';
     rows.forEach(function(r){
       html += '<tr>'
         + '<td>' + (r.date || '--') + '</td>'
         + '<td>' + (r.shift || '--') + '</td>'
         + '<td>' + String(r.calls || 0) + '</td>'
+        + '<td>' + (r.hours_worked == null ? '--' : Number(r.hours_worked).toFixed(1)) + '</td>'
         + '<td>' + String(r.ride_in_count || 0) + '</td>'
         + '<td>' + formatMaybeFloat(r.avg_min) + '</td>'
         + '<td>' + formatMaybeFloat(r.max_min) + '</td>'
@@ -1068,6 +1070,7 @@
   var personnelSortTypes = {
     name: 'string',
     total_calls: 'number',
+    total_hours_worked: 'number',
     ride_in_count: 'number',
     single_shift_max_calls: 'number',
     avg_call_duration_mins: 'number',
@@ -1166,6 +1169,7 @@
       }
       addCell(r.name || r.person_id || '');
       addCell(String(r.total_calls || 0));
+      addCell(r.total_hours_worked != null ? Number(r.total_hours_worked).toFixed(1) : '--');
       addCell(String(r.ride_in_count || 0));
       addCell(String(r.single_shift_max_calls || 0));
       addCell(formatMaybeFloat(r.avg_call_duration_mins));
@@ -1348,6 +1352,7 @@
         return [
           r.name || r.person_id || '',
           Number(r.total_calls || 0),
+          r.total_hours_worked == null ? '' : Number(r.total_hours_worked).toFixed(1),
           Number(r.ride_in_count || 0),
           Number(r.delta_calls || 0),
           Number(r.single_shift_max_calls || 0),
@@ -1360,7 +1365,7 @@
       });
       downloadCsv(
         'ppfd_personnel_' + (personnelState.period || 'period') + '_' + ts + '.csv',
-        ['Name','Total Calls','Ride-Ins','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
+        ['Name','Total Calls','Hours Worked','Ride-Ins','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
         rowsP
       );
       return;
