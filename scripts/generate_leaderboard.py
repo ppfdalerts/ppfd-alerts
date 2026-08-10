@@ -417,14 +417,26 @@ def _build_roster_map(roster_payload: dict, shift_date: datetime.date) -> dict:
     )
     after_end = shift_end_dt
     by_unit: dict[str, dict[str, dict]] = {}
+    seen_entries: set[tuple[str, str, str, str, str]] = set()
     for unit in roster_payload.get("units", []) or []:
         unit_code = _normalize_unit_code(unit.get("unit_code"))
         if not unit_code:
             continue
         for entry in unit.get("entries", []) or []:
             pkey = _person_key(entry)
-            if not pkey:
+            name = str(entry.get("name") or "").strip()
+            if not pkey or _is_excluded_personnel(pkey, name):
                 continue
+            entry_key = (
+                unit_code,
+                pkey,
+                str(entry.get("from") or ""),
+                str(entry.get("through") or ""),
+                str(entry.get("hours") or ""),
+            )
+            if entry_key in seen_entries:
+                continue
+            seen_entries.add(entry_key)
             interval = _entry_interval(entry, shift_date, shift_start_dt)
             if not interval:
                 continue
@@ -432,7 +444,6 @@ def _build_roster_map(roster_payload: dict, shift_date: datetime.date) -> dict:
             after_sec = _overlap_seconds(interval[0], interval[1], after_start, after_end)
             if total_sec <= 0 and after_sec <= 0:
                 continue
-            name = str(entry.get("name") or "").strip()
             unit_map = by_unit.setdefault(unit_code, {})
             info = unit_map.setdefault(pkey, {"name": name, "total_sec": 0, "after_sec": 0})
             if name and not info.get("name"):
@@ -456,7 +467,8 @@ def _roster_personnel_hours(roster_payload: dict, shift_date: datetime.date) -> 
         unit_code = _normalize_unit_code(unit.get("unit_code"))
         for entry in unit.get("entries", []) or []:
             pkey = _person_key(entry)
-            if not unit_code or not pkey:
+            name = str(entry.get("name") or "").strip()
+            if not unit_code or not pkey or _is_excluded_personnel(pkey, name):
                 continue
             key = (
                 unit_code,
@@ -501,6 +513,11 @@ def _compute_shift_personnel_from_roster(
 ) -> tuple[dict, dict, dict, dict, dict]:
     calls, dur, after, max_sec, _ride_in, _duration_known = load_stats(stats_path)
     roster_map = _build_roster_map(roster_payload, shift_date)
+    counted_by_unit = _load_counted_call_units(stats_path)
+    counted_total = sum(len(values) for values in counted_by_unit.values())
+    stats_total = sum(int(value or 0) for value in calls.values())
+    trusted_incident_keys = bool(counted_by_unit) and counted_total == stats_total
+    assigned_incidents: dict[str, set[str]] = defaultdict(set)
 
     names: dict[str, str] = {}
     p_calls: dict[str, int] = defaultdict(int)
@@ -511,7 +528,7 @@ def _compute_shift_personnel_from_roster(
     units = set(calls) | set(dur) | set(after) | set(max_sec)
     after_window_seconds = int((datetime.timedelta(hours=SHIFT_HOUR)).total_seconds()) or 1
 
-    for raw_unit in units:
+    for raw_unit in sorted(units):
         unit_calls = int(calls.get(raw_unit, 0) or 0)
         unit_dur = float(dur.get(raw_unit, 0) or 0)
         unit_after = int(after.get(raw_unit, 0) or 0)
@@ -523,19 +540,37 @@ def _compute_shift_personnel_from_roster(
         if not crew:
             continue
         for pkey, info in crew.items():
+            if _is_excluded_personnel(pkey, info.get("name")):
+                continue
             total_sec = float(info.get("total_sec", 0) or 0)
             after_sec = float(info.get("after_sec", 0) or 0)
             if total_sec <= 0:
                 continue
             f_total = min(max(total_sec / SHIFT_SECONDS, 0.0), 1.0)
             f_after = min(max(after_sec / after_window_seconds, 0.0), 1.0)
-            calls_est = _round_half_up(unit_calls * f_total)
+            base_calls = _round_half_up(unit_calls * f_total)
+            calls_est = base_calls
+            dedup_scale = 1.0
+            if trusted_incident_keys:
+                incident_ids = sorted(counted_by_unit.get(unit_code, set()))
+                target = min(_round_half_up(len(incident_ids) * f_total), len(incident_ids))
+                available = [
+                    incident_id
+                    for incident_id in incident_ids
+                    if incident_id not in assigned_incidents[pkey]
+                ]
+                selected = available[:target]
+                assigned_incidents[pkey].update(selected)
+                calls_est = len(selected)
+                dedup_scale = (calls_est / base_calls) if base_calls > 0 else 0.0
             after_est = _round_half_up(unit_after * f_after)
-            if after_est > calls_est:
+            if not trusted_incident_keys and after_est > calls_est:
                 calls_est = after_est
-            dur_est = _round_half_up(unit_dur * f_total)
+            after_est = min(after_est, calls_est)
+            dur_est = _round_half_up(unit_dur * f_total * dedup_scale)
             max_est = (
-                _round_half_up(unit_max * min(1.0, f_total)) if calls_est > 0 else 0
+                _round_half_up(unit_max * min(1.0, f_total) * dedup_scale)
+                if calls_est > 0 else 0
             )
 
             p_calls[pkey] += calls_est
@@ -658,26 +693,40 @@ def aggregate_personnel_timeframe_stats_hybrid(
                 shift_ride_in = {k: int(v) for k, v in shift_ride_in_dd.items()}
 
         for pid, nm in shift_names.items():
+            if _is_excluded_personnel(pid, nm):
+                continue
             if nm and pid not in names:
                 names[pid] = nm
         for pid, count in shift_calls.items():
+            if _is_excluded_personnel(pid, shift_names.get(pid)):
+                continue
             c_int = int(count)
             calls[pid] += c_int
             if c_int > single_shift_max_calls[pid]:
                 single_shift_max_calls[pid] = c_int
         for pid, seconds in shift_dur.items():
+            if _is_excluded_personnel(pid, shift_names.get(pid)):
+                continue
             dur[pid] += int(seconds)
         for pid, count in shift_after.items():
+            if _is_excluded_personnel(pid, shift_names.get(pid)):
+                continue
             c_int = int(count)
             after_midnight[pid] += c_int
             if c_int > single_shift_max_after[pid]:
                 single_shift_max_after[pid] = c_int
         for pid, mx in shift_max.items():
+            if _is_excluded_personnel(pid, shift_names.get(pid)):
+                continue
             if int(mx) > max_sec[pid]:
                 max_sec[pid] = int(mx)
         for pid, count in shift_ride_in.items():
+            if _is_excluded_personnel(pid, shift_names.get(pid)):
+                continue
             ride_in[pid] += int(count)
         for pid, hours in shift_worked_hours.items():
+            if _is_excluded_personnel(pid, shift_names.get(pid)):
+                continue
             worked_hours[pid] += float(hours)
 
     return (
@@ -722,24 +771,36 @@ def aggregate_personnel_timeframe_stats(stats_dir: Path, period_key: str, now: d
             continue
         file_names, file_calls, file_dur, file_after, file_max, file_ride_in = load_personnel_stats(stats_dir / name)
         for pid, nm in file_names.items():
+            if _is_excluded_personnel(pid, nm):
+                continue
             if nm and pid not in names:
                 names[pid] = nm
         for pid, count in file_calls.items():
+            if _is_excluded_personnel(pid, file_names.get(pid)):
+                continue
             c_int = int(count)
             calls[pid] += c_int
             if c_int > single_shift_max_calls[pid]:
                 single_shift_max_calls[pid] = c_int
         for pid, seconds in file_dur.items():
+            if _is_excluded_personnel(pid, file_names.get(pid)):
+                continue
             dur[pid] += int(seconds)
         for pid, count in file_after.items():
+            if _is_excluded_personnel(pid, file_names.get(pid)):
+                continue
             c_int = int(count)
             after_midnight[pid] += c_int
             if c_int > single_shift_max_after[pid]:
                 single_shift_max_after[pid] = c_int
         for pid, mx in file_max.items():
+            if _is_excluded_personnel(pid, file_names.get(pid)):
+                continue
             if int(mx) > max_sec[pid]:
                 max_sec[pid] = int(mx)
         for pid, count in file_ride_in.items():
+            if _is_excluded_personnel(pid, file_names.get(pid)):
+                continue
             ride_in[pid] += int(count)
     return dict(names), dict(calls), dict(dur), dict(after_midnight), dict(max_sec), dict(ride_in), dict(single_shift_max_calls), dict(single_shift_max_after)
 
@@ -748,6 +809,8 @@ def compute_personnel_period(stats_dir: Path, period_key: str, now: datetime.dat
     names, calls, dur, after, max_sec, ride_in, max_calls, max_after = aggregate_personnel_timeframe_stats(stats_dir, period_key, now)
     rows = []
     for pid, count in calls.items():
+        if _is_excluded_personnel(pid, names.get(pid)):
+            continue
         c = int(count)
         total_sec = int(dur.get(pid, 0))
         avg_min = (total_sec / c) / 60.0 if c else 0.0
@@ -803,6 +866,8 @@ def compute_personnel_period_hybrid(
     )
     rows = []
     for pid, count in calls.items():
+        if _is_excluded_personnel(pid, names.get(pid)):
+            continue
         c = int(count)
         total_sec = int(dur.get(pid, 0))
         avg_min = (total_sec / c) / 60.0 if c else 0.0
@@ -1512,6 +1577,8 @@ def _personnel_shift_detail_map(
         )
         people = set(calls.keys()) | set(dur.keys()) | set(after.keys()) | set(max_sec.keys()) | set(ride_in.keys()) | set(worked_hours.keys())
         for pid in people:
+            if _is_excluded_personnel(pid, names.get(pid)):
+                continue
             c = int(calls.get(pid, 0))
             s = int(dur.get(pid, 0))
             a = int(after.get(pid, 0))
