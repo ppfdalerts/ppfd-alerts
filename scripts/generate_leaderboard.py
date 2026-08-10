@@ -13,6 +13,31 @@ STATS_FILENAME_RE = re.compile(r"shift_stats_(\d{4}-\d{2}-\d{2})\.json")
 ROSTER_FILENAME_RE = re.compile(r"roster_units_(\d{4}-\d{2}-\d{2})\.json")
 PERSONNEL_STATS_FILENAME_RE = re.compile(r"shift_personnel_(\d{4}-\d{2}-\d{2})\.json")
 
+# These roster records are administrative/support assignments, not operational
+# leaderboard personnel. Keep the filter centralized so roster-derived and
+# legacy personnel files produce the same visible population.
+EXCLUDED_PERSONNEL_NAMES = {
+    "hughes, andrew",
+    "ellis, keith",
+    "stimson, jessica",
+    "bowlby, alexander",
+    "bowlby, alex",
+    "riley ii, chris",
+    "mitchell, john",
+    "mitchell, john r.",
+    "giblin 7, erin",
+    "layfield, thomas",
+    "layfield, t j",
+    "rose, debra a.",
+    "chait, sherri",
+    "scanlan, michaela f.",
+    "astleford, christopher",
+    "astleford, chris",
+    "gould, molly",
+    "bonnemann, david",
+    "agar, alan",
+}
+
 THREAD_IDS = {
     "GENERAL": 1, "R33": 2, "E33": 3, "T33": 4, "33FD": 5, "LR36": 6,
     "HM33": 7, "R34": 8, "E34": 9, "TR34": 10, "E36": 11, "S36": 12,
@@ -278,6 +303,37 @@ def _person_key(entry: dict) -> str | None:
         return pid
     name = str(entry.get("name") or "").strip()
     return name or None
+
+
+def _person_name_base(value) -> str:
+    text = str(value or "").strip().lower()
+    text = re.sub(r"\s*\([^)]*\)", "", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _is_excluded_personnel(person_id, name=None) -> bool:
+    return (
+        _person_name_base(person_id) in EXCLUDED_PERSONNEL_NAMES
+        or _person_name_base(name) in EXCLUDED_PERSONNEL_NAMES
+    )
+
+
+def _load_counted_call_units(fp: Path) -> dict[str, set[str]]:
+    """Load unique incident IDs by unit when the stats file has them."""
+    try:
+        payload = json.loads(fp.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    by_unit: dict[str, set[str]] = defaultdict(set)
+    for raw in payload.get("counted_calls") or []:
+        text = str(raw).strip()
+        if "|" not in text:
+            continue
+        incident_id, raw_unit = text.rsplit("|", 1)
+        unit = _normalize_unit_code(raw_unit)
+        if incident_id.strip() and unit:
+            by_unit[unit].add(incident_id.strip())
+    return dict(by_unit)
 
 
 def _parse_time_to_minutes(value) -> int | None:
