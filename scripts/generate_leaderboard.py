@@ -445,12 +445,117 @@ def _build_roster_map(roster_payload: dict, shift_date: datetime.date) -> dict:
             if total_sec <= 0 and after_sec <= 0:
                 continue
             unit_map = by_unit.setdefault(unit_code, {})
-            info = unit_map.setdefault(pkey, {"name": name, "total_sec": 0, "after_sec": 0})
+            info = unit_map.setdefault(
+                pkey,
+                {"name": name, "total_sec": 0, "after_sec": 0, "intervals": [], "ranks": []},
+            )
             if name and not info.get("name"):
                 info["name"] = name
             info["total_sec"] += total_sec
             info["after_sec"] += after_sec
+            info.setdefault("intervals", []).append((interval[0], interval[1]))
+            info.setdefault("ranks", []).append(str(entry.get("rank") or "").strip())
     return by_unit
+
+
+def _effective_personnel_assignments(
+    roster_payload: dict,
+    shift_date: datetime.date,
+    unit_calls: dict,
+    unit_after: dict,
+) -> dict[tuple[str, str], tuple[float, float]]:
+    """Merge roster time and prevent simultaneous unit double-counting."""
+    shift_start_dt = datetime.datetime.combine(shift_date, datetime.time(SHIFT_HOUR, 0))
+    shift_end_dt = shift_start_dt + datetime.timedelta(hours=24)
+    after_start = datetime.datetime.combine(
+        shift_date + datetime.timedelta(days=1), datetime.time(0, 0)
+    )
+    after_end = shift_end_dt
+    by_person: dict[str, dict[str, dict]] = defaultdict(dict)
+    seen_entries: set[tuple[str, str, str, str, str]] = set()
+
+    for unit in roster_payload.get("units", []) or []:
+        unit_code = _normalize_unit_code(unit.get("unit_code"))
+        if not unit_code:
+            continue
+        for entry in unit.get("entries", []) or []:
+            pkey = _person_key(entry)
+            name = str(entry.get("name") or "").strip()
+            if not pkey or _is_excluded_personnel(pkey, name):
+                continue
+            entry_key = (
+                unit_code,
+                pkey,
+                str(entry.get("from") or ""),
+                str(entry.get("through") or ""),
+                str(entry.get("hours") or ""),
+            )
+            if entry_key in seen_entries:
+                continue
+            seen_entries.add(entry_key)
+            interval = _entry_interval(entry, shift_date, shift_start_dt)
+            if not interval:
+                continue
+            start = max(interval[0], shift_start_dt)
+            end = min(interval[1], shift_end_dt)
+            if end <= start:
+                continue
+            info = by_person[pkey].setdefault(
+                unit_code,
+                {"name": name, "intervals": [], "ranks": []},
+            )
+            info["intervals"].append((start, end))
+            info["ranks"].append(str(entry.get("rank") or "").strip())
+
+    result: dict[tuple[str, str], tuple[float, float]] = {}
+    for pkey, units in by_person.items():
+        merged_by_unit: dict[str, list[tuple[datetime.datetime, datetime.datetime]]] = {}
+        for unit_code, info in units.items():
+            merged: list[list[datetime.datetime]] = []
+            for start, end in sorted(info["intervals"]):
+                if not merged or start > merged[-1][1]:
+                    merged.append([start, end])
+                else:
+                    merged[-1][1] = max(merged[-1][1], end)
+            merged_by_unit[unit_code] = [(start, end) for start, end in merged]
+
+        boundaries = sorted(
+            {point for spans in merged_by_unit.values() for span in spans for point in span}
+        )
+        totals: dict[str, list[float]] = defaultdict(lambda: [0.0, 0.0])
+        for start, end in zip(boundaries, boundaries[1:]):
+            if end <= start:
+                continue
+            active = [
+                unit_code
+                for unit_code, spans in merged_by_unit.items()
+                if any(span_start <= start and end <= span_end for span_start, span_end in spans)
+            ]
+            if not active:
+                continue
+            if len(active) > 1:
+                def priority(unit_code: str):
+                    ranks = [r.lower() for r in units[unit_code].get("ranks", []) if r.strip()]
+                    operational = any(r != "personnel" and "personnel" not in r for r in ranks)
+                    return (
+                        1 if operational else 0,
+                        int(unit_calls.get(unit_code, 0) or 0),
+                        int(unit_after.get(unit_code, 0) or 0),
+                        unit_code,
+                    )
+                active = [max(active, key=priority)]
+            winner = active[0]
+            seconds = (end - start).total_seconds()
+            totals[winner][0] += seconds
+            after_seconds = max(
+                0.0,
+                (min(end, after_end) - max(start, after_start)).total_seconds(),
+            )
+            totals[winner][1] += after_seconds
+
+        for unit_code, values in totals.items():
+            result[(unit_code, pkey)] = (values[0], values[1])
+    return result
 
 
 def _roster_personnel_hours(roster_payload: dict, shift_date: datetime.date) -> dict[str, float]:
@@ -513,6 +618,13 @@ def _compute_shift_personnel_from_roster(
 ) -> tuple[dict, dict, dict, dict, dict]:
     calls, dur, after, max_sec, _ride_in, _duration_known = load_stats(stats_path)
     roster_map = _build_roster_map(roster_payload, shift_date)
+    effective_assignments = _effective_personnel_assignments(
+        roster_payload,
+        shift_date,
+        calls,
+        after,
+    )
+    effective_persons = {pkey for _unit, pkey in effective_assignments}
     counted_by_unit = _load_counted_call_units(stats_path)
     counted_total = sum(len(values) for values in counted_by_unit.values())
     stats_total = sum(int(value or 0) for value in calls.values())
@@ -542,8 +654,14 @@ def _compute_shift_personnel_from_roster(
         for pkey, info in crew.items():
             if _is_excluded_personnel(pkey, info.get("name")):
                 continue
-            total_sec = float(info.get("total_sec", 0) or 0)
-            after_sec = float(info.get("after_sec", 0) or 0)
+            effective = effective_assignments.get((unit_code, pkey))
+            if effective:
+                total_sec, after_sec = effective
+            elif pkey in effective_persons:
+                continue
+            else:
+                total_sec = float(info.get("total_sec", 0) or 0)
+                after_sec = float(info.get("after_sec", 0) or 0)
             if total_sec <= 0:
                 continue
             f_total = min(max(total_sec / SHIFT_SECONDS, 0.0), 1.0)
