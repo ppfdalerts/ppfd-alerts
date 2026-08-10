@@ -15,6 +15,16 @@ SHIFT_START_HOUR = 7
 SHIFT_SECONDS = 24 * 3600
 STATS_FILENAME_RE = re.compile(r"shift_stats_(\d{4}-\d{2}-\d{2})\.json")
 
+EXCLUDED_PERSONNEL_NAMES = {
+    "hughes, andrew", "ellis, keith", "stimson, jessica",
+    "bowlby, alexander", "bowlby, alex", "riley ii, chris",
+    "mitchell, john", "mitchell, john r.", "giblin 7, erin",
+    "layfield, thomas", "layfield, t j", "rose, debra a.",
+    "chait, sherri", "scanlan, michaela f.",
+    "astleford, christopher", "astleford, chris", "gould, molly",
+    "bonnemann, david", "agar, alan",
+}
+
 
 def _parse_date(value: str | None) -> dt.date | None:
     if not value:
@@ -47,6 +57,19 @@ def _person_key(entry: dict) -> str | None:
         return pid
     name = str(entry.get("name") or "").strip()
     return name or None
+
+
+def _person_name_base(value) -> str:
+    text = str(value or "").strip().lower()
+    text = re.sub(r"\s*\([^)]*\)", "", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _is_excluded_personnel(person_id, name=None) -> bool:
+    return (
+        _person_name_base(person_id) in EXCLUDED_PERSONNEL_NAMES
+        or _person_name_base(name) in EXCLUDED_PERSONNEL_NAMES
+    )
 
 
 def _parse_time_to_minutes(value) -> int | None:
@@ -165,14 +188,26 @@ def _build_roster_map(roster_payload: dict, shift_date: dt.date) -> dict:
     after_start = dt.datetime.combine(shift_date + dt.timedelta(days=1), dt.time(0, 0))
     after_end = shift_end
     by_unit: dict[str, dict[str, dict]] = {}
+    seen_entries: set[tuple[str, str, str, str, str]] = set()
     for unit in roster_payload.get("units", []) or []:
         unit_code = _normalize_unit_code(unit.get("unit_code"))
         if not unit_code:
             continue
         for entry in unit.get("entries", []) or []:
             pkey = _person_key(entry)
-            if not pkey:
+            name = str(entry.get("name") or "").strip()
+            if not pkey or _is_excluded_personnel(pkey, name):
                 continue
+            entry_key = (
+                unit_code,
+                pkey,
+                str(entry.get("from") or ""),
+                str(entry.get("through") or ""),
+                str(entry.get("hours") or ""),
+            )
+            if entry_key in seen_entries:
+                continue
+            seen_entries.add(entry_key)
             interval = _entry_interval(entry, shift_date, shift_start)
             if not interval:
                 continue
@@ -180,7 +215,6 @@ def _build_roster_map(roster_payload: dict, shift_date: dt.date) -> dict:
             after_sec = _overlap_seconds(interval[0], interval[1], after_start, after_end)
             if total_sec <= 0 and after_sec <= 0:
                 continue
-            name = str(entry.get("name") or "").strip()
             unit_map = by_unit.setdefault(unit_code, {})
             info = unit_map.setdefault(
                 pkey, {"name": name, "total_sec": 0, "after_sec": 0}
