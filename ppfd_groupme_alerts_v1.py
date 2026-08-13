@@ -1315,6 +1315,28 @@ LAST_FINISHED: dict[str, list] = {}
 SEEN_MSG: Set[str] = set()
 MAIN_EVENT_SEEN: Set[tuple] = set()
 
+
+def _record_after_midnight_crossing(uid: str, rec: dict, now: datetime.datetime) -> tuple[bool, bool]:
+    """Count a call once when it remains active across the shift's midnight."""
+    if uid not in WATCH_SET or rec.get("ignore") or rec.get("after_midnight_recorded"):
+        return False, False
+    started = rec.get("start")
+    if not isinstance(started, datetime.datetime):
+        return False, False
+    midnight = (SHIFT_DT + datetime.timedelta(days=1)).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+    if not (started < midnight <= now):
+        return False, False
+
+    rec["after_midnight_recorded"] = True
+    AFTER_0000[uid] += 1
+    personnel_changed = False
+    for pkey in rec.get("personnel_keys") or []:
+        P_AFTER_0000[pkey] += 1
+        personnel_changed = True
+    return True, personnel_changed
+
 def post_main_once(event_key: tuple, title: str, body: str):
     """Send one main-chat copy for an event even when several units share a call."""
     key = tuple(event_key)
@@ -1506,6 +1528,7 @@ while not TEST_MODE:
                         "start": start_time,
                         "events": [("dispatched", start_time)],
                         "ignore": bool(before_shift),
+                        "after_midnight_recorded": False,
                         "transporting_recorded": False,
                         "at_hospital_recorded": False,
                         "ride_in_recorded": False,
@@ -1522,7 +1545,9 @@ while not TEST_MODE:
                             COUNTED_CALLS.add(counted_key)
                             CALLS[uid] += 1
                             try:
-                                if rcv and rcv.time() < datetime.time(7): AFTER_0000[uid] += 1
+                                if rcv and rcv.time() < datetime.time(7):
+                                    AFTER_0000[uid] += 1
+                                    rec["after_midnight_recorded"] = True
                             except Exception: pass
                             for pkey, pname in personnel:
                                 P_CALLS[pkey] += 1
@@ -1531,6 +1556,33 @@ while not TEST_MODE:
                                         P_AFTER_0000[pkey] += 1
                                 except Exception:
                                     pass
+                        after_changed, after_personnel_changed = _record_after_midnight_crossing(uid, rec, now)
+                        if after_changed:
+                            _stats_save(
+                                STATS_FN,
+                                CALLS,
+                                DUR_SEC,
+                                AFTER_0000,
+                                MAX_SEC,
+                                TRANSPORTING_COUNT,
+                                AT_HOSPITAL_COUNT,
+                                RIDE_IN_COUNT,
+                                DURATION_KNOWN_CALLS,
+                                COUNTED_CALLS,
+                            )
+                            stats_dirty = True
+                        if after_personnel_changed:
+                            _pstats_save(
+                                P_STATS_FN,
+                                PERSONNEL_NAMES,
+                                P_CALLS,
+                                P_DUR_SEC,
+                                P_AFTER_0000,
+                                P_MAX_SEC,
+                                P_TRANSPORTING_COUNT,
+                                P_AT_HOSPITAL_COUNT,
+                                P_RIDE_IN_COUNT,
+                            )
                         unit_status_changed, personnel_status_changed = _record_ride_in_status(uid, rec, status)
                         if (not already_counted) or unit_status_changed or personnel_status_changed:
                             _stats_save(
@@ -1559,6 +1611,7 @@ while not TEST_MODE:
                                 P_RIDE_IN_COUNT,
                             )
                 elif status != rec["status"]:
+                    after_changed, after_personnel_changed = _record_after_midnight_crossing(uid, rec, now)
                     rec["status"] = status
                     rec["events"].append((status, now))
                     unit_status_changed, personnel_status_changed = _record_ride_in_status(uid, rec, status)
@@ -1576,6 +1629,32 @@ while not TEST_MODE:
                             COUNTED_CALLS,
                         )
                     if personnel_status_changed:
+                        _pstats_save(
+                            P_STATS_FN,
+                            PERSONNEL_NAMES,
+                            P_CALLS,
+                            P_DUR_SEC,
+                            P_AFTER_0000,
+                            P_MAX_SEC,
+                            P_TRANSPORTING_COUNT,
+                            P_AT_HOSPITAL_COUNT,
+                            P_RIDE_IN_COUNT,
+                        )
+                    if after_changed:
+                        _stats_save(
+                            STATS_FN,
+                            CALLS,
+                            DUR_SEC,
+                            AFTER_0000,
+                            MAX_SEC,
+                            TRANSPORTING_COUNT,
+                            AT_HOSPITAL_COUNT,
+                            RIDE_IN_COUNT,
+                            DURATION_KNOWN_CALLS,
+                            COUNTED_CALLS,
+                        )
+                        stats_dirty = True
+                    if after_personnel_changed:
                         _pstats_save(
                             P_STATS_FN,
                             PERSONNEL_NAMES,
