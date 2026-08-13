@@ -1668,6 +1668,34 @@ while not TEST_MODE:
                         )
                     if unit_status_changed or personnel_status_changed:
                         stats_dirty = True
+                else:
+                    after_changed, after_personnel_changed = _record_after_midnight_crossing(uid, rec, now)
+                    if after_changed:
+                        _stats_save(
+                            STATS_FN,
+                            CALLS,
+                            DUR_SEC,
+                            AFTER_0000,
+                            MAX_SEC,
+                            TRANSPORTING_COUNT,
+                            AT_HOSPITAL_COUNT,
+                            RIDE_IN_COUNT,
+                            DURATION_KNOWN_CALLS,
+                            COUNTED_CALLS,
+                        )
+                        stats_dirty = True
+                    if after_personnel_changed:
+                        _pstats_save(
+                            P_STATS_FN,
+                            PERSONNEL_NAMES,
+                            P_CALLS,
+                            P_DUR_SEC,
+                            P_AFTER_0000,
+                            P_MAX_SEC,
+                            P_TRANSPORTING_COUNT,
+                            P_AT_HOSPITAL_COUNT,
+                            P_RIDE_IN_COUNT,
+                        )
                 seen_now.add(key)
 
             for key in list(ACTIVE):
