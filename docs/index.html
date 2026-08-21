@@ -3,6 +3,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<!-- personnel-order-column-v1 -->
 <title>PPFD Live Leaderboards</title>
 <style>
   :root{
@@ -160,6 +161,7 @@
   .personnel-controls select, .personnel-controls input{background:#0f141a; border:1px solid #223047; color:var(--text); padding:4px 6px; border-radius:6px; font-size:12px}
   .personnel-controls input{min-width:180px}
   .personnel-table th{cursor:pointer}
+  .personnel-table th.order-col, .personnel-table td.personnel-order{width:42px; min-width:42px; text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; cursor:default}
   .personnel-table th.sort-asc::after{content:" ^"; color:var(--muted); font-size:11px}
   .personnel-table th.sort-desc::after{content:" v"; color:var(--muted); font-size:11px}
   @media (max-width: 900px){
@@ -304,6 +306,7 @@
         <table id="board-personnel" class="personnel-table">
           <thead>
             <tr>
+              <th class="order-col">#</th>
               <th data-sort="name">Name</th>
               <th data-sort="total_calls">Total Calls</th>
               <th data-sort="total_hours_worked">Hours Worked</th>
@@ -1168,6 +1171,7 @@
         if(cls){ td.className = cls; }
         tr.appendChild(td);
       }
+      addCell(String(idx + 1), 'personnel-order');
       addCell(r.name || r.person_id || '');
       addCell(String(r.total_calls || 0));
       addCell(r.total_hours_worked != null ? Number(r.total_hours_worked).toFixed(1) : '--');
@@ -1349,8 +1353,9 @@
     }
     if(panel === 'personnel'){
       var rp = personnelState.renderedRows || [];
-      var rowsP = rp.map(function(r){
+      var rowsP = rp.map(function(r, idx){
         return [
+          idx + 1,
           r.name || r.person_id || '',
           Number(r.total_calls || 0),
           r.total_hours_worked == null ? '' : Number(r.total_hours_worked).toFixed(1),
@@ -1366,7 +1371,7 @@
       });
       downloadCsv(
         'ppfd_personnel_' + (personnelState.period || 'period') + '_' + ts + '.csv',
-        ['Name','Total Calls','Hours Worked','Ride-Ins','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
+        ['#','Name','Total Calls','Hours Worked','Ride-Ins','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
         rowsP
       );
       return;
