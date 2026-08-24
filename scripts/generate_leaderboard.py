@@ -254,6 +254,38 @@ def _load_roster_payload(roster_path: Path):
     return _normalize_roster_payload(payload, roster_path)
 
 
+def _personnel_roster_assignments(roster_payload: dict | None) -> dict[str, list[dict[str, str]]]:
+    """Return the unit and position assignments listed for each person on a day."""
+    assignments: dict[str, list[dict[str, str]]] = defaultdict(list)
+    seen: set[tuple[str, str, str]] = set()
+    if not roster_payload:
+        return {}
+
+    for unit in roster_payload.get("units", []) or []:
+        unit_code = _normalize_unit_code(unit.get("unit_code"))
+        if not unit_code:
+            continue
+        for entry in unit.get("entries", []) or []:
+            person_id = _person_key(entry)
+            name = str(entry.get("name") or "").strip()
+            if not person_id or _is_excluded_personnel(person_id, name):
+                continue
+            position = str(entry.get("rank") or "").strip()
+            marker = (person_id, unit_code, position)
+            if marker in seen:
+                continue
+            seen.add(marker)
+            assignments[person_id].append(
+                {"unit": unit_code, "position": position}
+            )
+
+    for person_id in assignments:
+        assignments[person_id].sort(
+            key=lambda item: (item["unit"], item["position"])
+        )
+    return dict(assignments)
+
+
 def _build_roster_bundle(roster_dir: Path):
     now = datetime.datetime.now()
     shift_date = shift_start(now).date()
@@ -1693,6 +1725,12 @@ def _personnel_shift_detail_map(
             personnel_dir=personnel_dir,
             day=day,
         )
+        roster_payload = (
+            _load_roster_payload(_roster_path_for_date(roster_dir, day))
+            if roster_dir and roster_dir.exists()
+            else None
+        )
+        roster_assignments = _personnel_roster_assignments(roster_payload)
         people = set(calls.keys()) | set(dur.keys()) | set(after.keys()) | set(max_sec.keys()) | set(ride_in.keys()) | set(worked_hours.keys())
         for pid in people:
             if _is_excluded_personnel(pid, names.get(pid)):
@@ -1715,6 +1753,7 @@ def _personnel_shift_detail_map(
                 {
                     "date": day.isoformat(),
                     "shift": _shift_letter_for(day),
+                    "assignments": roster_assignments.get(str(pid), []),
                     "calls": c,
                     "ride_in_count": ri,
                     "hours_worked": round(hours, 1),
