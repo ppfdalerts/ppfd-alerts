@@ -546,6 +546,18 @@
     return num.toFixed(1);
   }
 
+  function escapeHtml(value){
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+
+  function formatAssignmentValues(assignments, field){
+    if(!Array.isArray(assignments) || !assignments.length) return '--';
+    var values = assignments.map(function(item){ return String(item && item[field] || '').trim(); }).filter(Boolean);
+    return values.length ? values.map(escapeHtml).join('<br>') : '--';
+  }
+
   function csvMaybeFloat(value){
     if(value == null) return '';
     var num = Number(value);
@@ -1028,11 +1040,15 @@
       el.detailBody.innerHTML = '<div class=\"roster-empty\">No detail rows available for this selection.</div>';
       return;
     }
-    var html = '<table><thead><tr><th>Date</th><th>Shift</th><th>Calls</th><th>Hours Worked</th><th>Ride-Ins</th><th>Avg Min</th><th>Max Min</th><th>After 00:00</th></tr></thead><tbody>';
+    var personnelDetail = kind === 'personnel';
+    var html = '<table><thead><tr><th>Date</th><th>Shift</th>'
+      + (personnelDetail ? '<th>Unit Rode</th><th>Position</th>' : '')
+      + '<th>Calls</th><th>Hours Worked</th><th>Ride-Ins</th><th>Avg Min</th><th>Max Min</th><th>After 00:00</th></tr></thead><tbody>';
     rows.forEach(function(r){
       html += '<tr>'
         + '<td>' + (r.date || '--') + '</td>'
         + '<td>' + (r.shift || '--') + '</td>'
+        + (personnelDetail ? '<td>' + formatAssignmentValues(r.assignments, 'unit') + '</td><td>' + formatAssignmentValues(r.assignments, 'position') + '</td>' : '')
         + '<td>' + String(r.calls || 0) + '</td>'
         + '<td>' + (r.hours_worked == null ? '--' : Number(r.hours_worked).toFixed(1)) + '</td>'
         + '<td>' + String(r.ride_in_count || 0) + '</td>'
