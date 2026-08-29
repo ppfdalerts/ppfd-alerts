@@ -112,7 +112,15 @@ def main() -> int:
             log("No matching roster email found.", args.log)
             return 0
 
-        latest = messages[0]["id"]
+        message_details = [
+            service.users().messages().get(userId="me", id=item["id"], format="minimal").execute()
+            for item in messages
+        ]
+        latest_message = max(
+            message_details,
+            key=lambda item: int(item.get("internalDate") or 0),
+        )
+        latest = latest_message["id"]
         state = load_state(args.state, args.state.with_name("gmail_roster_last_message.txt"))
         if state.get("message_id") == latest:
             log(f"Roster email {latest} already processed; skipping.", args.log)
