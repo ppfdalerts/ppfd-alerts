@@ -392,9 +392,33 @@ def parse_apparatus_assignments_xlsx(sheet, known_people):
     """Parse the Kronos seven-day Apparatus Assignments worksheet."""
     by_date: dict[dt.date, dict[str, dict]] = {}
     seen: set[tuple] = set()
-    for row in sheet.iter_rows(min_row=2, values_only=True):
-        values = list(row) + [None] * 12
-        date_value, _shift, apparatus, position, name, employee_id, code, start, through, hours = values[:10]
+    rows = sheet.iter_rows(values_only=True)
+    try:
+        header = next(rows)
+    except StopIteration:
+        return by_date
+    columns = {
+        str(value or "").strip().lower(): index
+        for index, value in enumerate(header)
+    }
+
+    def value(row, *names):
+        for name in names:
+            index = columns.get(name.lower())
+            if index is not None and index < len(row):
+                return row[index]
+        return None
+
+    for row in rows:
+        date_value = value(row, "Date")
+        apparatus = value(row, "Apparatus")
+        position = value(row, "Position")
+        name = value(row, "Personnel")
+        employee_id = value(row, "Employee ID", "Personnel ID")
+        code = value(row, "Work Code")
+        start = value(row, "From")
+        through = value(row, "Through")
+        hours = value(row, "Duration")
         unit_code = XLSX_APPARATUS_CODES.get(str(apparatus or "").strip())
         if not unit_code or not name or str(name).strip() in ("-,-", "?,?"):
             continue
@@ -415,7 +439,12 @@ def parse_apparatus_assignments_xlsx(sheet, known_people):
         rank = str(position or "").strip()
         from_time = _time_text(start)
         through_time = _time_text(through)
-        duration = float(hours) if hours not in (None, "") else None
+        if hours not in (None, ""):
+            duration = float(hours)
+        elif start and through:
+            duration = _duration_hours(from_time, through_time)
+        else:
+            duration = None
         entry_key = (roster_date, unit_code, person_id, rank, str(code or ""), from_time, through_time, duration)
         if entry_key in seen:
             continue
