@@ -1165,7 +1165,7 @@ def _format_range(start_date: datetime.date, end_date: datetime.date) -> str:
 
 
 def _daily_call_frequency(stats_dir: Path, shift_date: datetime.date, now: datetime.datetime) -> dict[str, list[int]]:
-    """Return hourly call counts from 07:00 through the latest known hour."""
+    """Return hourly call counts, collapsing repeated notifications for one attachment."""
     times = load_call_times(stats_dir / f"shift_stats_{shift_date:%Y-%m-%d}.json")
     if not times:
         return {}
@@ -1181,14 +1181,27 @@ def _daily_call_frequency(stats_dir: Path, shift_date: datetime.date, now: datet
             continue
         unit_buckets = [0] * (visible_hours or 24)
         latest_bucket = -1
+        parsed_values: list[datetime.datetime] = []
         for value in values:
             try:
                 parsed = datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
                 if parsed.tzinfo:
                     parsed = parsed.astimezone().replace(tzinfo=None)
-                bucket = int((parsed - shift_base).total_seconds() // 3600)
             except Exception:
                 continue
+            parsed_values.append(parsed)
+
+        # GroupMe and the local alert log can both retain notifications for the
+        # same attachment. A unit cannot begin a second call while still attached,
+        # so collapse timestamps less than 30 minutes apart for this chart.
+        deduped_values: list[datetime.datetime] = []
+        for parsed in sorted(parsed_values):
+            if deduped_values and parsed - deduped_values[-1] < datetime.timedelta(minutes=30):
+                continue
+            deduped_values.append(parsed)
+
+        for parsed in deduped_values:
+            bucket = int((parsed - shift_base).total_seconds() // 3600)
             if 0 <= bucket < 24:
                 if bucket >= len(unit_buckets):
                     unit_buckets.extend([0] * (bucket + 1 - len(unit_buckets)))
