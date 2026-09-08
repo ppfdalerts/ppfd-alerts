@@ -151,10 +151,15 @@ def _avg_minutes(total_seconds: int | float, known_calls: int) -> float | None:
     return round((float(total_seconds) / float(known_calls)) / 60.0, 1)
 
 
-def _max_minutes(max_seconds: int | float, known_calls: int) -> float | None:
-    if known_calls <= 0:
+def _max_minutes(max_seconds: int | float) -> float | None:
+    if float(max_seconds or 0) <= 0:
         return None
     return round(float(max_seconds) / 60.0, 1)
+
+
+def _period_hours(start_date: datetime.date, end_date: datetime.date) -> int:
+    """Use the full number of calendar hours covered by a leaderboard period."""
+    return max(1, (end_date - start_date).days + 1) * 24
 
 
 def _safe_parent(path: Path, idx: int):
@@ -1022,11 +1027,13 @@ def compute_personnel_period_hybrid(
         total_sec = int(dur.get(pid, 0))
         avg_min = (total_sec / c) / 60.0 if c else 0.0
         max_min = int(max_sec.get(pid, 0)) / 60.0 if max_sec.get(pid, 0) else 0.0
+        worked = float(worked_hours.get(pid, 0.0) or 0.0)
         rows.append(
             {
                 "person_id": pid,
                 "name": names.get(pid, pid),
                 "total_calls": c,
+                "avg_calls_per_hour": round(c / worked, 2) if worked > 0 else None,
                 "ride_in_count": int(ride_in.get(pid, 0)),
                 "total_hours_worked": round(float(worked_hours.get(pid, 0.0)), 1),
                 "single_shift_max_calls": int(max_calls.get(pid, 0)),
@@ -1084,7 +1091,7 @@ def aggregate_timeframe_stats(
         days = TIMEFRAME_LENGTHS[period_key]
         cutoff_date = shift_date - datetime.timedelta(days=days - 1)
     calls = defaultdict(int)
-    dur = defaultdict(int)
+    dur = defaultdict(float)
     after_midnight = defaultdict(int)
     max_sec = defaultdict(int)
     ride_in = defaultdict(int)
@@ -1112,7 +1119,7 @@ def aggregate_timeframe_stats(
                 duration_known_calls[unit] += _duration_denominator(unit, file_calls, file_duration_known)
         for unit, seconds in file_dur.items():
             if unit in WATCH_SET:
-                dur[unit] += int(seconds)
+                dur[unit] += float(seconds)
         for unit, count in file_after.items():
             if unit in WATCH_SET:
                 after_midnight[unit] += int(count)
@@ -1381,9 +1388,9 @@ def compute_shift_breakdown(
     letters = ['A', 'B', 'C']
     sum_calls: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
     max_calls: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
-    sum_dur: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})  # seconds
+    sum_dur: dict[str, dict[str, float]] = defaultdict(lambda: {l: 0.0 for l in letters})  # seconds
     sum_dur_calls: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
-    max_dur: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})  # seconds
+    max_dur: dict[str, dict[str, float]] = defaultdict(lambda: {l: 0.0 for l in letters})  # seconds
     sum_after: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
     max_after: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
     sum_ride_in: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
@@ -1404,9 +1411,9 @@ def compute_shift_breakdown(
             if unit not in WATCH_SET:
                 continue
             c = int(file_calls.get(unit, 0))
-            s = int(file_dur.get(unit, 0))
+            s = float(file_dur.get(unit, 0) or 0)
             a = int(file_after.get(unit, 0))
-            mx = int(file_max.get(unit, 0))
+            mx = float(file_max.get(unit, 0) or 0)
             ri = int(file_ride_in.get(unit, 0))
             known_calls = _duration_denominator(unit, file_calls, file_duration_known)
             sum_calls[unit][letter] += c
@@ -1427,7 +1434,7 @@ def compute_shift_breakdown(
         calls_abc = [int(sum_calls[unit][l]) for l in letters]
         calls_max_abc = [int(max_calls[unit][l]) for l in letters]
         avg_min_abc = [_avg_minutes(sum_dur[unit][l], sum_dur_calls[unit][l]) for l in letters]
-        max_min_abc = [_max_minutes(max_dur[unit][l], sum_dur_calls[unit][l]) for l in letters]
+        max_min_abc = [_max_minutes(max_dur[unit][l]) for l in letters]
         after_abc = [int(sum_after[unit][l]) for l in letters]
         after_max_abc = [int(max_after[unit][l]) for l in letters]
         ride_in_abc = [int(sum_ride_in[unit][l]) for l in letters]
@@ -1443,6 +1450,7 @@ def compute_shift_breakdown(
             "total_calls": sum(calls_abc),
             "total_after": sum(after_abc),
             "total_ride_ins": sum(ride_in_abc),
+            "avg_calls_per_hour": round(sum(calls_abc) / float(_period_hours(start_date, end_date)), 2),
             "delta_calls": int((delta_map or {}).get(unit, 0)),
         })
     # Sort by total calls desc then unit
@@ -1458,6 +1466,7 @@ def _rows_from(
     ride_in: dict | None = None,
     duration_known_calls: dict | None = None,
     delta_map: dict | None = None,
+    period_hours: int | None = None,
 ):
     rows = []
     for unit, count in sorted(calls.items(), key=lambda kv: (-kv[1], kv[0])):
@@ -1472,7 +1481,9 @@ def _rows_from(
             "delta_calls": int((delta_map or {}).get(unit, 0)),
         }
         if max_sec is not None:
-            r["max_min"] = _max_minutes(int(max_sec.get(unit, 0)), known_calls)
+            r["max_min"] = _max_minutes(max_sec.get(unit, 0))
+        if period_hours:
+            r["avg_calls_per_hour"] = round(float(count) / float(period_hours), 2)
         rows.append(r)
     return rows
 
@@ -1663,7 +1674,7 @@ def _unit_shift_detail_map(
                     "calls": c,
                     "ride_in_count": ri,
                     "avg_min": _avg_minutes(s, known_calls),
-                    "max_min": _max_minutes(mx, known_calls),
+                    "max_min": _max_minutes(mx),
                     "after_0000": a,
                 }
             )
@@ -1957,7 +1968,16 @@ def compute_period(
             delta_map=delta_map,
         )
     else:
-        rows = _rows_from(calls, dur, after, max_sec, ride_in=ride_in, duration_known_calls=duration_known_calls, delta_map=delta_map)
+        rows = _rows_from(
+            calls,
+            dur,
+            after,
+            max_sec,
+            ride_in=ride_in,
+            duration_known_calls=duration_known_calls,
+            delta_map=delta_map,
+            period_hours=_period_hours(period_start, period_end),
+        )
     meta = {}
     if period_key == 'day':
         sd = shift_start(now).date()
@@ -1998,7 +2018,16 @@ def compute_prior(stats_dir: Path, now: datetime.datetime | None = None):
     for unit in set(calls.keys()) | set(prev_calls.keys()):
         delta_map[unit] = int(calls.get(unit, 0)) - int(prev_calls.get(unit, 0))
     text = format_leaderboard_body("Daily", "day", calls, dur, after, now, duration_known_calls=duration_known_calls)
-    rows = _rows_from(calls, dur, after, max_sec, ride_in=ride_in, duration_known_calls=duration_known_calls, delta_map=delta_map)
+    rows = _rows_from(
+        calls,
+        dur,
+        after,
+        max_sec,
+        ride_in=ride_in,
+        duration_known_calls=duration_known_calls,
+        delta_map=delta_map,
+        period_hours=24,
+    )
     return {
         "label": "Daily",
         "period": "day",
