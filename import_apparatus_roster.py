@@ -388,6 +388,17 @@ def _time_text(value) -> str:
     return text
 
 
+def _xlsx_date(value):
+    if isinstance(value, dt.datetime):
+        return value.date()
+    if isinstance(value, dt.date):
+        return value
+    try:
+        return dt.date.fromisoformat(str(value).strip()[:10])
+    except (TypeError, ValueError):
+        return None
+
+
 def parse_apparatus_assignments_xlsx(sheet, known_people):
     """Parse the Kronos seven-day Apparatus Assignments worksheet."""
     by_date: dict[dt.date, dict[str, dict]] = {}
@@ -422,15 +433,9 @@ def parse_apparatus_assignments_xlsx(sheet, known_people):
         unit_code = XLSX_APPARATUS_CODES.get(str(apparatus or "").strip())
         if not unit_code or not name or str(name).strip() in ("-,-", "?,?"):
             continue
-        if isinstance(date_value, dt.datetime):
-            roster_date = date_value.date()
-        elif isinstance(date_value, dt.date):
-            roster_date = date_value
-        else:
-            try:
-                roster_date = dt.date.fromisoformat(str(date_value).strip()[:10])
-            except ValueError:
-                continue
+        roster_date = _xlsx_date(date_value)
+        if roster_date is None:
+            continue
 
         person_name = str(name).strip()
         canonical = canonical_name(person_name)
@@ -474,6 +479,54 @@ def parse_apparatus_assignments_xlsx(sheet, known_people):
     return by_date
 
 
+def parse_apparatus_coverage_xlsx(sheet):
+    """Parse coverage rows so empty source apparatus sections are retained."""
+    by_date: dict[dt.date, dict[str, dict]] = {}
+    rows = sheet.iter_rows(values_only=True)
+    try:
+        header = next(rows)
+    except StopIteration:
+        return by_date
+    columns = {
+        str(value or "").strip().lower(): index
+        for index, value in enumerate(header)
+    }
+
+    def value(row, name):
+        index = columns.get(name.lower())
+        return row[index] if index is not None and index < len(row) else None
+
+    for row in rows:
+        roster_date = _xlsx_date(value(row, "Date"))
+        if roster_date is None:
+            continue
+        apparatus = str(value(row, "Apparatus") or "").strip()
+        unit_code = XLSX_APPARATUS_CODES.get(apparatus)
+        if not unit_code:
+            unit_code = apparatus.upper() if apparatus.upper() in WATCH_UNIT_CODES else None
+        if not unit_code:
+            continue
+        unit_name = next(
+            (name for name, code in XLSX_APPARATUS_CODES.items() if code == unit_code and " " in name),
+            apparatus or unit_code,
+        )
+        date_units = by_date.setdefault(roster_date, {})
+        unit = date_units.setdefault(
+            unit_code,
+            {
+                "shift": "Fire Department / Suppression / XLSX apparatus coverage",
+                "unit_name": unit_name,
+                "unit_code": unit_code,
+                "entries": [],
+            },
+        )
+        unit["coverage_status"] = str(value(row, "Coverage Status") or "").strip()
+        notes = str(value(row, "Source Notes") or "").strip()
+        if notes:
+            unit["source_notes"] = notes
+    return by_date
+
+
 def _xlsx_bytes(path: Path) -> tuple[str, bytes]:
     if path.suffix.lower() != ".zip":
         return path.name, path.read_bytes()
@@ -495,7 +548,17 @@ def parse_roster_xlsx(path: Path, known_people):
     workbook = load_workbook(BytesIO(data), data_only=True, read_only=True)
     if "Daily Roster" not in workbook.sheetnames:
         if "Apparatus Assignments" in workbook.sheetnames:
-            return parse_apparatus_assignments_xlsx(workbook["Apparatus Assignments"], known_people), source_name
+            by_date = parse_apparatus_assignments_xlsx(workbook["Apparatus Assignments"], known_people)
+            if "Apparatus Coverage" in workbook.sheetnames:
+                coverage = parse_apparatus_coverage_xlsx(workbook["Apparatus Coverage"])
+                for roster_date, coverage_units in coverage.items():
+                    date_units = by_date.setdefault(roster_date, {})
+                    for unit_code, coverage_unit in coverage_units.items():
+                        unit = date_units.setdefault(unit_code, coverage_unit)
+                        for key in ("coverage_status", "source_notes"):
+                            if key in coverage_unit:
+                                unit[key] = coverage_unit[key]
+            return by_date, source_name
         raise SystemExit("XLSX does not contain a Daily Roster or Apparatus Assignments sheet.")
     sheet = workbook["Daily Roster"]
     by_date: dict[dt.date, dict[str, dict]] = {}
