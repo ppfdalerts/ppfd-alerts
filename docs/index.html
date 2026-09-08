@@ -699,34 +699,49 @@
       return 'background: hsla('+hue+',85%,52%,'+alpha+'); color:#0b0d10; font-weight:700; border-radius:6px; padding:2px 8px; display:inline-block;';
     }
     function renderFrequency(cell, values, rate){
-      var points = Array.isArray(values) ? values.map(function(v){ return Number(v) || 0; }) : [];
-      if(!points.length){
+      var hourly = Array.isArray(values) ? values.map(function(v){ return Number(v) || 0; }) : [];
+      if(!hourly.length){
         cell.textContent='--';
         cell.title='Call timestamps are not available for this shift';
         return;
       }
-      var w=82, h=24, pad=3, max=Math.max.apply(null, points.concat([1]));
-      var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-      svg.setAttribute('class','frequency-spark');
-      svg.setAttribute('viewBox','0 0 '+w+' '+h);
-      svg.setAttribute('role','img');
-      svg.setAttribute('aria-label','Calls per hour: '+points.join(', '));
-      var poly=document.createElementNS('http://www.w3.org/2000/svg','polyline');
-      var coords=points.map(function(v,i){
-        var x=points.length===1 ? w/2 : pad + (i*(w-pad*2)/(points.length-1));
-        var y=h-pad - ((v/max)*(h-pad*2));
-        return x.toFixed(1)+','+y.toFixed(1);
-      }).join(' ');
-      poly.setAttribute('points',coords);
-      svg.appendChild(poly);
-      var last=points.length-1;
-      var lastX=points.length===1 ? w/2 : pad + (last*(w-pad*2)/(points.length-1));
-      var lastY=h-pad - ((points[last]/max)*(h-pad*2));
-      var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      dot.setAttribute('cx',lastX.toFixed(1)); dot.setAttribute('cy',lastY.toFixed(1)); dot.setAttribute('r','2.5');
-      svg.appendChild(dot);
-      cell.appendChild(svg);
-      cell.title='Hourly calls since 07:00: '+points.join(', ')+' | Average: '+(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr';
+      var labels=['07','11','15','19','23','03'];
+      var ranges=['07:00-11:00','11:00-15:00','15:00-19:00','19:00-23:00','23:00-03:00','03:00-07:00'];
+      var totals=[0,0,0,0,0,0];
+      hourly.slice(0,24).forEach(function(value, index){ totals[Math.floor(index/4)] += value; });
+      var availableBlocks=Math.min(6, Math.ceil(hourly.length/4));
+      var max=Math.max.apply(null, totals.slice(0,availableBlocks).concat([1]));
+      var chart=document.createElement('div');
+      chart.className='frequency-chart';
+      chart.setAttribute('role','img');
+      chart.setAttribute('aria-label','Four-hour call totals: '+totals.slice(0,availableBlocks).join(', '));
+      var avg=document.createElement('div');
+      avg.className='frequency-rate';
+      avg.innerHTML=(rate == null ? '--' : Number(rate).toFixed(2))+'<br>calls/hr';
+      chart.appendChild(avg);
+      var bars=document.createElement('div');
+      bars.className='frequency-bars';
+      totals.forEach(function(total, index){
+        var available=index < availableBlocks;
+        var bin=document.createElement('div');
+        bin.className='frequency-bin'+(available ? '' : ' future');
+        bin.title=ranges[index]+': '+(available ? total+' calls' : 'not reached');
+        var count=document.createElement('span');
+        count.className='frequency-count';
+        count.textContent=available ? String(total) : '--';
+        var track=document.createElement('span');
+        track.className='frequency-track';
+        var bar=document.createElement('span');
+        bar.className='frequency-bar';
+        bar.style.height=available ? Math.max(2,Math.round((total/max)*22))+'px' : '2px';
+        track.appendChild(bar);
+        var label=document.createElement('span');
+        label.className='frequency-label';
+        label.textContent=labels[index];
+        bin.appendChild(count); bin.appendChild(track); bin.appendChild(label); bars.appendChild(bin);
+      });
+      chart.appendChild(bars);
+      cell.appendChild(chart);
     }
     rows.forEach(function(r, idx){
       var tr=document.createElement('tr');
@@ -1390,9 +1405,12 @@
     if(panel === 'today' || panel === 'prior'){
       var p = data[panel] || {rows:[]};
       var rows = (p.rows || []).map(function(r){
-        return [r.unit || '', Number(r.calls || 0), csvMaybeFloat(r.avg_calls_per_hour), Number(r.ride_in_count || 0), Number(r.delta_calls || 0), csvMaybeFloat(r.avg_min), csvMaybeFloat(r.max_min), Number(r.after_0000 || 0)];
+        var hourly=Array.isArray(r.call_frequency) ? r.call_frequency : [];
+        var blocks=hourly.length ? [0,0,0,0,0,0] : ['','','','','',''];
+        hourly.slice(0,24).forEach(function(value,index){ blocks[Math.floor(index/4)] += Number(value) || 0; });
+        return [r.unit || '', Number(r.calls || 0), csvMaybeFloat(r.avg_calls_per_hour)].concat(blocks, [Number(r.ride_in_count || 0), Number(r.delta_calls || 0), csvMaybeFloat(r.avg_min), csvMaybeFloat(r.max_min), Number(r.after_0000 || 0)]);
       });
-      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Avg Calls/Hr','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
+      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Avg Calls/Hr','Calls 07-11','Calls 11-15','Calls 15-19','Calls 19-23','Calls 23-03','Calls 03-07','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
       return;
     }
     if(panel === 'week' || panel === 'month' || panel === 'year'){
