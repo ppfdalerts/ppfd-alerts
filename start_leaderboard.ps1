@@ -61,6 +61,7 @@ $script:BackfillStatus = [ordered]@{
   updated_at = (Get-Date).ToUniversalTime().ToString('o')
 }
 $script:RunLockPath = Join-Path $script:StateRoot 'leaderboard_sync.lock'
+$script:BackfillAttemptPath = Join-Path $script:StateRoot 'leaderboard_backfill_attempt.json'
 $script:HasRunLock = $false
 $script:LogPath = Join-Path $script:StateRoot 'leaderboard_runner.log'
 
@@ -400,6 +401,29 @@ function Get-FileFingerprint {
     } catch {
       return 'error'
     }
+  }
+}
+
+function Get-BackfillAttemptState {
+  if (-not (Test-Path $script:BackfillAttemptPath)) { return $null }
+  try {
+    return Get-Content -Path $script:BackfillAttemptPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+  } catch {
+    return $null
+  }
+}
+
+function Save-BackfillAttemptState {
+  param([Parameter(Mandatory=$true)][string]$GapSignature)
+
+  try {
+    $payload = [ordered]@{
+      gap_signature = $GapSignature
+      attempted_at = (Get-Date).ToUniversalTime().ToString('o')
+    } | ConvertTo-Json
+    [System.IO.File]::WriteAllText($script:BackfillAttemptPath, $payload, [System.Text.UTF8Encoding]::new($false))
+  } catch {
+    Write-Info "WARN: Failed to persist backfill throttle state: $($_.Exception.Message)"
   }
 }
 
@@ -910,6 +934,21 @@ function Get-LatestRosterDate {
   return $latest
 }
 
+function Get-EarliestRosterDate {
+  param(
+    [Parameter(Mandatory=$true)][string]$RosterDir
+  )
+
+  $earliest = $null
+  $files = Get-ChildItem -Path $RosterDir -Filter 'roster_units_*.json' -File -ErrorAction SilentlyContinue
+  foreach ($f in $files) {
+    $d = Get-DateFromFileName -FileName $f.Name -Pattern '^roster_units_(\d{4}-\d{2}-\d{2})\.json$'
+    if (-not $d) { continue }
+    if (-not $earliest -or $d -lt $earliest) { $earliest = $d }
+  }
+  return $earliest
+}
+
 function Get-BadPersonnelDates {
   param(
     [Parameter(Mandatory=$true)][object[]]$StatsEntries,
@@ -974,8 +1013,15 @@ function Invoke-BackfillPersonnelScript {
     $args += @('--ca-bundle', $caBundle)
   }
 
-  & $Python @args
-  $exitCode = $LASTEXITCODE
+  $quotedArgs = $args | ForEach-Object { '"' + ([string]$_).Replace('"', '\"') + '"' }
+  $process = Start-Process -FilePath $Python -ArgumentList ($quotedArgs -join ' ') -WindowStyle Hidden -PassThru
+  $timeoutSec = 120
+  if (-not $process.WaitForExit($timeoutSec * 1000)) {
+    try { $process.Kill() } catch {}
+    Write-Info "WARN: backfill_personnel_stats.py exceeded ${timeoutSec}s; continuing leaderboard generation."
+    return $false
+  }
+  $exitCode = $process.ExitCode
   if ($exitCode -ne 0) {
     Write-Info "WARN: backfill_personnel_stats.py failed (exit $exitCode)."
     return $false
@@ -1021,7 +1067,13 @@ function Invoke-BackfillCatchup {
     return
   }
 
-  $badDates = @(Get-BadPersonnelDates -StatsEntries $statsEntries -PersonnelDir $PersonnelDir)
+  $earliestRosterDate = Get-EarliestRosterDate -RosterDir $RosterDir
+  $eligibleStatsEntries = if ($earliestRosterDate) {
+    @($statsEntries | Where-Object { $_.Date -ge $earliestRosterDate })
+  } else {
+    $statsEntries
+  }
+  $badDates = @(Get-BadPersonnelDates -StatsEntries $eligibleStatsEntries -PersonnelDir $PersonnelDir)
   if ($badDates.Count -gt 0) {
     $firstBad = ($badDates | Select-Object -First 1).ToString('yyyy-MM-dd')
     $lastBad = ($badDates | Select-Object -Last 1).ToString('yyyy-MM-dd')
@@ -1030,6 +1082,21 @@ function Invoke-BackfillCatchup {
       Set-BackfillStatus -Status 'skipped' -Action 'none' -Message "Known personnel gap unchanged ($firstBad..$lastBad); backfill already attempted."
       return
     }
+    $previousAttempt = Get-BackfillAttemptState
+    $previousAttemptAt = $null
+    if ($previousAttempt -and $previousAttempt.attempted_at) {
+      try { $previousAttemptAt = [datetime]::Parse([string]$previousAttempt.attempted_at).ToUniversalTime() } catch {}
+    }
+    if (
+      $previousAttempt -and
+      [string]$previousAttempt.gap_signature -eq $gapSignature -and
+      $previousAttemptAt -and
+      $previousAttemptAt -gt (Get-Date).ToUniversalTime().AddHours(-12)
+    ) {
+      Set-BackfillStatus -Status 'skipped' -Action 'none' -Message "Known personnel gap unchanged ($firstBad..$lastBad); retry throttled for 12 hours."
+      return
+    }
+    Save-BackfillAttemptState -GapSignature $gapSignature
     Write-Info "Detected $($badDates.Count) personnel gap day(s) ($firstBad..$lastBad); running full backfill."
     $ok = Invoke-BackfillPersonnelScript -Python $Python -StatsDir $StatsDir -RosterDir $RosterDir -PersonnelDir $PersonnelDir
     if ($ok) {
@@ -1060,6 +1127,15 @@ function Invoke-BackfillCatchup {
   if ($latestRosterDate -lt $latestStatsDate) {
     $start = $latestRosterDate.AddDays(1).Date
     $end = $latestStatsDate.Date
+    $missingRangePersonnel = @($statsEntries | Where-Object {
+      $_.Date -ge $start -and
+      $_.Date -le $end -and
+      -not (Test-Path (Join-Path $PersonnelDir ("shift_personnel_{0}.json" -f $_.Date.ToString('yyyy-MM-dd'))))
+    })
+    if ($missingRangePersonnel.Count -eq 0) {
+      Set-BackfillStatus -Status 'skipped' -Action 'none' -Message "Roster export lags through $($latestRosterDate.ToString('yyyy-MM-dd')), but personnel files already cover current stats."
+      return
+    }
     Write-Info "Roster lag detected ($($latestRosterDate.ToString('yyyy-MM-dd')) -> $($latestStatsDate.ToString('yyyy-MM-dd'))); backfilling range."
     $ok = Invoke-BackfillPersonnelScript -Python $Python -StatsDir $StatsDir -RosterDir $RosterDir -PersonnelDir $PersonnelDir -StartDate $start -EndDate $end
     if ($ok) {
