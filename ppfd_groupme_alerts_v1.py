@@ -759,6 +759,22 @@ def _call_times_load(fp):
     except Exception:
         return defaultdict(list)
 
+
+def _call_events_load(fp):
+    try:
+        with open(fp) as f:
+            raw = json.load(f).get("call_events", {})
+        if not isinstance(raw, dict):
+            return {}
+        return {
+            str(key): value
+            for key, value in raw.items()
+            if str(key).strip() and isinstance(value, (str, dict))
+        }
+    except Exception:
+        return {}
+
+
 def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hospital_count=None, ride_in_count=None, duration_known_calls=None, counted_calls=None):
     try:
         transporting_count = transporting_count if transporting_count is not None else {}
@@ -770,6 +786,10 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
             call_times = globals().get("CALL_TIMES")
         else:
             call_times = _call_times_load(fp)
+        if "CALL_EVENTS" in globals() and fp == globals().get("STATS_FN"):
+            call_events = globals().get("CALL_EVENTS")
+        else:
+            call_events = _call_events_load(fp)
         os.makedirs(os.path.dirname(fp), exist_ok=True)
         with open(fp + ".tmp", "w") as f:
             json.dump(
@@ -784,6 +804,7 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
                     "duration_known_calls": duration_known_calls,
                     "counted_calls": counted_calls,
                     "call_times": call_times,
+                    "call_events": call_events,
                 },
                 f,
             )
@@ -1409,6 +1430,7 @@ SHIFT_DT = shift_start(NOW)
 STATS_FN = stats_file(SHIFT_DT)
 CALLS, DUR_SEC, AFTER_0000, MAX_SEC, TRANSPORTING_COUNT, AT_HOSPITAL_COUNT, RIDE_IN_COUNT, DURATION_KNOWN_CALLS, COUNTED_CALLS = _stats_load(STATS_FN)
 CALL_TIMES = _call_times_load(STATS_FN)
+CALL_EVENTS = _call_events_load(STATS_FN)
 P_STATS_FN = personnel_stats_file(SHIFT_DT)
 PERSONNEL_NAMES, P_CALLS, P_DUR_SEC, P_AFTER_0000, P_MAX_SEC, P_TRANSPORTING_COUNT, P_AT_HOSPITAL_COUNT, P_RIDE_IN_COUNT = _pstats_load(P_STATS_FN)
 
@@ -1647,7 +1669,12 @@ while not TEST_MODE:
                         if not already_counted:
                             COUNTED_CALLS.add(counted_key)
                             CALLS[uid] += 1
-                            CALL_TIMES[uid].append((rcv or now).isoformat())
+                            call_timestamp = (rcv or now).isoformat()
+                            CALL_TIMES[uid].append(call_timestamp)
+                            CALL_EVENTS[counted_key] = {
+                                "timestamp": call_timestamp,
+                                "source": "live_911",
+                            }
                             try:
                                 if rcv and rcv.time() < datetime.time(7):
                                     AFTER_0000[uid] += 1
@@ -1883,7 +1910,7 @@ while not TEST_MODE:
             P_RIDE_IN_COUNT,
         )
         CALLS.clear(); DUR_SEC.clear(); AFTER_0000.clear(); MAX_SEC.clear(); TRANSPORTING_COUNT.clear(); AT_HOSPITAL_COUNT.clear(); RIDE_IN_COUNT.clear()
-        CALL_TIMES.clear()
+        CALL_TIMES.clear(); CALL_EVENTS.clear()
         PERSONNEL_NAMES.clear(); P_CALLS.clear(); P_DUR_SEC.clear(); P_AFTER_0000.clear(); P_MAX_SEC.clear(); P_TRANSPORTING_COUNT.clear(); P_AT_HOSPITAL_COUNT.clear(); P_RIDE_IN_COUNT.clear(); DURATION_KNOWN_CALLS.clear(); COUNTED_CALLS.clear()
         SHIFT_DT = current_shift_start
         STATS_FN = stats_file(SHIFT_DT)
