@@ -1223,7 +1223,9 @@ def _daily_call_frequency(stats_dir: Path, shift_date: datetime.date, now: datet
             parsed_values.append(parsed)
 
         if incident_keyed:
-            deduped_values = sorted(set(parsed_values))
+            # The call_events object is already unique by (incident_id, unit).
+            # Distinct calls can legitimately have the same recorded timestamp.
+            deduped_values = sorted(parsed_values)
         else:
             # Legacy notification lists can contain attachment/status duplicates.
             deduped_values: list[datetime.datetime] = []
