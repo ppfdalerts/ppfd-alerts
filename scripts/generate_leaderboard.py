@@ -77,6 +77,22 @@ def load_stats(fp: Path):
         return defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int), defaultdict(int), None
 
 
+def load_call_times(fp: Path) -> dict[str, list[str]]:
+    """Load optional live call timestamps without changing the stats tuple API."""
+    try:
+        with fp.open("r", encoding="utf-8") as f:
+            raw = json.load(f).get("call_times", {})
+        if not isinstance(raw, dict):
+            return {}
+        return {
+            str(unit): [str(value) for value in values if value]
+            for unit, values in raw.items()
+            if isinstance(values, list)
+        }
+    except Exception:
+        return {}
+
+
 def load_feed_health(path: Path | None):
     """Load and re-evaluate live feed freshness at generation time."""
     if not path or not path.exists():
@@ -1146,6 +1162,47 @@ def _date_range_for_period(now: datetime.datetime, period_key: str) -> tuple[dat
 
 def _format_range(start_date: datetime.date, end_date: datetime.date) -> str:
     return f"{start_date:%Y-%m-%d} - {end_date:%Y-%m-%d}"
+
+
+def _daily_call_frequency(stats_dir: Path, shift_date: datetime.date, now: datetime.datetime) -> dict[str, list[int]]:
+    """Return hourly call counts from 07:00 through the latest known hour."""
+    times = load_call_times(stats_dir / f"shift_stats_{shift_date:%Y-%m-%d}.json")
+    if not times:
+        return {}
+    shift_base = datetime.datetime.combine(shift_date, datetime.time(7, 0))
+    current_shift_date = shift_start(now).date()
+    if shift_date == current_shift_date:
+        visible_hours = min(24, max(1, int((now - shift_base).total_seconds() // 3600) + 1))
+    else:
+        visible_hours = 0
+    buckets: dict[str, list[int]] = {}
+    for unit, values in times.items():
+        if unit not in WATCH_SET:
+            continue
+        unit_buckets = [0] * (visible_hours or 24)
+        latest_bucket = -1
+        for value in values:
+            try:
+                parsed = datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+                if parsed.tzinfo:
+                    parsed = parsed.astimezone().replace(tzinfo=None)
+                bucket = int((parsed - shift_base).total_seconds() // 3600)
+            except Exception:
+                continue
+            if 0 <= bucket < 24:
+                if bucket >= len(unit_buckets):
+                    unit_buckets.extend([0] * (bucket + 1 - len(unit_buckets)))
+                unit_buckets[bucket] += 1
+                latest_bucket = max(latest_bucket, bucket)
+        if latest_bucket >= 0:
+            buckets[unit] = unit_buckets[:latest_bucket + 1] if not visible_hours else unit_buckets
+    return buckets
+
+
+def _attach_daily_call_frequency(period_payload: dict, stats_dir: Path, shift_date: datetime.date, now: datetime.datetime) -> None:
+    frequency = _daily_call_frequency(stats_dir, shift_date, now)
+    for row in period_payload.get("rows", []) or []:
+        row["call_frequency"] = frequency.get(row.get("unit"), [])
 
 
 def _list_shift_stat_dates(stats_dir: Path) -> list[datetime.date]:
