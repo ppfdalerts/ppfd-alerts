@@ -93,6 +93,33 @@ def load_call_times(fp: Path) -> dict[str, list[str]]:
         return {}
 
 
+def load_call_events(fp: Path) -> dict[str, list[str]]:
+    """Load incident-keyed timestamps grouped by unit."""
+    try:
+        with fp.open("r", encoding="utf-8") as f:
+            raw = json.load(f).get("call_events", {})
+        if not isinstance(raw, dict):
+            return {}
+        grouped: dict[str, list[str]] = defaultdict(list)
+        for key, value in raw.items():
+            text_key = str(key)
+            if "|" not in text_key:
+                continue
+            _incident_id, raw_unit = text_key.rsplit("|", 1)
+            unit = _canonical_unit(raw_unit)
+            if not unit:
+                continue
+            if isinstance(value, dict):
+                timestamp = value.get("timestamp")
+            else:
+                timestamp = value
+            if timestamp:
+                grouped[unit].append(str(timestamp))
+        return {unit: values for unit, values in grouped.items() if values}
+    except Exception:
+        return {}
+
+
 def load_feed_health(path: Path | None):
     """Load and re-evaluate live feed freshness at generation time."""
     if not path or not path.exists():
@@ -1165,8 +1192,12 @@ def _format_range(start_date: datetime.date, end_date: datetime.date) -> str:
 
 
 def _daily_call_frequency(stats_dir: Path, shift_date: datetime.date, now: datetime.datetime) -> dict[str, list[int]]:
-    """Return hourly call counts, collapsing repeated notifications for one attachment."""
-    times = load_call_times(stats_dir / f"shift_stats_{shift_date:%Y-%m-%d}.json")
+    """Return hourly call counts from incident-keyed events or legacy timestamps."""
+    stats_path = stats_dir / f"shift_stats_{shift_date:%Y-%m-%d}.json"
+    times = load_call_events(stats_path)
+    incident_keyed = bool(times)
+    if not times:
+        times = load_call_times(stats_path)
     if not times:
         return {}
     shift_base = datetime.datetime.combine(shift_date, datetime.time(7, 0))
@@ -1191,14 +1222,15 @@ def _daily_call_frequency(stats_dir: Path, shift_date: datetime.date, now: datet
                 continue
             parsed_values.append(parsed)
 
-        # GroupMe and the local alert log can both retain notifications for the
-        # same attachment. A unit cannot begin a second call while still attached,
-        # so collapse timestamps less than 30 minutes apart for this chart.
-        deduped_values: list[datetime.datetime] = []
-        for parsed in sorted(parsed_values):
-            if deduped_values and parsed - deduped_values[-1] < datetime.timedelta(minutes=30):
-                continue
-            deduped_values.append(parsed)
+        if incident_keyed:
+            deduped_values = sorted(set(parsed_values))
+        else:
+            # Legacy notification lists can contain attachment/status duplicates.
+            deduped_values: list[datetime.datetime] = []
+            for parsed in sorted(parsed_values):
+                if deduped_values and parsed - deduped_values[-1] < datetime.timedelta(minutes=30):
+                    continue
+                deduped_values.append(parsed)
 
         for parsed in deduped_values:
             bucket = int((parsed - shift_base).total_seconds() // 3600)
