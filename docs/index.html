@@ -43,18 +43,15 @@
   .col-unit{width:20%}
   .col-calls{width:16%}
   .col-rate{width:11%; white-space:nowrap}
-  #board-today .col-rate, #board-prior .col-rate{width:254px; min-width:254px}
-  .frequency-chart{display:flex; align-items:flex-end; gap:6px; min-width:236px}
-  .frequency-rate{width:46px; flex:0 0 46px; color:#bfdbfe; font-size:10px; line-height:1.15; text-align:center}
-  .frequency-bars{display:grid; grid-template-columns:repeat(6, 1fr); gap:3px; width:184px}
-  .frequency-bin{display:grid; grid-template-rows:12px 24px 10px; justify-items:center; align-items:end; min-width:0}
-  .frequency-count{font-size:10px; line-height:12px; color:#e5e7eb; font-variant-numeric:tabular-nums}
-  .frequency-track{height:24px; width:15px; display:flex; align-items:flex-end; border-bottom:1px solid #344155}
-  .frequency-bar{display:block; width:15px; min-height:2px; border-radius:3px 3px 1px 1px; background:linear-gradient(180deg,#93c5fd,#2563eb)}
-  .frequency-bin.future .frequency-count, .frequency-bin.future .frequency-label{color:#4b5563}
-  .frequency-bin.future .frequency-track{border-bottom-color:#252d39}
-  .frequency-bin.future .frequency-bar{background:#252d39}
-  .frequency-label{font-size:9px; line-height:10px; color:#7f8b9b; font-variant-numeric:tabular-nums}
+  #board-today .col-rate, #board-prior .col-rate{width:340px; min-width:340px}
+  .frequency-chart{display:block; min-width:322px}
+  .frequency-summary{margin-bottom:5px; color:#bfdbfe; font-size:11px; line-height:1.2; text-align:left}
+  .frequency-blocks{display:grid; grid-template-columns:repeat(3, 1fr); gap:4px; width:322px}
+  .frequency-bin{display:flex; align-items:center; justify-content:space-between; gap:5px; min-width:0; padding:4px 6px; border:1px solid #334155; border-radius:6px; background:rgba(37,99,235,var(--activity-level,.12))}
+  .frequency-count{font-size:11px; line-height:1; color:#f8fafc; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .frequency-label{font-size:9px; line-height:1.1; color:#cbd5e1; white-space:nowrap}
+  .frequency-bin.future{border-style:dashed; border-color:#293241; background:#171c23}
+  .frequency-bin.future .frequency-count, .frequency-bin.future .frequency-label{color:#667085}
   .col-avg{width:22%}
   .col-max{width:22%}
   .col-after{width:20%}
@@ -213,12 +210,12 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Calls by Time</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (4-Hour Blocks)</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Calls by Time</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (4-Hour Blocks)</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
@@ -705,7 +702,7 @@
         cell.title='Call timestamps are not available for this shift';
         return;
       }
-      var labels=['07','11','15','19','23','03'];
+      var labels=['7-11 AM','11 AM-3 PM','3-7 PM','7-11 PM','11 PM-3 AM','3-7 AM'];
       var ranges=['07:00-11:00','11:00-15:00','15:00-19:00','19:00-23:00','23:00-03:00','03:00-07:00'];
       var totals=[0,0,0,0,0,0];
       hourly.slice(0,24).forEach(function(value, index){ totals[Math.floor(index/4)] += value; });
@@ -714,32 +711,27 @@
       var max=Math.max.apply(null, totals.slice(0,availableBlocks).concat([1]));
       var chart=document.createElement('div');
       chart.className='frequency-chart';
-      chart.setAttribute('role','img');
+      chart.setAttribute('role','group');
       chart.setAttribute('aria-label','Four-hour call totals: '+totals.slice(0,availableBlocks).join(', '));
       var avg=document.createElement('div');
-      avg.className='frequency-rate';
-      avg.innerHTML=(rate == null ? '--' : Number(rate).toFixed(2))+'/hr<br>'+timedCalls+'/'+Number(totalCalls || 0)+' timed';
+      avg.className='frequency-summary';
+      avg.textContent='Rate: '+(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr | Timeline: '+timedCalls+' of '+Number(totalCalls || 0)+' calls';
       chart.appendChild(avg);
       var bars=document.createElement('div');
-      bars.className='frequency-bars';
+      bars.className='frequency-blocks';
       totals.forEach(function(total, index){
         var available=index < availableBlocks;
         var bin=document.createElement('div');
         bin.className='frequency-bin'+(available ? '' : ' future');
         bin.title=ranges[index]+': '+(available ? total+' calls' : 'not reached');
-        var count=document.createElement('span');
-        count.className='frequency-count';
-        count.textContent=available ? String(total) : '--';
-        var track=document.createElement('span');
-        track.className='frequency-track';
-        var bar=document.createElement('span');
-        bar.className='frequency-bar';
-        bar.style.height=available ? Math.max(2,Math.round((total/max)*22))+'px' : '2px';
-        track.appendChild(bar);
+        if(available){ bin.style.setProperty('--activity-level', String((0.10+(total/max)*0.32).toFixed(2))); }
         var label=document.createElement('span');
         label.className='frequency-label';
         label.textContent=labels[index];
-        bin.appendChild(count); bin.appendChild(track); bin.appendChild(label); bars.appendChild(bin);
+        var count=document.createElement('span');
+        count.className='frequency-count';
+        count.textContent=available ? total+' '+(total===1 ? 'call' : 'calls') : 'Not reached';
+        bin.appendChild(label); bin.appendChild(count); bars.appendChild(bin);
       });
       chart.appendChild(bars);
       cell.appendChild(chart);
