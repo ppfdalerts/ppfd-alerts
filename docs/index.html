@@ -43,13 +43,18 @@
   .col-unit{width:20%}
   .col-calls{width:16%}
   .col-rate{width:11%; white-space:nowrap}
-  #board-today .col-rate, #board-prior .col-rate{width:340px; min-width:340px}
-  .frequency-chart{display:block; min-width:322px}
-  .frequency-summary{margin-bottom:5px; color:#bfdbfe; font-size:11px; line-height:1.2; text-align:left}
-  .frequency-blocks{display:grid; grid-template-columns:repeat(3, 1fr); gap:4px; width:322px}
-  .frequency-bin{display:flex; align-items:center; justify-content:space-between; gap:5px; min-width:0; padding:4px 6px; border:1px solid #334155; border-radius:6px; background:rgba(37,99,235,var(--activity-level,.12))}
-  .frequency-count{font-size:11px; line-height:1; color:#f8fafc; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap}
-  .frequency-label{font-size:9px; line-height:1.1; color:#cbd5e1; white-space:nowrap}
+  #board-today .col-rate, #board-prior .col-rate{width:292px; min-width:292px}
+  .frequency-chart{display:block; min-width:274px}
+  .frequency-summary{margin-bottom:3px; color:#bfdbfe; font-size:9px; line-height:1.1; text-align:left}
+  .frequency-blocks{display:grid; grid-template-columns:repeat(3, 1fr); gap:3px; width:274px}
+  .frequency-bin{display:flex; align-items:center; justify-content:space-between; gap:3px; min-width:0; padding:3px 4px; border:1px solid #334155; border-radius:5px}
+  .frequency-bin.volume-zero{background:#1b222c; border-color:#354052}
+  .frequency-bin.volume-low{background:rgba(22,163,74,.20); border-color:#16a34a}
+  .frequency-bin.volume-medium{background:rgba(234,179,8,.22); border-color:#ca8a04}
+  .frequency-bin.volume-high{background:rgba(249,115,22,.24); border-color:#ea580c}
+  .frequency-bin.volume-peak{background:rgba(239,68,68,.27); border-color:#ef4444}
+  .frequency-count{font-size:10px; line-height:1; color:#f8fafc; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .frequency-label{font-size:8px; line-height:1; color:#d5dce7; white-space:nowrap}
   .frequency-bin.future{border-style:dashed; border-color:#293241; background:#171c23}
   .frequency-bin.future .frequency-count, .frequency-bin.future .frequency-label{color:#667085}
   .col-avg{width:22%}
@@ -708,7 +713,6 @@
       hourly.slice(0,24).forEach(function(value, index){ totals[Math.floor(index/4)] += value; });
       var timedCalls=totals.reduce(function(sum,value){ return sum+value; },0);
       var availableBlocks=Math.min(6, Math.ceil(hourly.length/4));
-      var max=Math.max.apply(null, totals.slice(0,availableBlocks).concat([1]));
       var chart=document.createElement('div');
       chart.className='frequency-chart';
       chart.setAttribute('role','group');
@@ -724,7 +728,10 @@
         var bin=document.createElement('div');
         bin.className='frequency-bin'+(available ? '' : ' future');
         bin.title=ranges[index]+': '+(available ? total+' calls' : 'not reached');
-        if(available){ bin.style.setProperty('--activity-level', String((0.10+(total/max)*0.32).toFixed(2))); }
+        if(available){
+          var volumeClass=total===0 ? 'volume-zero' : total===1 ? 'volume-low' : total===2 ? 'volume-medium' : total===3 ? 'volume-high' : 'volume-peak';
+          bin.classList.add(volumeClass);
+        }
         var label=document.createElement('span');
         label.className='frequency-label';
         label.textContent=labels[index];
