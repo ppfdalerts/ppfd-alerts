@@ -464,6 +464,7 @@ function Get-SystemSourceMappings {
 
   $pairs = @(
     @{ Base = $WorkspaceRoot; Rel = 'backfill_personnel_stats.py';      Dest = 'backfill_personnel_stats.py' },
+    @{ Base = $WorkspaceRoot; Rel = 'backfill_unit_stats_from_csv.py';  Dest = 'backfill_unit_stats_from_csv.py' },
     @{ Base = $WorkspaceRoot; Rel = 'import_apparatus_roster.py';       Dest = 'import_apparatus_roster.py' },
     @{ Base = $WorkspaceRoot; Rel = 'install_groupme_task.ps1';         Dest = 'install_groupme_task.ps1' },
     @{ Base = $WorkspaceRoot; Rel = 'README_LEADERBOARD.md';            Dest = 'README_LEADERBOARD.md' },
