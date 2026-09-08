@@ -2120,6 +2120,7 @@ def main():
     month_start, month_end = _date_range_for_period(now, "month")
 
     today_period = compute_period(stats_dir, "day", now=now)
+    _attach_daily_call_frequency(today_period, stats_dir, shift_day, now)
     prior_period = compute_prior(stats_dir, now=now)
     week_period = compute_period(stats_dir, "week", now=now)
     month_period = compute_period(stats_dir, "month", now=now)
