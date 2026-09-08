@@ -43,9 +43,18 @@
   .col-unit{width:20%}
   .col-calls{width:16%}
   .col-rate{width:11%; white-space:nowrap}
-  .frequency-spark{display:block; width:82px; height:24px; overflow:visible}
-  .frequency-spark polyline{fill:none; stroke:#60a5fa; stroke-width:2; stroke-linejoin:round; stroke-linecap:round}
-  .frequency-spark circle{fill:#bfdbfe; stroke:#2563eb; stroke-width:1}
+  #board-today .col-rate, #board-prior .col-rate{width:250px; min-width:250px}
+  .frequency-chart{display:flex; align-items:flex-end; gap:6px; min-width:232px}
+  .frequency-rate{width:42px; flex:0 0 42px; color:#bfdbfe; font-size:10px; line-height:1.15; text-align:center}
+  .frequency-bars{display:grid; grid-template-columns:repeat(6, 1fr); gap:3px; width:184px}
+  .frequency-bin{display:grid; grid-template-rows:12px 24px 10px; justify-items:center; align-items:end; min-width:0}
+  .frequency-count{font-size:10px; line-height:12px; color:#e5e7eb; font-variant-numeric:tabular-nums}
+  .frequency-track{height:24px; width:15px; display:flex; align-items:flex-end; border-bottom:1px solid #344155}
+  .frequency-bar{display:block; width:15px; min-height:2px; border-radius:3px 3px 1px 1px; background:linear-gradient(180deg,#93c5fd,#2563eb)}
+  .frequency-bin.future .frequency-count, .frequency-bin.future .frequency-label{color:#4b5563}
+  .frequency-bin.future .frequency-track{border-bottom-color:#252d39}
+  .frequency-bin.future .frequency-bar{background:#252d39}
+  .frequency-label{font-size:9px; line-height:10px; color:#7f8b9b; font-variant-numeric:tabular-nums}
   .col-avg{width:22%}
   .col-max{width:22%}
   .col-after{width:20%}
@@ -204,12 +213,12 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Avg Calls/Hr</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Calls by Time</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Avg Calls/Hr</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Calls by Time</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
