@@ -855,6 +855,87 @@ def _pstats_save(
     except Exception as e:
         log(f"Personnel persist error: {e}")
 
+
+def _record_completed_duration(uid: str, rec: dict, dur_sec: float):
+    """Persist a completed call to the shift on which it started."""
+    target_date = rec.get("stats_date")
+    if not isinstance(target_date, datetime.date):
+        target_date = SHIFT_DT.date()
+    target_dt = datetime.datetime.combine(target_date, datetime.time())
+    pkeys = rec.get("personnel_keys") or []
+
+    if target_date == SHIFT_DT.date():
+        DUR_SEC[uid] += dur_sec
+        MAX_SEC[uid] = max(float(MAX_SEC.get(uid, 0) or 0), float(dur_sec))
+        DURATION_KNOWN_CALLS[uid] += 1
+        _stats_save(
+            STATS_FN,
+            CALLS,
+            DUR_SEC,
+            AFTER_0000,
+            MAX_SEC,
+            TRANSPORTING_COUNT,
+            AT_HOSPITAL_COUNT,
+            RIDE_IN_COUNT,
+            DURATION_KNOWN_CALLS,
+            COUNTED_CALLS,
+        )
+        if pkeys:
+            for pkey in pkeys:
+                P_DUR_SEC[pkey] += dur_sec
+                P_MAX_SEC[pkey] = max(float(P_MAX_SEC.get(pkey, 0) or 0), float(dur_sec))
+            _pstats_save(
+                P_STATS_FN,
+                PERSONNEL_NAMES,
+                P_CALLS,
+                P_DUR_SEC,
+                P_AFTER_0000,
+                P_MAX_SEC,
+                P_TRANSPORTING_COUNT,
+                P_AT_HOSPITAL_COUNT,
+                P_RIDE_IN_COUNT,
+            )
+        return
+
+    old_stats_fn = stats_file(target_dt)
+    old = _stats_load(old_stats_fn)
+    old_calls, old_dur, old_after, old_max, old_transport, old_hospital, old_ride, old_known, old_counted = old
+    old_dur[uid] += dur_sec
+    old_max[uid] = max(float(old_max.get(uid, 0) or 0), float(dur_sec))
+    old_known[uid] += 1
+    _stats_save(
+        old_stats_fn,
+        old_calls,
+        old_dur,
+        old_after,
+        old_max,
+        old_transport,
+        old_hospital,
+        old_ride,
+        old_known,
+        old_counted,
+    )
+    if pkeys:
+        old_pstats_fn = personnel_stats_file(target_dt)
+        old_p = _pstats_load(old_pstats_fn)
+        old_names, old_pcalls, old_pdur, old_pafter, old_pmax, old_ptransport, old_phospital, old_pride = old_p
+        for pkey in pkeys:
+            if pkey in PERSONNEL_NAMES and pkey not in old_names:
+                old_names[pkey] = PERSONNEL_NAMES[pkey]
+            old_pdur[pkey] += dur_sec
+            old_pmax[pkey] = max(float(old_pmax.get(pkey, 0) or 0), float(dur_sec))
+        _pstats_save(
+            old_pstats_fn,
+            old_names,
+            old_pcalls,
+            old_pdur,
+            old_pafter,
+            old_pmax,
+            old_ptransport,
+            old_phospital,
+            old_pride,
+        )
+
 def _is_transporting_status(status: str) -> bool:
     text = (status or "").strip().lower()
     if not text:
@@ -1526,6 +1607,7 @@ while not TEST_MODE:
                     ACTIVE[key] = rec = {
                         "status": status,
                         "start": start_time,
+                        "stats_date": SHIFT_DT.date(),
                         "events": [("dispatched", start_time)],
                         "ignore": bool(before_shift),
                         "after_midnight_recorded": False,
@@ -1706,38 +1788,9 @@ while not TEST_MODE:
                     LAST_FINISHED[uid] = rec["events"]
                     if uid in WATCH_SET and not rec.get("ignore"):
                         dur_sec = (rec["events"][-1][1] - rec["events"][0][1]).total_seconds()
-                        DUR_SEC[uid] += dur_sec
-                        MAX_SEC[uid] = max(int(MAX_SEC.get(uid, 0)), int(dur_sec))
-                        DURATION_KNOWN_CALLS[uid] += 1
-                        _stats_save(
-                            STATS_FN,
-                            CALLS,
-                            DUR_SEC,
-                            AFTER_0000,
-                            MAX_SEC,
-                            TRANSPORTING_COUNT,
-                            AT_HOSPITAL_COUNT,
-                            RIDE_IN_COUNT,
-                            DURATION_KNOWN_CALLS,
-                            COUNTED_CALLS,
-                        )
+                        _record_completed_duration(uid, rec, dur_sec)
                         stats_dirty = True
                         pkeys = rec.get("personnel_keys") or []
-                        if pkeys:
-                            for pkey in pkeys:
-                                P_DUR_SEC[pkey] += dur_sec
-                                P_MAX_SEC[pkey] = max(int(P_MAX_SEC.get(pkey, 0)), int(dur_sec))
-                            _pstats_save(
-                                P_STATS_FN,
-                                PERSONNEL_NAMES,
-                                P_CALLS,
-                                P_DUR_SEC,
-                                P_AFTER_0000,
-                                P_MAX_SEC,
-                                P_TRANSPORTING_COUNT,
-                                P_AT_HOSPITAL_COUNT,
-                                P_RIDE_IN_COUNT,
-                            )
 
             # --- ALERT: New Call (one-time per incident) ---
             # Post into each matching unit topic (R33, T33, etc.) plus LOG/main
