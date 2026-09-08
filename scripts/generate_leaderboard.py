@@ -106,7 +106,7 @@ def load_call_events(fp: Path) -> dict[str, list[str]]:
             if "|" not in text_key:
                 continue
             _incident_id, raw_unit = text_key.rsplit("|", 1)
-            unit = _canonical_unit(raw_unit)
+            unit = _normalize_unit_code(raw_unit)
             if not unit:
                 continue
             if isinstance(value, dict):
