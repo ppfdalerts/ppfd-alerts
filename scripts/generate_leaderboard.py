@@ -1195,7 +1195,7 @@ def _daily_call_frequency(stats_dir: Path, shift_date: datetime.date, now: datet
                 unit_buckets[bucket] += 1
                 latest_bucket = max(latest_bucket, bucket)
         if latest_bucket >= 0:
-            buckets[unit] = unit_buckets[:latest_bucket + 1] if not visible_hours else unit_buckets
+            buckets[unit] = unit_buckets
     return buckets
 
 
@@ -1523,7 +1523,7 @@ def _rows_from(
     ride_in: dict | None = None,
     duration_known_calls: dict | None = None,
     delta_map: dict | None = None,
-    period_hours: int | None = None,
+    period_hours: int | float | None = None,
 ):
     rows = []
     for unit, count in sorted(calls.items(), key=lambda kv: (-kv[1], kv[0])):
@@ -2025,6 +2025,10 @@ def compute_period(
             delta_map=delta_map,
         )
     else:
+        row_period_hours: int | float = _period_hours(period_start, period_end)
+        if period_key == "day" and period_start == shift_start(now).date():
+            elapsed = (now - shift_start(now)).total_seconds() / 3600.0
+            row_period_hours = min(24.0, max(1.0, elapsed))
         rows = _rows_from(
             calls,
             dur,
@@ -2033,7 +2037,7 @@ def compute_period(
             ride_in=ride_in,
             duration_known_calls=duration_known_calls,
             delta_map=delta_map,
-            period_hours=_period_hours(period_start, period_end),
+            period_hours=row_period_hours,
         )
     meta = {}
     if period_key == 'day':
@@ -2122,6 +2126,7 @@ def main():
     today_period = compute_period(stats_dir, "day", now=now)
     _attach_daily_call_frequency(today_period, stats_dir, shift_day, now)
     prior_period = compute_prior(stats_dir, now=now)
+    _attach_daily_call_frequency(prior_period, stats_dir, prior_day, now)
     week_period = compute_period(stats_dir, "week", now=now)
     month_period = compute_period(stats_dir, "month", now=now)
     year_period = compute_period(
