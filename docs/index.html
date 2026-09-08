@@ -45,7 +45,7 @@
   .col-rate{width:11%; white-space:nowrap}
   #board-today .col-rate, #board-prior .col-rate{width:250px; min-width:250px}
   .frequency-chart{display:flex; align-items:flex-end; gap:6px; min-width:232px}
-  .frequency-rate{width:42px; flex:0 0 42px; color:#bfdbfe; font-size:10px; line-height:1.15; text-align:center}
+  .frequency-rate{width:46px; flex:0 0 46px; color:#bfdbfe; font-size:10px; line-height:1.15; text-align:center}
   .frequency-bars{display:grid; grid-template-columns:repeat(6, 1fr); gap:3px; width:184px}
   .frequency-bin{display:grid; grid-template-rows:12px 24px 10px; justify-items:center; align-items:end; min-width:0}
   .frequency-count{font-size:10px; line-height:12px; color:#e5e7eb; font-variant-numeric:tabular-nums}
@@ -698,7 +698,7 @@
       var alpha=0.22+0.28*n;
       return 'background: hsla('+hue+',85%,52%,'+alpha+'); color:#0b0d10; font-weight:700; border-radius:6px; padding:2px 8px; display:inline-block;';
     }
-    function renderFrequency(cell, values, rate){
+    function renderFrequency(cell, values, rate, totalCalls){
       var hourly = Array.isArray(values) ? values.map(function(v){ return Number(v) || 0; }) : [];
       if(!hourly.length){
         cell.textContent='--';
@@ -709,6 +709,7 @@
       var ranges=['07:00-11:00','11:00-15:00','15:00-19:00','19:00-23:00','23:00-03:00','03:00-07:00'];
       var totals=[0,0,0,0,0,0];
       hourly.slice(0,24).forEach(function(value, index){ totals[Math.floor(index/4)] += value; });
+      var timedCalls=totals.reduce(function(sum,value){ return sum+value; },0);
       var availableBlocks=Math.min(6, Math.ceil(hourly.length/4));
       var max=Math.max.apply(null, totals.slice(0,availableBlocks).concat([1]));
       var chart=document.createElement('div');
@@ -717,7 +718,7 @@
       chart.setAttribute('aria-label','Four-hour call totals: '+totals.slice(0,availableBlocks).join(', '));
       var avg=document.createElement('div');
       avg.className='frequency-rate';
-      avg.innerHTML=(rate == null ? '--' : Number(rate).toFixed(2))+'<br>calls/hr';
+      avg.innerHTML=(rate == null ? '--' : Number(rate).toFixed(2))+'/hr<br>'+timedCalls+'/'+Number(totalCalls || 0)+' timed';
       chart.appendChild(avg);
       var bars=document.createElement('div');
       bars.className='frequency-bars';
@@ -757,7 +758,7 @@
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
       var tdRate=document.createElement('td'); tdRate.className='col-rate';
-      renderFrequency(tdRate, r.call_frequency, r.avg_calls_per_hour);
+      renderFrequency(tdRate, r.call_frequency, r.avg_calls_per_hour, r.calls);
       tr.appendChild(tdRate);
       var tdR=document.createElement('td'); tdR.className='col-calls';
       var rideIns=r.ride_in_count||0;
