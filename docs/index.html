@@ -43,6 +43,9 @@
   .col-unit{width:20%}
   .col-calls{width:16%}
   .col-rate{width:11%; white-space:nowrap}
+  .frequency-spark{display:block; width:82px; height:24px; overflow:visible}
+  .frequency-spark polyline{fill:none; stroke:#60a5fa; stroke-width:2; stroke-linejoin:round; stroke-linecap:round}
+  .frequency-spark circle{fill:#bfdbfe; stroke:#2563eb; stroke-width:1}
   .col-avg{width:22%}
   .col-max{width:22%}
   .col-after{width:20%}
@@ -686,6 +689,36 @@
       var alpha=0.22+0.28*n;
       return 'background: hsla('+hue+',85%,52%,'+alpha+'); color:#0b0d10; font-weight:700; border-radius:6px; padding:2px 8px; display:inline-block;';
     }
+    function renderFrequency(cell, values, rate){
+      var points = Array.isArray(values) ? values.map(function(v){ return Number(v) || 0; }) : [];
+      if(!points.length){
+        cell.textContent='--';
+        cell.title='Call timestamps are not available for this shift';
+        return;
+      }
+      var w=82, h=24, pad=3, max=Math.max.apply(null, points.concat([1]));
+      var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('class','frequency-spark');
+      svg.setAttribute('viewBox','0 0 '+w+' '+h);
+      svg.setAttribute('role','img');
+      svg.setAttribute('aria-label','Calls per hour: '+points.join(', '));
+      var poly=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+      var coords=points.map(function(v,i){
+        var x=points.length===1 ? w/2 : pad + (i*(w-pad*2)/(points.length-1));
+        var y=h-pad - ((v/max)*(h-pad*2));
+        return x.toFixed(1)+','+y.toFixed(1);
+      }).join(' ');
+      poly.setAttribute('points',coords);
+      svg.appendChild(poly);
+      var last=points.length-1;
+      var lastX=points.length===1 ? w/2 : pad + (last*(w-pad*2)/(points.length-1));
+      var lastY=h-pad - ((points[last]/max)*(h-pad*2));
+      var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('cx',lastX.toFixed(1)); dot.setAttribute('cy',lastY.toFixed(1)); dot.setAttribute('r','2.5');
+      svg.appendChild(dot);
+      cell.appendChild(svg);
+      cell.title='Hourly calls since 07:00: '+points.join(', ')+' | Average: '+(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr';
+    }
     rows.forEach(function(r, idx){
       var tr=document.createElement('tr');
       tr.dataset.unit = r.unit;
@@ -700,7 +733,7 @@
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
       var tdRate=document.createElement('td'); tdRate.className='col-rate';
-      tdRate.textContent = r.avg_calls_per_hour == null ? '--' : Number(r.avg_calls_per_hour).toFixed(2);
+      renderFrequency(tdRate, r.call_frequency, r.avg_calls_per_hour);
       tr.appendChild(tdRate);
       var tdR=document.createElement('td'); tdR.className='col-calls';
       var rideIns=r.ride_in_count||0;
