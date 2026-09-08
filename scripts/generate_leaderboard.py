@@ -1660,7 +1660,7 @@ def _unit_shift_detail_map(
             if unit not in WATCH_SET:
                 continue
             c = int(calls.get(unit, 0))
-            s = int(dur.get(unit, 0))
+            s = float(dur.get(unit, 0) or 0)
             a = int(after.get(unit, 0))
             mx = int(max_sec.get(unit, 0))
             ri = int(ride_in.get(unit, 0))
