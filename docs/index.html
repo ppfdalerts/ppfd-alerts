@@ -200,12 +200,12 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Avg Calls/Hr</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Avg Calls/Hr</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
@@ -213,7 +213,7 @@
       <div class="body"><table id="board-week"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
-          <th class="col-total" rowspan="2">Cumulative Calls</th>
+          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th>
           <th colspan="3">Total Calls</th>
           <th colspan="3">Single-Shift Max Calls</th>
           <th colspan="3">Avg. Call Duration (Mins)</th>
@@ -238,7 +238,7 @@
       <div class="body"><table id="board-month"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
-          <th class="col-total" rowspan="2">Cumulative Calls</th>
+          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th>
           <th colspan="3">Total Calls</th>
           <th colspan="3">Single-Shift Max Calls</th>
           <th colspan="3">Avg. Call Duration (Mins)</th>
@@ -263,7 +263,7 @@
       <div class="body"><table id="board-year"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
-          <th class="col-total" rowspan="2">Cumulative Calls</th>
+          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th>
           <th colspan="3">Total Calls</th>
           <th colspan="3">Single-Shift Max Calls</th>
           <th colspan="3">Avg. Call Duration (Mins)</th>
@@ -309,6 +309,7 @@
               <th class="order-col">#</th>
               <th data-sort="name">Name</th>
               <th data-sort="total_calls">Total Calls</th>
+              <th data-sort="avg_calls_per_hour">Avg Calls/Hr</th>
               <th data-sort="total_hours_worked">Hours Worked</th>
               <th data-sort="ride_in_count">Ride-Ins</th>
               <th data-sort="single_shift_max_calls">Single-Shift Max Calls</th>
@@ -697,6 +698,9 @@
       }
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
+      var tdRate=document.createElement('td'); tdRate.className='col-rate';
+      tdRate.textContent = r.avg_calls_per_hour == null ? '--' : Number(r.avg_calls_per_hour).toFixed(2);
+      tr.appendChild(tdRate);
       var tdR=document.createElement('td'); tdR.className='col-calls';
       var rideIns=r.ride_in_count||0;
       if(rideIns>0){ tdR.innerHTML='<span class="pill-badge ride-badge">'+rideIns+'</span>'; }
@@ -723,7 +727,7 @@
     var tbody=table.querySelector('tbody');
     tbody.innerHTML='';
     var hasCumulative = periodKey === 'week' || periodKey === 'month' || periodKey === 'year' || periodKey === 'rolling_year';
-    var thCount=hasCumulative ? 24 : 23;
+    var thCount=hasCumulative ? 25 : 24;
     if(!data || !Array.isArray(data.rows) || data.rows.length===0){
       var tr=document.createElement('tr'); var td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
@@ -770,8 +774,12 @@
         var totalText=String(Number(r.total_calls || 0));
         if(idx===cumulativeWinner){ tdTotal.innerHTML='<span class="cumulative-win">'+totalText+'</span>'; }
         else { tdTotal.textContent=totalText; }
-        tr.appendChild(tdTotal);
+       tr.appendChild(tdTotal);
       }
+      var tdRate=document.createElement('td');
+      tdRate.className='col-rate';
+      tdRate.textContent = r.avg_calls_per_hour == null ? '--' : Number(r.avg_calls_per_hour).toFixed(2);
+      tr.appendChild(tdRate);
       (function(){
         var classes=['valA','valB','valC'];
         function renderGroup(arr, isFloat, lowestWins, allowZero){
@@ -1090,6 +1098,7 @@
   var personnelSortTypes = {
     name: 'string',
     total_calls: 'number',
+    avg_calls_per_hour: 'number',
     total_hours_worked: 'number',
     ride_in_count: 'number',
     single_shift_max_calls: 'number',
@@ -1190,6 +1199,7 @@
       addCell(String(idx + 1), 'personnel-order');
       addCell(r.name || r.person_id || '');
       addCell(String(r.total_calls || 0));
+      addCell(r.avg_calls_per_hour != null ? Number(r.avg_calls_per_hour).toFixed(2) : '--');
       addCell(r.total_hours_worked != null ? Number(r.total_hours_worked).toFixed(1) : '--');
       addCell(String(r.ride_in_count || 0));
       addCell(String(r.single_shift_max_calls || 0));
@@ -1337,9 +1347,9 @@
     if(panel === 'today' || panel === 'prior'){
       var p = data[panel] || {rows:[]};
       var rows = (p.rows || []).map(function(r){
-        return [r.unit || '', Number(r.calls || 0), Number(r.ride_in_count || 0), Number(r.delta_calls || 0), csvMaybeFloat(r.avg_min), csvMaybeFloat(r.max_min), Number(r.after_0000 || 0)];
+        return [r.unit || '', Number(r.calls || 0), csvMaybeFloat(r.avg_calls_per_hour), Number(r.ride_in_count || 0), Number(r.delta_calls || 0), csvMaybeFloat(r.avg_min), csvMaybeFloat(r.max_min), Number(r.after_0000 || 0)];
       });
-      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
+      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Avg Calls/Hr','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
       return;
     }
     if(panel === 'week' || panel === 'month' || panel === 'year'){
@@ -1358,11 +1368,11 @@
         var afm = r.after_max_abc || [0,0,0];
         var ri = r.ride_in_abc || [0,0,0];
         var cumulative = (panel === 'week' || panel === 'month' || panel === 'year') ? [Number(r.total_calls || 0)] : [];
-        return [r.unit || ''].concat(cumulative, [c[0], c[1], c[2], cm[0], cm[1], cm[2], csvMaybeFloat(a[0]), csvMaybeFloat(a[1]), csvMaybeFloat(a[2]), csvMaybeFloat(m[0]), csvMaybeFloat(m[1]), csvMaybeFloat(m[2]), af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2], Number(r.delta_calls || 0)]);
+        return [r.unit || ''].concat(cumulative, [csvMaybeFloat(r.avg_calls_per_hour), c[0], c[1], c[2], cm[0], cm[1], cm[2], csvMaybeFloat(a[0]), csvMaybeFloat(a[1]), csvMaybeFloat(a[2]), csvMaybeFloat(m[0]), csvMaybeFloat(m[1]), csvMaybeFloat(m[2]), af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2], Number(r.delta_calls || 0)]);
       });
       downloadCsv(
         'ppfd_' + exportKey + '_' + ts + '.csv',
-        (panel === 'week' || panel === 'month' || panel === 'year' ? ['Unit','Cumulative Calls'] : ['Unit']).concat(['Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Ride-Ins A','Ride-Ins B','Ride-Ins C','Change vs Last Period']),
+         (panel === 'week' || panel === 'month' || panel === 'year' ? ['Unit','Cumulative Calls','Avg Calls/Hr'] : ['Unit','Avg Calls/Hr']).concat(['Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Ride-Ins A','Ride-Ins B','Ride-Ins C','Change vs Last Period']),
         rowsW
       );
       return;
@@ -1374,6 +1384,7 @@
           idx + 1,
           r.name || r.person_id || '',
           Number(r.total_calls || 0),
+          csvMaybeFloat(r.avg_calls_per_hour),
           r.total_hours_worked == null ? '' : Number(r.total_hours_worked).toFixed(1),
           Number(r.ride_in_count || 0),
           Number(r.delta_calls || 0),
@@ -1387,7 +1398,7 @@
       });
       downloadCsv(
         'ppfd_personnel_' + (personnelState.period || 'period') + '_' + ts + '.csv',
-        ['#','Name','Total Calls','Hours Worked','Ride-Ins','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
+         ['#','Name','Total Calls','Avg Calls/Hr','Hours Worked','Ride-Ins','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
         rowsP
       );
       return;
