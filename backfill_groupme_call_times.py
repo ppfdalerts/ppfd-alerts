@@ -158,20 +158,42 @@ def list_stat_dates(stats_dir: Path) -> list[dt.date]:
     return sorted(dates)
 
 
-def load_call_times(path: Path) -> dict[str, list[str]]:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        raw = payload.get("call_times", {})
-        if isinstance(raw, dict):
-            return {str(k): list(v) for k, v in raw.items() if isinstance(v, list)}
-    except Exception:
-        pass
-    return {}
-
-
-def save_call_times(path: Path, call_times: dict[str, list[str]]) -> None:
+def load_event_ledger(path: Path) -> tuple[dict[str, list[str]], dict[str, dict]]:
     payload = json.loads(path.read_text(encoding="utf-8"))
-    payload["call_times"] = {unit: sorted(set(values)) for unit, values in call_times.items() if values}
+    counted_by_unit: dict[str, list[str]] = {}
+    for raw_key in payload.get("counted_calls") or []:
+        key = str(raw_key)
+        if "|" not in key:
+            continue
+        incident_id, unit = key.rsplit("|", 1)
+        if unit in WATCH_UNITS and incident_id:
+            counted_by_unit.setdefault(unit, []).append(incident_id)
+    for unit in counted_by_unit:
+        counted_by_unit[unit] = sorted(set(counted_by_unit[unit]), key=lambda value: (not value.isdigit(), int(value) if value.isdigit() else value))
+    raw_events = payload.get("call_events", {})
+    events = dict(raw_events) if isinstance(raw_events, dict) else {}
+    return counted_by_unit, events
+
+
+def event_timestamp(value) -> str:
+    if isinstance(value, dict):
+        return str(value.get("timestamp") or "")
+    return str(value or "")
+
+
+def minute_key(value: str) -> str:
+    try:
+        parsed = dt.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if parsed.tzinfo:
+            parsed = parsed.astimezone().replace(tzinfo=None)
+        return parsed.strftime("%Y-%m-%dT%H:%M")
+    except Exception:
+        return str(value)[:16]
+
+
+def save_call_events(path: Path, call_events: dict[str, dict]) -> None:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["call_events"] = dict(sorted(call_events.items()))
     temp = path.with_suffix(path.suffix + ".tmp")
     temp.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     temp.replace(path)
@@ -240,23 +262,45 @@ def main() -> int:
     for message in load_alert_log_messages(Path(args.alerts_log)):
         consider_message(message, None)
 
+    records_by_day_unit: dict[tuple[str, str], list[str]] = {}
+    for (unit, shift_date, _hhmm, _signature), timestamp in all_records.items():
+        records_by_day_unit.setdefault((shift_date, unit), []).append(timestamp)
+
     added_by_date: dict[str, int] = {}
+    unmatched_by_date: dict[str, int] = {}
     for day in dates:
         if day < start or day > end:
             continue
         path = stats_dir / f"shift_stats_{day:%Y-%m-%d}.json"
-        call_times = load_call_times(path)
-        before = sum(len(values) for values in call_times.values())
-        for (unit, shift_date, _hhmm, _signature), timestamp in all_records.items():
-            if shift_date == day.isoformat():
-                call_times.setdefault(unit, []).append(timestamp)
-        after = sum(len(set(values)) for values in call_times.values())
-        if after > before and not args.dry_run:
-            save_call_times(path, call_times)
-        if after > before:
-            added_by_date[day.isoformat()] = after - before
+        counted_by_unit, call_events = load_event_ledger(path)
+        before = len(call_events)
+        unmatched = 0
+        for unit, incident_ids in counted_by_unit.items():
+            candidates = sorted(set(records_by_day_unit.get((day.isoformat(), unit), [])))
+            existing_keys = {f"{incident_id}|{unit}" for incident_id in incident_ids if f"{incident_id}|{unit}" in call_events}
+            existing_minutes = {minute_key(event_timestamp(call_events[key])) for key in existing_keys}
+            candidates = [timestamp for timestamp in candidates if minute_key(timestamp) not in existing_minutes]
+            remaining_ids = [incident_id for incident_id in incident_ids if f"{incident_id}|{unit}" not in call_events]
+            for incident_id, timestamp in zip(remaining_ids, candidates):
+                call_events[f"{incident_id}|{unit}"] = {
+                    "timestamp": timestamp,
+                    "source": "alert_history_inferred",
+                }
+            unmatched += max(0, len(remaining_ids) - len(candidates))
+        added = len(call_events) - before
+        if added and not args.dry_run:
+            save_call_events(path, call_events)
+        if added:
+            added_by_date[day.isoformat()] = added
+        if unmatched:
+            unmatched_by_date[day.isoformat()] = unmatched
 
-    print(json.dumps({"channels": len(channels), "records": len(all_records), "added_by_date": added_by_date}, indent=2))
+    print(json.dumps({
+        "channels": len(channels),
+        "notification_records": len(all_records),
+        "events_added_by_date": added_by_date,
+        "calls_without_retained_timestamp_by_date": unmatched_by_date,
+    }, indent=2))
     return 0
 
 
