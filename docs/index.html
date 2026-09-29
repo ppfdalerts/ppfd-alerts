@@ -723,47 +723,92 @@
       var alpha=0.22+0.28*n;
       return 'background: hsla('+hue+',85%,52%,'+alpha+'); color:#0b0d10; font-weight:700; border-radius:6px; padding:2px 8px; display:inline-block;';
     }
-    function renderFrequency(cell, values, rate, totalCalls){
-      var hourly = Array.isArray(values) ? values.map(function(v){ return Number(v) || 0; }) : [];
-      if(!hourly.length){
-        cell.textContent='--';
-        cell.title='Call timestamps are not available for this shift';
-        return;
-      }
-      var labels=['7-11 AM','11 AM-3 PM','3-7 PM','7-11 PM','11 PM-3 AM','3-7 AM'];
-      var ranges=['07:00-11:00','11:00-15:00','15:00-19:00','19:00-23:00','23:00-03:00','03:00-07:00'];
-      var totals=[0,0,0,0,0,0];
-      hourly.slice(0,24).forEach(function(value, index){ totals[Math.floor(index/4)] += value; });
-      var timedCalls=totals.reduce(function(sum,value){ return sum+value; },0);
-      var availableBlocks=Math.min(6, Math.ceil(hourly.length/4));
+    function formatActivityDuration(seconds){
+      if(seconds == null || !isFinite(Number(seconds))) return '--';
+      var total=Math.max(0, Math.round(Number(seconds)/60));
+      var hours=Math.floor(total/60), mins=total%60;
+      if(hours && mins) return hours+'h '+mins+'m';
+      if(hours) return hours+'h';
+      return mins+'m';
+    }
+    function activityDate(value){
+      if(!value) return null;
+      var d=new Date(value);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    function activityTime(value){
+      var d=activityDate(value);
+      return d ? d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : '--';
+    }
+    function renderActivityTimeline(cell, records, rate, totalCalls, activeSeconds, utilization, exactDuration, meta){
+      var calls=Array.isArray(records) ? records : [];
       var chart=document.createElement('div');
-      chart.className='frequency-chart';
+      chart.className='activity-chart';
       chart.setAttribute('role','group');
-      chart.setAttribute('aria-label','Four-hour call totals: '+totals.slice(0,availableBlocks).join(', '));
-      var avg=document.createElement('div');
-      avg.className='frequency-summary';
-      avg.textContent='Rate: '+(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr | Timeline: '+timedCalls+' of '+Number(totalCalls || 0)+' calls';
-      chart.appendChild(avg);
-      var bars=document.createElement('div');
-      bars.className='frequency-blocks';
-      totals.forEach(function(total, index){
-        var available=index < availableBlocks;
-        var bin=document.createElement('div');
-        bin.className='frequency-bin'+(available ? '' : ' future');
-        bin.title=ranges[index]+': '+(available ? total+' calls' : 'not reached');
-        if(available){
-          var volumeClass=total===0 ? 'volume-zero' : total===1 ? 'volume-low' : total===2 ? 'volume-medium' : total===3 ? 'volume-high' : 'volume-peak';
-          bin.classList.add(volumeClass);
+      chart.setAttribute('aria-label','24-hour call activity timeline with '+Number(totalCalls || 0)+' calls');
+      var summary=document.createElement('div');
+      summary.className='activity-summary';
+      summary.textContent=(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr • '+Number(totalCalls || 0)+' calls • '+(exactDuration ? '' : '~')+formatActivityDuration(activeSeconds)+' active';
+      chart.appendChild(summary);
+
+      var timeline=document.createElement('div');
+      timeline.className='activity-timeline';
+      var shiftStart=activityDate(meta && meta.shift_start);
+      if(!shiftStart){
+        var first= calls.length ? activityDate(calls[0].start) : null;
+        shiftStart=first ? new Date(first.getFullYear(), first.getMonth(), first.getDate(), 7, 0, 0, 0) : new Date();
+      }
+      var shiftEnd=new Date(shiftStart.getTime()+24*60*60*1000);
+      var now=new Date();
+      var elapsed=Math.max(0, Math.min(24*60*60*1000, now.getTime()-shiftStart.getTime()));
+      var isCurrent=meta && meta.is_current_shift;
+      timeline.style.setProperty('--activity-elapsed', (isCurrent ? (elapsed/(24*60*60*1000)*100) : 100)+'%');
+      calls.forEach(function(record){
+        var start=activityDate(record.start);
+        if(!start) return;
+        var end=activityDate(record.end);
+        var temporaryEnd=false;
+        if(!end && isCurrent && start.getTime() <= now.getTime()){
+          end=now;
+          temporaryEnd=true;
         }
-        var label=document.createElement('span');
-        label.className='frequency-label';
-        label.textContent=labels[index];
-        var count=document.createElement('span');
-        count.className='frequency-count';
-        count.textContent=available ? total+' '+(total===1 ? 'call' : 'calls') : 'Not reached';
-        bin.appendChild(label); bin.appendChild(count); bars.appendChild(bin);
+        var clippedStart=new Date(Math.max(start.getTime(), shiftStart.getTime()));
+        var clippedEnd=end ? new Date(Math.min(end.getTime(), shiftEnd.getTime())) : null;
+        if(clippedEnd && clippedEnd.getTime()<clippedStart.getTime()) clippedEnd=clippedStart;
+        var left=((clippedStart.getTime()-shiftStart.getTime())/(24*60*60*1000))*100;
+        var width=clippedEnd ? ((clippedEnd.getTime()-clippedStart.getTime())/(24*60*60*1000))*100 : 0;
+        if(left<0 || left>100) return;
+        var segment=document.createElement('div');
+        segment.className='activity-segment';
+        var duration=record.duration_sec != null ? Number(record.duration_sec) : (clippedEnd ? Math.max(0,(clippedEnd-clippedStart)/1000) : null);
+        if(duration == null || !isFinite(duration)) segment.classList.add('unknown');
+        else if(duration < 1800) segment.classList.add('short');
+        else if(duration < 3600) segment.classList.add('medium');
+        else if(duration < 5400) segment.classList.add('long');
+        else segment.classList.add('critical');
+        segment.style.left=Math.max(0, Math.min(100, left))+'%';
+        segment.style.width=Math.max(0, Math.min(100-left, width))+'%';
+        var tooltip=[];
+        if(record.call_type) tooltip.push(String(record.call_type));
+        if(record.incident_id) tooltip.push('Call #'+record.incident_id);
+        tooltip.push('Start: '+activityTime(record.start));
+        tooltip.push('Clear: '+(temporaryEnd || record.ongoing ? 'Ongoing' : (record.end ? activityTime(record.end) : '--')));
+        tooltip.push('Duration: '+(duration == null ? '--' : formatActivityDuration(duration)));
+        segment.title=tooltip.join('\n');
+        timeline.appendChild(segment);
       });
-      chart.appendChild(bars);
+      if(isCurrent){
+        var marker=document.createElement('div');
+        marker.className='activity-now';
+        marker.style.left=(Math.max(0,Math.min(100,elapsed/(24*60*60*1000)*100)))+'%';
+        marker.title='Current time';
+        timeline.appendChild(marker);
+      }
+      chart.appendChild(timeline);
+      var scale=document.createElement('div');
+      scale.className='activity-scale';
+      ['7A','11A','3P','7P','11P','3A','7A'].forEach(function(label){ var span=document.createElement('span'); span.textContent=label; scale.appendChild(span); });
+      chart.appendChild(scale);
       cell.appendChild(chart);
     }
     rows.forEach(function(r, idx){
@@ -780,8 +825,14 @@
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
       var tdRate=document.createElement('td'); tdRate.className='col-rate';
-      renderFrequency(tdRate, r.call_frequency, r.avg_calls_per_hour, r.calls);
+      renderActivityTimeline(tdRate, r.call_timeline, r.avg_calls_per_hour, r.calls, r.active_seconds, r.utilization_pct, r.activity_duration_exact, data.meta || {});
       tr.appendChild(tdRate);
+      var tdUtil=document.createElement('td'); tdUtil.className='col-util';
+      var util=Number(r.utilization_pct || 0);
+      var utilClass=util>=20 ? 'utilization-peak' : util>=10 ? 'utilization-high' : util>=5 ? 'utilization-medium' : 'utilization-low';
+      tdUtil.innerHTML='<span class="utilization-value '+utilClass+'">'+util.toFixed(1)+'%</span>';
+      tdUtil.title=(r.activity_duration_exact ? '' : 'Based on aggregate duration data; per-call clear times are unavailable for this shift.')+' Active time: '+formatActivityDuration(r.active_seconds);
+      tr.appendChild(tdUtil);
       var tdR=document.createElement('td'); tdR.className='col-calls';
       var rideIns=r.ride_in_count||0;
       if(rideIns>0){ tdR.innerHTML='<span class="pill-badge ride-badge">'+rideIns+'</span>'; }
