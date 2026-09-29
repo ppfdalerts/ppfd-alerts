@@ -449,8 +449,10 @@ function Get-FeedHealthFingerprint {
     } else {
       $status = 'ok'
     }
-    $traffic = ([string]$health.last_traffic_at).Trim()
-    return ('{0}|{1}' -f $status, $traffic)
+    # Traffic timestamps change every poll. Only the health state belongs in
+    # the publisher fingerprint; otherwise GitHub Pages receives a new commit
+    # every 30 seconds and its deployment queue becomes stale.
+    return $status
   } catch {
     return 'error'
   }
