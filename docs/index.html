@@ -44,19 +44,26 @@
   .col-calls{width:16%}
   .col-rate{width:11%; white-space:nowrap}
   #board-today .col-rate, #board-prior .col-rate{width:292px; min-width:292px}
-  .frequency-chart{display:block; min-width:274px}
-  .frequency-summary{margin-bottom:3px; color:#bfdbfe; font-size:9px; line-height:1.1; text-align:left}
-  .frequency-blocks{display:grid; grid-template-columns:repeat(3, 1fr); gap:3px; width:274px}
-  .frequency-bin{display:flex; align-items:center; justify-content:space-between; gap:3px; min-width:0; padding:3px 4px; border:1px solid #334155; border-radius:5px}
-  .frequency-bin.volume-zero{background:#1b222c; border-color:#354052}
-  .frequency-bin.volume-low{background:rgba(22,163,74,.20); border-color:#16a34a}
-  .frequency-bin.volume-medium{background:rgba(234,179,8,.22); border-color:#ca8a04}
-  .frequency-bin.volume-high{background:rgba(249,115,22,.24); border-color:#ea580c}
-  .frequency-bin.volume-peak{background:rgba(239,68,68,.27); border-color:#ef4444}
-  .frequency-count{font-size:10px; line-height:1; color:#f8fafc; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap}
-  .frequency-label{font-size:8px; line-height:1; color:#d5dce7; white-space:nowrap}
-  .frequency-bin.future{border-style:dashed; border-color:#293241; background:#171c23}
-  .frequency-bin.future .frequency-count, .frequency-bin.future .frequency-label{color:#667085}
+  .col-util{width:9%; min-width:70px; white-space:nowrap}
+  .activity-chart{display:block; width:274px; max-width:100%;}
+  .activity-summary{margin-bottom:3px; color:#bfdbfe; font-size:9px; line-height:1.1; white-space:nowrap; text-align:left; font-variant-numeric:tabular-nums}
+  .activity-timeline{position:relative; height:20px; width:100%; overflow:hidden; border:1px solid #334155; border-radius:5px; background:linear-gradient(90deg, #202b39 0 var(--activity-elapsed,100%), #151a20 var(--activity-elapsed,100%) 100%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
+  .activity-timeline::after{content:""; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(90deg, transparent 0 calc(16.666% - 1px), rgba(148,163,184,.28) calc(16.666% - 1px) 16.666%); z-index:1}
+  .activity-segment{position:absolute; top:3px; bottom:3px; min-width:3px; border-radius:2px; z-index:2; box-shadow:0 0 0 1px rgba(255,255,255,.2); cursor:help}
+  .activity-segment.short{background:#22c55e}
+  .activity-segment.medium{background:#eab308}
+  .activity-segment.long{background:#f97316}
+  .activity-segment.critical{background:#ef4444}
+  .activity-segment.unknown{background:#60a5fa; opacity:.8}
+  .activity-now{position:absolute; top:0; bottom:0; width:1px; background:#f8fafc; opacity:.72; z-index:3; pointer-events:none}
+  .activity-scale{display:grid; grid-template-columns:repeat(7,1fr); color:#94a3b8; font-size:8px; line-height:1; margin-top:3px; font-variant-numeric:tabular-nums}
+  .activity-scale span:nth-child(n+2){text-align:center}
+  .activity-scale span:last-child{text-align:right}
+  .utilization-value{font-variant-numeric:tabular-nums; font-weight:700}
+  .utilization-low{color:#86efac}
+  .utilization-medium{color:#fde047}
+  .utilization-high{color:#fb923c}
+  .utilization-peak{color:#fca5a5}
   .col-avg{width:22%}
   .col-max{width:22%}
   .col-after{width:20%}
@@ -215,12 +222,12 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (4-Hour Blocks)</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)</th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (4-Hour Blocks)</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)</th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
