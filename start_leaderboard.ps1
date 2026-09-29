@@ -1327,7 +1327,20 @@ function Invoke-LeaderboardRun {
     $indexOut = Join-Path $repoRoot 'docs\index.html'
     $outData = Join-Path $generatedRoot 'docs\data.json'
     $outRoster = Join-Path $generatedRoot 'docs\roster_units.json'
-    $feedHealth = Join-Path $stateRoot 'feed_health.json'
+    # The alerts worker may write feed health in the code root while the
+    # publisher state lives one directory above it. Always use the newest
+    # available health file so an older copy cannot raise a false outage.
+    $feedHealthCandidates = @(
+      (Join-Path $stateRoot 'feed_health.json'),
+      (Join-Path $here 'feed_health.json'),
+      (Join-Path $repoRoot 'feed_health.json')
+    ) | Select-Object -Unique
+    $feedHealthItem = $feedHealthCandidates |
+      Where-Object { Test-Path -LiteralPath $_ } |
+      ForEach-Object { Get-Item -LiteralPath $_ -ErrorAction SilentlyContinue } |
+      Sort-Object LastWriteTimeUtc -Descending |
+      Select-Object -First 1
+    $feedHealth = if ($feedHealthItem) { $feedHealthItem.FullName } else { Join-Path $stateRoot 'feed_health.json' }
     $versionOut = Join-Path $generatedRoot 'docs\version.json'
     $backfillStatusOut = Join-Path $generatedRoot 'docs\backfill_status.json'
     $legacyCalc = Join-Path $here 'ppfd_leaderboard_calculator.py'
