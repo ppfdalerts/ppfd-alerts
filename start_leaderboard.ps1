@@ -480,6 +480,7 @@ function Get-SystemSourceMappings {
     @{ Base = $WorkspaceRoot; Rel = 'uninstall_groupme_task.ps1';       Dest = 'uninstall_groupme_task.ps1' },
     @{ Base = $WorkspaceRoot; Rel = 'ppfd_groupme_alerts_v1.py';        Dest = 'ppfd_groupme_alerts_v1.py' },
     @{ Base = $WorkspaceRoot; Rel = 'backfill_groupme_call_times.py';   Dest = 'backfill_groupme_call_times.py' },
+    @{ Base = $RepoRoot;      Rel = 'backfill_call_intervals.py';        Dest = 'backfill_call_intervals.py' },
     @{ Base = $WorkspaceRoot; Rel = 'ppfd_leaderboard_calculator.py';   Dest = 'ppfd_leaderboard_calculator.py' },
     @{ Base = $WorkspaceRoot; Rel = 'ppfd_telegram_alerts_v3.2.py';     Dest = 'ppfd_telegram_alerts_v3.2.py' },
     @{ Base = $RepoRoot;      Rel = '.github\workflows\pages-data.yml'; Dest = '.github/workflows/pages-data.yml' },
