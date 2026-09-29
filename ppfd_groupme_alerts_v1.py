@@ -810,6 +810,34 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
                 call_intervals = globals().get("CALL_INTERVALS")
             else:
                 call_intervals = _call_intervals_load(fp)
+        saved_intervals = dict(call_intervals or {})
+        # Persist active calls separately from completed intervals. The
+        # generator must not mistake an old start event for a call still in
+        # progress after a worker restart.
+        active_calls = globals().get("ACTIVE", {})
+        current_shift = globals().get("SHIFT_DT")
+        current_stats_fn = globals().get("STATS_FN")
+        if fp == current_stats_fn and isinstance(active_calls, dict):
+            current_date = current_shift.date() if isinstance(current_shift, datetime.datetime) else None
+            for (incident_id, unit), record in active_calls.items():
+                if unit not in WATCH_SET or record.get("ignore"):
+                    continue
+                if current_date is not None and record.get("stats_date") != current_date:
+                    continue
+                started = record.get("start")
+                if not isinstance(started, datetime.datetime) or not incident_id:
+                    continue
+                key = f"{incident_id}|{unit}"
+                existing = saved_intervals.get(key)
+                if not isinstance(existing, dict) or not existing.get("end"):
+                    saved_intervals[key] = {
+                        "start": started.isoformat(),
+                        "end": None,
+                        "duration_sec": None,
+                        "ongoing": True,
+                        "source": "live_911",
+                    }
+        call_intervals = saved_intervals
         os.makedirs(os.path.dirname(fp), exist_ok=True)
         with open(fp + ".tmp", "w") as f:
             json.dump(
