@@ -1479,12 +1479,22 @@
     if(panel === 'today' || panel === 'prior'){
       var p = data[panel] || {rows:[]};
       var rows = (p.rows || []).map(function(r){
-        var hourly=Array.isArray(r.call_frequency) ? r.call_frequency : [];
-        var blocks=hourly.length ? [0,0,0,0,0,0] : ['','','','','',''];
-        hourly.slice(0,24).forEach(function(value,index){ blocks[Math.floor(index/4)] += Number(value) || 0; });
-        return [r.unit || '', Number(r.calls || 0), csvMaybeFloat(r.avg_calls_per_hour)].concat(blocks, [Number(r.ride_in_count || 0), Number(r.delta_calls || 0), csvMaybeFloat(r.avg_min), csvMaybeFloat(r.max_min), Number(r.after_0000 || 0)]);
+        var activeSeconds = r.active_seconds == null ? null : Number(r.active_seconds);
+        var utilization = r.utilization_pct == null ? null : Number(r.utilization_pct);
+        return [
+          r.unit || '',
+          Number(r.calls || 0),
+          csvMaybeFloat(r.avg_calls_per_hour),
+          activeSeconds == null ? '' : formatActivityDuration(activeSeconds),
+          utilization == null ? '' : utilization.toFixed(1) + '%',
+          Number(r.ride_in_count || 0),
+          Number(r.delta_calls || 0),
+          csvMaybeFloat(r.avg_min),
+          csvMaybeFloat(r.max_min),
+          Number(r.after_0000 || 0)
+        ];
       });
-      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Avg Calls/Hr','Calls 07-11','Calls 11-15','Calls 15-19','Calls 19-23','Calls 23-03','Calls 03-07','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
+      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Avg Calls/Hr','Active Time','Utilization','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
       return;
     }
     if(panel === 'week' || panel === 'month' || panel === 'year'){
