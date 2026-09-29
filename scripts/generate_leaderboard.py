@@ -1321,9 +1321,9 @@ def _daily_call_activity(stats_dir: Path, shift_date: datetime.date, now: dateti
         interval_value = intervals.get(text_key, {})
         start = _parse_activity_datetime(interval_value.get("start") or event_value.get("timestamp"))
         end = _parse_activity_datetime(interval_value.get("end"))
-        ongoing = False
+        ongoing = bool(interval_value.get("ongoing"))
         duration_known = end is not None
-        if end is None and shift_date == current_shift_date and start is not None and start <= current_now:
+        if ongoing and end is None and shift_date == current_shift_date and start is not None and start <= current_now:
             end = current_now
             ongoing = True
             duration_known = True
