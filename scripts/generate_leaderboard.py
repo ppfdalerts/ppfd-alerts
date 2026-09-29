@@ -2271,6 +2271,9 @@ def compute_period(
     if period_key == 'day':
         sd = shift_start(now).date()
         meta['shift_date'] = f"{_shift_letter_for(sd)}-Shift {sd:%m/%d/%y}"
+        meta['shift_start'] = datetime.datetime.combine(sd, datetime.time(SHIFT_HOUR, 0)).isoformat()
+        meta['shift_end'] = (datetime.datetime.combine(sd, datetime.time(SHIFT_HOUR, 0)) + datetime.timedelta(hours=24)).isoformat()
+        meta['is_current_shift'] = True
     elif period_key in ('week', 'month', 'year', 'rolling_year'):
         if start_date and end_date:
             start_val = start_date
@@ -2317,12 +2320,18 @@ def compute_prior(stats_dir: Path, now: datetime.datetime | None = None):
         delta_map=delta_map,
         period_hours=24,
     )
+    prior_shift_start = datetime.datetime.combine(prev_date, datetime.time(SHIFT_HOUR, 0))
     return {
         "label": "Daily",
         "period": "day",
         "text": text,
         "rows": rows,
-        "meta": {"shift_date": f"{_shift_letter_for(prev_date)}-Shift {prev_date:%m/%d/%y}"},
+        "meta": {
+            "shift_date": f"{_shift_letter_for(prev_date)}-Shift {prev_date:%m/%d/%y}",
+            "shift_start": prior_shift_start.isoformat(),
+            "shift_end": (prior_shift_start + datetime.timedelta(hours=24)).isoformat(),
+            "is_current_shift": False,
+        },
         "updated": datetime.datetime.utcnow().isoformat() + "Z",
     }
 
