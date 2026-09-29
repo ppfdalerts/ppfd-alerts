@@ -49,7 +49,7 @@
   .activity-summary{margin-bottom:3px; color:#bfdbfe; font-size:9px; line-height:1.1; white-space:nowrap; text-align:left; font-variant-numeric:tabular-nums}
   .activity-timeline{position:relative; height:20px; width:100%; overflow:hidden; border:1px solid #334155; border-radius:5px; background:linear-gradient(90deg, #202b39 0 var(--activity-elapsed,100%), #151a20 var(--activity-elapsed,100%) 100%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
   .activity-timeline::after{content:""; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(90deg, transparent 0 calc(16.666% - 1px), rgba(148,163,184,.28) calc(16.666% - 1px) 16.666%); z-index:1}
-  .activity-segment{position:absolute; top:3px; bottom:3px; min-width:3px; border-radius:2px; z-index:2; box-shadow:0 0 0 1px rgba(255,255,255,.2); cursor:help}
+  .activity-segment{position:absolute; top:3px; bottom:3px; min-width:4px; border:1px solid rgba(255,255,255,.78); box-sizing:border-box; border-radius:2px; z-index:2; box-shadow:0 0 0 1px rgba(15,23,42,.78); cursor:help}
   .activity-segment.short{background:#22c55e}
   .activity-segment.medium{background:#eab308}
   .activity-segment.long{background:#f97316}
@@ -762,21 +762,24 @@
       var now=new Date();
       var elapsed=Math.max(0, Math.min(24*60*60*1000, now.getTime()-shiftStart.getTime()));
       var isCurrent=meta && meta.is_current_shift;
-      timeline.style.setProperty('--activity-elapsed', (isCurrent ? (elapsed/(24*60*60*1000)*100) : 100)+'%');
+      var visibleEnd=isCurrent ? new Date(Math.min(shiftEnd.getTime(), Math.max(now.getTime(), shiftStart.getTime()+60*60*1000))) : shiftEnd;
+      var visibleMs=Math.max(60*60*1000, visibleEnd.getTime()-shiftStart.getTime());
+      timeline.style.setProperty('--activity-elapsed', (isCurrent ? Math.min(100, elapsed/visibleMs*100) : 100)+'%');
       calls.forEach(function(record){
         var start=activityDate(record.start);
         if(!start) return;
         var end=activityDate(record.end);
         var temporaryEnd=false;
-        if(!end && isCurrent && start.getTime() <= now.getTime()){
-          end=now;
+        if(!end && record.ongoing && isCurrent && start.getTime() <= now.getTime()){
+          end=visibleEnd;
           temporaryEnd=true;
         }
         var clippedStart=new Date(Math.max(start.getTime(), shiftStart.getTime()));
-        var clippedEnd=end ? new Date(Math.min(end.getTime(), shiftEnd.getTime())) : null;
+        if(clippedStart.getTime() > visibleEnd.getTime()) return;
+        var clippedEnd=end ? new Date(Math.min(end.getTime(), visibleEnd.getTime())) : null;
         if(clippedEnd && clippedEnd.getTime()<clippedStart.getTime()) clippedEnd=clippedStart;
-        var left=((clippedStart.getTime()-shiftStart.getTime())/(24*60*60*1000))*100;
-        var width=clippedEnd ? ((clippedEnd.getTime()-clippedStart.getTime())/(24*60*60*1000))*100 : 0;
+        var left=((clippedStart.getTime()-shiftStart.getTime())/visibleMs)*100;
+        var width=clippedEnd ? ((clippedEnd.getTime()-clippedStart.getTime())/visibleMs)*100 : 0;
         if(left<0 || left>100) return;
         var segment=document.createElement('div');
         segment.className='activity-segment';
@@ -800,14 +803,24 @@
       if(isCurrent){
         var marker=document.createElement('div');
         marker.className='activity-now';
-        marker.style.left=(Math.max(0,Math.min(100,elapsed/(24*60*60*1000)*100)))+'%';
+        marker.style.left=(Math.max(0,Math.min(100,elapsed/visibleMs*100)))+'%';
         marker.title='Current time';
         timeline.appendChild(marker);
       }
       chart.appendChild(timeline);
       var scale=document.createElement('div');
       scale.className='activity-scale';
-      ['7A','11A','3P','7P','11P','3A','7A'].forEach(function(label){ var span=document.createElement('span'); span.textContent=label; scale.appendChild(span); });
+      for(var scaleIndex=0; scaleIndex<7; scaleIndex++){
+        var scaleTime=new Date(shiftStart.getTime()+visibleMs*(scaleIndex/6));
+        var scaleHour=scaleTime.getHours();
+        var scaleMinute=scaleTime.getMinutes();
+        var scaleSuffix=scaleHour >= 12 ? 'P' : 'A';
+        var scaleDisplayHour=scaleHour % 12 || 12;
+        var scaleLabel=scaleMinute ? scaleDisplayHour+':'+String(scaleMinute).padStart(2,'0')+scaleSuffix : scaleDisplayHour+scaleSuffix;
+        var span=document.createElement('span');
+        span.textContent=scaleLabel;
+        scale.appendChild(span);
+      }
       chart.appendChild(scale);
       cell.appendChild(chart);
     }
