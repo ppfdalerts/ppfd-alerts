@@ -120,6 +120,22 @@ def load_call_events(fp: Path) -> dict[str, list[str]]:
         return {}
 
 
+def load_call_interval_records(fp: Path) -> dict[str, dict]:
+    """Load per-call start/end records keyed by incident and unit."""
+    try:
+        with fp.open("r", encoding="utf-8") as f:
+            raw = json.load(f).get("call_intervals", {})
+        if not isinstance(raw, dict):
+            return {}
+        return {
+            str(key): dict(value)
+            for key, value in raw.items()
+            if "|" in str(key) and isinstance(value, dict)
+        }
+    except Exception:
+        return {}
+
+
 def load_feed_health(path: Path | None):
     """Load and re-evaluate live feed freshness at generation time."""
     if not path or not path.exists():
@@ -1246,10 +1262,175 @@ def _daily_call_frequency(stats_dir: Path, shift_date: datetime.date, now: datet
     return buckets
 
 
+def _parse_activity_datetime(value) -> datetime.datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if parsed.tzinfo:
+            parsed = parsed.astimezone().replace(tzinfo=None)
+        return parsed
+    except Exception:
+        return None
+
+
+def _merge_activity_intervals(intervals: list[tuple[datetime.datetime, datetime.datetime]]) -> float:
+    if not intervals:
+        return 0.0
+    merged: list[list[datetime.datetime]] = []
+    for start, end in sorted(intervals, key=lambda value: (value[0], value[1])):
+        if end <= start:
+            continue
+        if merged and start <= merged[-1][1]:
+            if end > merged[-1][1]:
+                merged[-1][1] = end
+        else:
+            merged.append([start, end])
+    return sum((end - start).total_seconds() for start, end in merged)
+
+
+def _daily_call_activity(stats_dir: Path, shift_date: datetime.date, now: datetime.datetime) -> dict[str, dict]:
+    """Build compact per-call timeline records for one 24-hour shift."""
+    stats_path = stats_dir / f"shift_stats_{shift_date:%Y-%m-%d}.json"
+    calls, dur, _after, _max_sec, _ride_in, _duration_known = load_stats(stats_path)
+    try:
+        with stats_path.open("r", encoding="utf-8") as f:
+            raw_events = json.load(f).get("call_events", {})
+    except Exception:
+        raw_events = {}
+    if not isinstance(raw_events, dict):
+        raw_events = {}
+    intervals = load_call_interval_records(stats_path)
+    shift_base = datetime.datetime.combine(shift_date, datetime.time(SHIFT_HOUR, 0))
+    shift_end = shift_base + datetime.timedelta(hours=24)
+    current_shift_date = shift_start(now).date()
+    current_now = min(max(now, shift_base), shift_end)
+    records_by_unit: dict[str, list[dict]] = defaultdict(list)
+    seen_keys: set[str] = set()
+
+    event_items = list(raw_events.items())
+    for key, event in event_items:
+        text_key = str(key)
+        if "|" not in text_key:
+            continue
+        _incident_id, raw_unit = text_key.rsplit("|", 1)
+        unit = _normalize_unit_code(raw_unit)
+        if unit not in WATCH_SET:
+            continue
+        event_value = event if isinstance(event, dict) else {"timestamp": event}
+        interval_value = intervals.get(text_key, {})
+        start = _parse_activity_datetime(interval_value.get("start") or event_value.get("timestamp"))
+        end = _parse_activity_datetime(interval_value.get("end"))
+        ongoing = False
+        duration_known = end is not None
+        if end is None and shift_date == current_shift_date and start is not None and start <= current_now:
+            end = current_now
+            ongoing = True
+            duration_known = True
+        clipped_start = max(start, shift_base) if start is not None else None
+        clipped_end = min(end, shift_end) if end is not None else None
+        if clipped_start is not None and clipped_end is not None and clipped_end < clipped_start:
+            clipped_end = clipped_start
+        if clipped_start is None:
+            continue
+        record = {
+            "incident_id": str(_incident_id),
+            "start": clipped_start.isoformat(),
+            "end": clipped_end.isoformat() if clipped_end is not None and duration_known else None,
+            "duration_sec": round((clipped_end - clipped_start).total_seconds(), 1) if clipped_end is not None and duration_known else None,
+            "ongoing": ongoing,
+            "duration_known": duration_known,
+            "source": interval_value.get("source") or event_value.get("source") or "call_event",
+        }
+        records_by_unit[unit].append(record)
+        seen_keys.add(text_key)
+
+    # Preserve an interval if a legacy file has one but its event ledger is absent.
+    for key, interval_value in intervals.items():
+        if key in seen_keys or "|" not in key:
+            continue
+        _incident_id, raw_unit = key.rsplit("|", 1)
+        unit = _normalize_unit_code(raw_unit)
+        if unit not in WATCH_SET:
+            continue
+        start = _parse_activity_datetime(interval_value.get("start"))
+        end = _parse_activity_datetime(interval_value.get("end"))
+        if start is None:
+            continue
+        clipped_start = max(start, shift_base)
+        clipped_end = min(end, shift_end) if end is not None else None
+        duration_known = clipped_end is not None
+        records_by_unit[unit].append(
+            {
+                "incident_id": str(_incident_id),
+                "start": clipped_start.isoformat(),
+                "end": clipped_end.isoformat() if clipped_end is not None else None,
+                "duration_sec": round((clipped_end - clipped_start).total_seconds(), 1) if clipped_end is not None else None,
+                "ongoing": False,
+                "duration_known": duration_known,
+                "source": interval_value.get("source") or "call_interval",
+            }
+        )
+
+    activity: dict[str, dict] = {}
+    for unit, records in records_by_unit.items():
+        records.sort(key=lambda record: (record.get("start") or "", record.get("incident_id") or ""))
+        parsed_intervals = []
+        all_durations_known = True
+        for record in records:
+            start = _parse_activity_datetime(record.get("start"))
+            end = _parse_activity_datetime(record.get("end"))
+            if start is None or end is None:
+                all_durations_known = False
+            elif end > start:
+                parsed_intervals.append((start, end))
+        union_seconds = _merge_activity_intervals(parsed_intervals)
+        aggregate_seconds = float(dur.get(unit, 0) or 0)
+        if all_durations_known:
+            active_seconds = union_seconds
+            exact = True
+        else:
+            # Older files have call start events and aggregate durations but no
+            # per-call clear records. Keep their existing duration totals without
+            # fabricating individual clear times.
+            active_seconds = aggregate_seconds
+            exact = False
+        activity[unit] = {
+            "records": records,
+            "active_seconds": round(max(0.0, active_seconds), 1),
+            "duration_exact": exact,
+            "utilization_pct": round(min(100.0, max(0.0, active_seconds / 86400.0 * 100.0)), 1),
+        }
+    for unit, count in calls.items():
+        if unit not in WATCH_SET or unit in activity or int(count or 0) <= 0:
+            continue
+        aggregate_seconds = float(dur.get(unit, 0) or 0)
+        activity[unit] = {
+            "records": [],
+            "active_seconds": round(max(0.0, aggregate_seconds), 1),
+            "duration_exact": False,
+            "utilization_pct": round(min(100.0, max(0.0, aggregate_seconds / 86400.0 * 100.0)), 1),
+        }
+    return activity
+
+
 def _attach_daily_call_frequency(period_payload: dict, stats_dir: Path, shift_date: datetime.date, now: datetime.datetime) -> None:
     frequency = _daily_call_frequency(stats_dir, shift_date, now)
     for row in period_payload.get("rows", []) or []:
         row["call_frequency"] = frequency.get(row.get("unit"), [])
+
+
+def _attach_daily_call_activity(period_payload: dict, stats_dir: Path, shift_date: datetime.date, now: datetime.datetime) -> None:
+    frequency = _daily_call_frequency(stats_dir, shift_date, now)
+    activity = _daily_call_activity(stats_dir, shift_date, now)
+    for row in period_payload.get("rows", []) or []:
+        unit = row.get("unit")
+        row["call_frequency"] = frequency.get(unit, [])
+        unit_activity = activity.get(unit, {})
+        row["call_timeline"] = unit_activity.get("records", [])
+        row["active_seconds"] = unit_activity.get("active_seconds", 0.0)
+        row["activity_duration_exact"] = bool(unit_activity.get("duration_exact", False))
+        row["utilization_pct"] = unit_activity.get("utilization_pct", 0.0)
 
 
 def _list_shift_stat_dates(stats_dir: Path) -> list[datetime.date]:
@@ -2171,9 +2352,9 @@ def main():
     month_start, month_end = _date_range_for_period(now, "month")
 
     today_period = compute_period(stats_dir, "day", now=now)
-    _attach_daily_call_frequency(today_period, stats_dir, shift_day, now)
+    _attach_daily_call_activity(today_period, stats_dir, shift_day, now)
     prior_period = compute_prior(stats_dir, now=now)
-    _attach_daily_call_frequency(prior_period, stats_dir, prior_day, now)
+    _attach_daily_call_activity(prior_period, stats_dir, prior_day, now)
     week_period = compute_period(stats_dir, "week", now=now)
     month_period = compute_period(stats_dir, "month", now=now)
     year_period = compute_period(
