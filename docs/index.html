@@ -731,6 +731,10 @@
       if(hours) return hours+'h';
       return mins+'m';
     }
+    function formatCallDuration(seconds){
+      if(seconds == null || !isFinite(Number(seconds))) return '--';
+      return (Math.max(0, Number(seconds))/60).toFixed(1)+' min';
+    }
     function activityDate(value){
       if(!value) return null;
       var d=new Date(value);
@@ -801,7 +805,7 @@
         tooltip.push('Start: '+activityTime(record.start));
         tooltip.push('Clear: '+(temporaryEnd || record.ongoing ? 'Ongoing' : (record.end ? activityTime(record.end) : '--')));
         if(unitDurationUnavailable) tooltip.push('Unit duration: unavailable (incident-wide time excluded)');
-        else tooltip.push((record.ongoing ? 'Elapsed: ' : 'Duration: ')+(duration == null ? '--' : formatActivityDuration(duration)));
+        else tooltip.push((record.ongoing ? 'Elapsed: ' : 'Duration: ')+(duration == null ? '--' : formatCallDuration(duration)));
         segment.title=tooltip.join('\n');
         timeline.appendChild(segment);
       });
