@@ -769,8 +769,12 @@
         var start=activityDate(record.start);
         if(!start) return;
         var end=activityDate(record.end);
+        var durationScope=String(record.duration_scope || '').toLowerCase().replace(/-/g,'_');
+        var durationSource=String(record.source || '').toLowerCase();
+        var unitDurationUnavailable=Boolean(record.unit_duration_unavailable) || durationScope==='incident' || durationScope==='incident_wide' || durationSource==='incident_csv_involved';
+        if(unitDurationUnavailable) end=null;
         var temporaryEnd=false;
-        if(!end && record.ongoing && isCurrent && start.getTime() <= now.getTime()){
+        if(record.ongoing && isCurrent && start.getTime() <= now.getTime()){
           end=visibleEnd;
           temporaryEnd=true;
         }
@@ -783,7 +787,7 @@
         if(left<0 || left>100) return;
         var segment=document.createElement('div');
         segment.className='activity-segment';
-        var duration=record.duration_sec != null ? Number(record.duration_sec) : (clippedEnd ? Math.max(0,(clippedEnd-clippedStart)/1000) : null);
+        var duration=unitDurationUnavailable ? null : (record.ongoing && clippedEnd ? Math.max(0,(clippedEnd-clippedStart)/1000) : (record.duration_sec != null ? Number(record.duration_sec) : (clippedEnd ? Math.max(0,(clippedEnd-clippedStart)/1000) : null)));
         if(duration == null || !isFinite(duration)) segment.classList.add('unknown');
         else if(duration < 1800) segment.classList.add('short');
         else if(duration < 3600) segment.classList.add('medium');
@@ -796,7 +800,8 @@
         if(record.incident_id) tooltip.push('Call #'+record.incident_id);
         tooltip.push('Start: '+activityTime(record.start));
         tooltip.push('Clear: '+(temporaryEnd || record.ongoing ? 'Ongoing' : (record.end ? activityTime(record.end) : '--')));
-        tooltip.push('Duration: '+(duration == null ? '--' : formatActivityDuration(duration)));
+        if(unitDurationUnavailable) tooltip.push('Unit duration: unavailable (incident-wide time excluded)');
+        else tooltip.push((record.ongoing ? 'Elapsed: ' : 'Duration: ')+(duration == null ? '--' : formatActivityDuration(duration)));
         segment.title=tooltip.join('\n');
         timeline.appendChild(segment);
       });
