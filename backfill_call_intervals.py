@@ -83,6 +83,14 @@ def shift_date_for(start: dt.datetime) -> dt.date:
     return start.date() if start.hour >= 7 else start.date() - dt.timedelta(days=1)
 
 
+def has_unit_duration(interval) -> bool:
+    if not isinstance(interval, dict) or not interval:
+        return False
+    scope = str(interval.get("duration_scope") or "").strip().lower().replace("-", "_")
+    source = str(interval.get("source") or "").strip().lower()
+    return scope not in {"incident", "incident_wide"} and source != "incident_csv_involved"
+
+
 def write_payload(path: Path, payload: dict) -> None:
     temp = path.with_suffix(path.suffix + ".tmp")
     temp.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -117,6 +125,7 @@ def main() -> int:
         "candidate_keys": len(removals_by_key),
         "files_updated": [],
         "intervals_added": 0,
+        "incident_intervals_replaced": 0,
         "ambiguous_matches": 0,
         "missing_matches": 0,
         "skipped_existing": 0,
@@ -165,7 +174,7 @@ def main() -> int:
                 continue
             key = candidates[0]
             existing = intervals.get(key)
-            if isinstance(existing, dict) and existing.get("end"):
+            if has_unit_duration(existing) and existing.get("end"):
                 report["skipped_existing"] += 1
                 continue
             start_dt = event_timestamp(raw_events.get(key))
@@ -183,8 +192,11 @@ def main() -> int:
                 "duration_sec": duration_sec,
                 "ongoing": False,
                 "source": "alert_history_removal",
+                "duration_scope": "unit",
                 "evidence": "alerts.log unit-removal notification",
             }
+            if isinstance(existing, dict) and existing.get("end"):
+                report["incident_intervals_replaced"] += 1
             report["intervals_added"] += 1
             changed = True
 
