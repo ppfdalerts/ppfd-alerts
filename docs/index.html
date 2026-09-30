@@ -775,6 +775,7 @@
         var end=activityDate(record.end);
         var durationScope=String(record.duration_scope || '').toLowerCase().replace(/-/g,'_');
         var durationSource=String(record.source || '').toLowerCase();
+        var orphanedUnitDuration=durationSource==='live_911_orphaned';
         var unitDurationUnavailable=Boolean(record.unit_duration_unavailable) || durationScope==='incident' || durationScope==='incident_wide' || durationSource==='incident_csv_involved';
         if(unitDurationUnavailable) end=null;
         var temporaryEnd=false;
@@ -804,7 +805,7 @@
         if(record.incident_id) tooltip.push('Call #'+record.incident_id);
         tooltip.push('Start: '+activityTime(record.start));
         tooltip.push('Clear: '+(temporaryEnd || record.ongoing ? 'Ongoing' : (record.end ? activityTime(record.end) : '--')));
-        if(unitDurationUnavailable) tooltip.push('Unit duration: unavailable (incident-wide time excluded)');
+        if(unitDurationUnavailable) tooltip.push(orphanedUnitDuration ? 'Unit duration: unavailable (clear time was not recorded)' : 'Unit duration: unavailable (incident-wide time excluded)');
         else tooltip.push((record.ongoing ? 'Elapsed: ' : 'Duration: ')+(duration == null ? '--' : formatCallDuration(duration)));
         segment.title=tooltip.join('\n');
         timeline.appendChild(segment);
