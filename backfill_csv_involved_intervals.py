@@ -83,6 +83,8 @@ def shift_date_for(value: dt.datetime) -> dt.date:
 def has_unit_duration(interval) -> bool:
     if not isinstance(interval, dict) or not interval:
         return False
+    if interval.get("unit_duration_unavailable"):
+        return False
     scope = str(interval.get("duration_scope") or "").strip().lower().replace("-", "_")
     source = str(interval.get("source") or "").strip().lower()
     return scope not in {"incident", "incident_wide"} and source != "incident_csv_involved"
