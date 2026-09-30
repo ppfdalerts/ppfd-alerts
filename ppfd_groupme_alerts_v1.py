@@ -815,9 +815,9 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
             call_events = _call_events_load(fp)
         if call_intervals is None:
             if "CALL_INTERVALS" in globals() and fp == globals().get("STATS_FN"):
-                # Another process may backfill completed intervals while the
-                # worker is running. Merge the file first so the next periodic
-                # save cannot overwrite those authoritative durations.
+                # Another process may backfill intervals while the worker is
+                # running. Merge the file first, while keeping live unit-level
+                # intervals authoritative over incident-wide metadata.
                 disk_intervals = _call_intervals_load(fp)
                 memory_intervals = globals().get("CALL_INTERVALS") or {}
                 call_intervals = dict(disk_intervals)
