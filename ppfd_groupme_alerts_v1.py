@@ -790,6 +790,14 @@ def _call_intervals_load(fp):
         return {}
 
 
+def _interval_has_unit_duration(interval):
+    if not isinstance(interval, dict) or not interval:
+        return False
+    scope = str(interval.get("duration_scope") or "").strip().lower().replace("-", "_")
+    source = str(interval.get("source") or "").strip().lower()
+    return scope not in {"incident", "incident_wide"} and source != "incident_csv_involved"
+
+
 def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hospital_count=None, ride_in_count=None, duration_known_calls=None, counted_calls=None, call_intervals=None):
     try:
         transporting_count = transporting_count if transporting_count is not None else {}
@@ -815,7 +823,13 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
                 call_intervals = dict(disk_intervals)
                 for key, value in memory_intervals.items():
                     existing = call_intervals.get(key)
-                    if not isinstance(existing, dict) or not existing.get("end") or value.get("end"):
+                    incoming_is_unit = _interval_has_unit_duration(value)
+                    existing_is_unit = _interval_has_unit_duration(existing)
+                    if (
+                        not isinstance(existing, dict)
+                        or (incoming_is_unit and not existing_is_unit)
+                        or (incoming_is_unit == existing_is_unit and (not existing.get("end") or value.get("end")))
+                    ):
                         call_intervals[key] = value
             else:
                 call_intervals = _call_intervals_load(fp)
@@ -838,13 +852,14 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
                     continue
                 key = f"{incident_id}|{unit}"
                 existing = saved_intervals.get(key)
-                if not isinstance(existing, dict) or not existing.get("end"):
+                if not isinstance(existing, dict) or not _interval_has_unit_duration(existing) or not existing.get("end"):
                     saved_intervals[key] = {
                         "start": started.isoformat(),
                         "end": None,
                         "duration_sec": None,
                         "ongoing": True,
                         "source": "live_911",
+                        "duration_scope": "unit",
                     }
         call_intervals = saved_intervals
         os.makedirs(os.path.dirname(fp), exist_ok=True)
@@ -971,6 +986,7 @@ def _record_completed_duration(uid: str, rec: dict, dur_sec: float):
         "end": end_time.isoformat() if isinstance(end_time, datetime.datetime) else None,
         "duration_sec": round(float(max(0.0, dur_sec)), 1),
         "source": "live_911",
+        "duration_scope": "unit",
     }
 
     if target_date == SHIFT_DT.date():
