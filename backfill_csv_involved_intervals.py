@@ -1,4 +1,4 @@
-"""Use a CSV report's Involved duration to backfill today's unit timelines."""
+"""Store CSV incident-wide Involved windows without replacing unit durations."""
 
 from __future__ import annotations
 
@@ -80,6 +80,14 @@ def shift_date_for(value: dt.datetime) -> dt.date:
     return value.date() if value.hour >= 7 else value.date() - dt.timedelta(days=1)
 
 
+def has_unit_duration(interval) -> bool:
+    if not isinstance(interval, dict) or not interval:
+        return False
+    scope = str(interval.get("duration_scope") or "").strip().lower().replace("-", "_")
+    source = str(interval.get("source") or "").strip().lower()
+    return scope not in {"incident", "incident_wide"} and source != "incident_csv_involved"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("csv_file")
@@ -149,6 +157,7 @@ def main() -> int:
 
     added = 0
     replaced = 0
+    preserved_unit_intervals = 0
     missing_ledger = []
     for key, record in records.items():
         if key not in events and key not in counted:
@@ -157,6 +166,11 @@ def main() -> int:
         start = record["start"]
         end = start + dt.timedelta(seconds=record["duration_sec"])
         prior = intervals.get(key)
+        # A unit's live dispatch-to-clear interval is authoritative.  The CSV
+        # Involved value is scoped to the whole incident and cannot replace it.
+        if has_unit_duration(prior):
+            preserved_unit_intervals += 1
+            continue
         intervals[key] = {
             "start": start.isoformat(),
             "end": end.isoformat(),
@@ -183,6 +197,7 @@ def main() -> int:
         "records": len(records),
         "added": added,
         "replaced": replaced,
+        "preserved_unit_intervals": preserved_unit_intervals,
         "duplicates": duplicates,
         "skipped": skipped,
         "missing_ledger": missing_ledger,
