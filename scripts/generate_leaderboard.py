@@ -1453,6 +1453,19 @@ def _attach_daily_call_activity(period_payload: dict, stats_dir: Path, shift_dat
         row["active_seconds"] = unit_activity.get("active_seconds", 0.0)
         row["activity_duration_exact"] = bool(unit_activity.get("duration_exact", False))
         row["utilization_pct"] = unit_activity.get("utilization_pct", 0.0)
+        # The live worker can atomically replace the stats file between the
+        # daily-row read and the timeline read.  If that happens at the exact
+        # moment a call clears, keep this published snapshot internally
+        # consistent by incorporating the authoritative completed interval.
+        completed_durations = [
+            float(record.get("duration_sec"))
+            for record in row["call_timeline"]
+            if record.get("duration_sec") is not None and not record.get("ongoing")
+        ]
+        if completed_durations:
+            timeline_max_min = round(max(completed_durations) / 60.0, 1)
+            if row.get("max_min") is None or timeline_max_min > float(row.get("max_min") or 0):
+                row["max_min"] = timeline_max_min
 
 
 def _list_shift_stat_dates(stats_dir: Path) -> list[datetime.date]:
