@@ -179,6 +179,7 @@ def dbg(msg: str):
         log(f"DEBUG: {msg}")
 
 REQUIRE_STARTUP_CONFIRM = str(os.environ.get("REQUIRE_STARTUP_CONFIRM", "0")).strip().lower() in ("1", "true", "yes", "on")
+SUPPRESS_STARTUP_ANNOUNCE = str(os.environ.get("SUPPRESS_STARTUP_ANNOUNCE", "0")).strip().lower() in ("1", "true", "yes", "on")
 
 # Use local naive datetimes so long-running processes track DST transitions
 # correctly without fixed-offset drift.
@@ -793,9 +794,48 @@ def _call_intervals_load(fp):
 def _interval_has_unit_duration(interval):
     if not isinstance(interval, dict) or not interval:
         return False
+    if interval.get("unit_duration_unavailable"):
+        return False
     scope = str(interval.get("duration_scope") or "").strip().lower().replace("-", "_")
     source = str(interval.get("source") or "").strip().lower()
     return scope not in {"incident", "incident_wide"} and source != "incident_csv_involved"
+
+
+def _unit_status_is_active(status) -> bool:
+    text = str(status or "").strip().lower()
+    inactive_markers = ("available", "clear", "cancel", "released")
+    return not any(marker in text for marker in inactive_markers)
+
+
+def _retire_orphaned_call_intervals(intervals, active_keys, retired_at):
+    """Hide open intervals that no longer have a live in-memory call."""
+    if not isinstance(intervals, dict):
+        return 0
+    active_text_keys = {
+        f"{incident_id}|{unit}"
+        for incident_id, unit in active_keys
+        if incident_id and unit
+    }
+    retired = 0
+    retired_iso = retired_at.isoformat() if isinstance(retired_at, datetime.datetime) else None
+    for key, interval in list(intervals.items()):
+        if key in active_text_keys or not isinstance(interval, dict) or not interval.get("ongoing"):
+            continue
+        replacement = dict(interval)
+        replacement.update({
+            "end": None,
+            "duration_sec": None,
+            "ongoing": False,
+            "duration_known": False,
+            "unit_duration_unavailable": True,
+            "source": "live_911_orphaned",
+            "duration_scope": "unknown",
+        })
+        if retired_iso:
+            replacement["retired_at"] = retired_iso
+        intervals[key] = replacement
+        retired += 1
+    return retired
 
 
 def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hospital_count=None, ride_in_count=None, duration_known_calls=None, counted_calls=None, call_intervals=None):
@@ -827,6 +867,7 @@ def _stats_save(fp, calls, dur, after, max_sec, transporting_count=None, at_hosp
                     existing_is_unit = _interval_has_unit_duration(existing)
                     if (
                         not isinstance(existing, dict)
+                        or value.get("unit_duration_unavailable")
                         or (incoming_is_unit and not existing_is_unit)
                         or (incoming_is_unit == existing_is_unit and (not existing.get("end") or value.get("end")))
                     ):
@@ -1066,6 +1107,23 @@ def _record_completed_duration(uid: str, rec: dict, dur_sec: float):
             old_phospital,
             old_pride,
         )
+
+
+def _finish_active_call(key: tuple[str, str], ended_at: datetime.datetime, event_name: str = "available") -> bool:
+    """Close one tracked unit assignment and persist its unit-level duration."""
+    rec = ACTIVE.pop(key, None)
+    if rec is None:
+        return False
+    rec.setdefault("events", []).append((event_name or "available", ended_at))
+    uid = key[1]
+    LAST_FINISHED[uid] = rec["events"]
+    if uid in WATCH_SET and not rec.get("ignore"):
+        started_at = rec.get("start")
+        if not isinstance(started_at, datetime.datetime):
+            started_at = rec["events"][0][1]
+        dur_sec = max(0.0, (ended_at - started_at).total_seconds())
+        _record_completed_duration(uid, rec, dur_sec)
+    return True
 
 def _is_transporting_status(status: str) -> bool:
     text = (status or "").strip().lower()
@@ -1560,7 +1618,10 @@ def post_main_once(event_key: tuple, title: str, body: str):
     MAIN_EVENT_SEEN.add(key)
     post("LOG", title, body)
 
-if not TEST_MODE:
+if SUPPRESS_STARTUP_ANNOUNCE:
+    START_ANNOUNCED = True
+    log("Startup announce suppressed for controlled restart.")
+elif not TEST_MODE:
     _announce_start()
 
 def _build_call_alert_title_body(it: dict, units: list[str]) -> tuple[str, str]:
@@ -1676,11 +1737,10 @@ while not TEST_MODE:
             # Only consider FD units that are still on the call and not marked available/cleared
             def _unit_is_active(uid: str) -> bool:
                 try:
-                    s = (statuses.get(uid, "") or "").lower()
+                    status = statuses.get(uid, "")
                 except Exception:
-                    s = ""
-                inactive_markers = ("available", "clear", "cancel", "released")
-                return not any(m in s for m in inactive_markers)
+                    status = ""
+                return _unit_status_is_active(status)
 
             fd_units = [u for u in units if (u in WATCH_SET and _unit_is_active(u))]
             sunstar_units = {u for u in units if is_sunstar(u)}
@@ -1728,16 +1788,23 @@ while not TEST_MODE:
                     del SUNSTAR_TRACK[key]
 
             seen_now = set()
+            incident_was_tracked = any(key[0] == iid for key in ACTIVE)
             for uid in units:
                 key = (iid, uid)
                 status = statuses.get(uid, "")
                 rec = ACTIVE.get(key)
+                if not _unit_is_active(uid):
+                    if rec is not None and _finish_active_call(key, now, status or "available"):
+                        stats_dirty = True
+                    continue
                 if rec is None:
                     rcv = parse_ts(it.get("Received"), now)
                     before_shift = False
                     try: before_shift = (rcv is not None and rcv < SHIFT_DT)
                     except Exception: before_shift = False
-                    start_time = rcv or now
+                    # Units added after an incident was already being tracked
+                    # start when first observed, not at the incident receive time.
+                    start_time = now if incident_was_tracked else (rcv or now)
                     ACTIVE[key] = rec = {
                         "incident_id": iid,
                         "status": status,
@@ -1923,15 +1990,8 @@ while not TEST_MODE:
 
             for key in list(ACTIVE):
                 if key[0] == iid and key not in seen_now:
-                    rec = ACTIVE.pop(key)
-                    rec["events"].append(("available", now))
-                    uid = key[1]
-                    LAST_FINISHED[uid] = rec["events"]
-                    if uid in WATCH_SET and not rec.get("ignore"):
-                        dur_sec = (rec["events"][-1][1] - rec["events"][0][1]).total_seconds()
-                        _record_completed_duration(uid, rec, dur_sec)
+                    if _finish_active_call(key, now, "unit_removed"):
                         stats_dirty = True
-                        pkeys = rec.get("personnel_keys") or []
 
             # --- ALERT: New Call (one-time per incident) ---
             # Post into each matching unit topic (R33, T33, etc.) plus LOG/main
@@ -1956,6 +2016,34 @@ while not TEST_MODE:
         for incident_id in list(FD_UNIT_TRACK):
             if incident_id not in seen_incidents:
                 del FD_UNIT_TRACK[incident_id]
+
+        # An incident can disappear from the snapshot while its final units are
+        # still listed on the last snapshot. Close those assignments as soon as
+        # the incident disappears instead of leaving an ever-growing interval.
+        for key in list(ACTIVE):
+            if key[0] not in seen_incidents:
+                if _finish_active_call(key, now, "incident_removed"):
+                    stats_dirty = True
+
+        # After a restart there is no trustworthy end timestamp for an open
+        # interval whose call is no longer live. Keep its start marker, but do
+        # not publish a fabricated duration.
+        retired_intervals = _retire_orphaned_call_intervals(CALL_INTERVALS, ACTIVE.keys(), now)
+        if retired_intervals:
+            _stats_save(
+                STATS_FN,
+                CALLS,
+                DUR_SEC,
+                AFTER_0000,
+                MAX_SEC,
+                TRANSPORTING_COUNT,
+                AT_HOSPITAL_COUNT,
+                RIDE_IN_COUNT,
+                DURATION_KNOWN_CALLS,
+                COUNTED_CALLS,
+            )
+            stats_dirty = True
+            log(f"Retired {retired_intervals} orphaned call interval(s) with unknown unit duration.")
 
         # Commands from groups/topics
         poll_commands(now)
