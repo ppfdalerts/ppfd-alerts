@@ -833,8 +833,10 @@ function Resolve-StatsDir {
 
   $candidates = @(
     (Join-Path $BaseDir 'data\shift_stats'),
-    (Join-Path $BaseDir 'ppfd-alerts\data\shift_stats')
-  )
+    (Join-Path $BaseDir 'ppfd-alerts\data\shift_stats'),
+    (Join-Path $script:ScriptRoot 'data\shift_stats'),
+    (Join-Path $script:CodeRepoRoot 'data\shift_stats')
+  ) | Select-Object -Unique
 
   $bestPath = $null
   $bestTicks = -1
