@@ -136,6 +136,20 @@ def load_call_interval_records(fp: Path) -> dict[str, dict]:
         return {}
 
 
+def _interval_has_unit_duration(interval: dict | None) -> bool:
+    """Return whether an interval measures one unit's time on the call.
+
+    The CAD CSV ``Involved`` field measures the whole incident.  It is useful
+    incident metadata, but it must never be rendered as the duration of every
+    unit assigned to that incident.
+    """
+    if not isinstance(interval, dict) or not interval:
+        return False
+    scope = str(interval.get("duration_scope") or "").strip().lower().replace("-", "_")
+    source = str(interval.get("source") or "").strip().lower()
+    return scope not in {"incident", "incident_wide"} and source != "incident_csv_involved"
+
+
 def load_feed_health(path: Path | None):
     """Load and re-evaluate live feed freshness at generation time."""
     if not path or not path.exists():
@@ -1319,9 +1333,12 @@ def _daily_call_activity(stats_dir: Path, shift_date: datetime.date, now: dateti
             continue
         event_value = event if isinstance(event, dict) else {"timestamp": event}
         interval_value = intervals.get(text_key, {})
-        start = _parse_activity_datetime(interval_value.get("start") or event_value.get("timestamp"))
-        end = _parse_activity_datetime(interval_value.get("end"))
-        ongoing = bool(interval_value.get("ongoing"))
+        unit_duration = _interval_has_unit_duration(interval_value)
+        start = _parse_activity_datetime(
+            (interval_value.get("start") if unit_duration else None) or event_value.get("timestamp")
+        )
+        end = _parse_activity_datetime(interval_value.get("end")) if unit_duration else None
+        ongoing = bool(interval_value.get("ongoing")) if unit_duration else False
         duration_known = end is not None
         if ongoing and end is None and shift_date == current_shift_date and start is not None and start <= current_now:
             end = current_now
@@ -1341,6 +1358,8 @@ def _daily_call_activity(stats_dir: Path, shift_date: datetime.date, now: dateti
             "ongoing": ongoing,
             "duration_known": duration_known,
             "source": interval_value.get("source") or event_value.get("source") or "call_event",
+            "duration_scope": "unit" if unit_duration else interval_value.get("duration_scope"),
+            "unit_duration_unavailable": bool(interval_value) and not unit_duration,
         }
         records_by_unit[unit].append(record)
         seen_keys.add(text_key)
@@ -1354,7 +1373,8 @@ def _daily_call_activity(stats_dir: Path, shift_date: datetime.date, now: dateti
         if unit not in WATCH_SET:
             continue
         start = _parse_activity_datetime(interval_value.get("start"))
-        end = _parse_activity_datetime(interval_value.get("end"))
+        unit_duration = _interval_has_unit_duration(interval_value)
+        end = _parse_activity_datetime(interval_value.get("end")) if unit_duration else None
         if start is None:
             continue
         clipped_start = max(start, shift_base)
@@ -1369,6 +1389,8 @@ def _daily_call_activity(stats_dir: Path, shift_date: datetime.date, now: dateti
                 "ongoing": False,
                 "duration_known": duration_known,
                 "source": interval_value.get("source") or "call_interval",
+                "duration_scope": "unit" if unit_duration else interval_value.get("duration_scope"),
+                "unit_duration_unavailable": not unit_duration,
             }
         )
 
