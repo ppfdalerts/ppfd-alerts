@@ -29,10 +29,12 @@ try:
     _LOG_FP = os.path.join(_RUNTIME_ROOT, "alerts.log")
     _HANDSHAKE_FP = os.path.join(_RUNTIME_ROOT, "startup_handshake.json")
     _FEED_HEALTH_FP = os.path.join(_RUNTIME_ROOT, "feed_health.json")
+    _FEED_OUTAGES_FP = os.path.join(_RUNTIME_ROOT, "data", "feed_outages.json")
 except Exception:
     _LOG_FP = "alerts.log"
     _HANDSHAKE_FP = "startup_handshake.json"
     _FEED_HEALTH_FP = "feed_health.json"
+    _FEED_OUTAGES_FP = os.path.join("data", "feed_outages.json")
 sys.stdout = _open_log_with_retry(_LOG_FP)
 sys.stderr = sys.stdout
 
@@ -41,6 +43,7 @@ def log(msg: str):
     print(f"{ts}  {msg}", flush=True)
 
 FEED_HEALTH_THRESHOLD_SEC = 20 * 60
+FEED_OUTAGE_HISTORY_LIMIT = 400
 
 def _utc_iso(value=None):
     value = value or datetime.datetime.utcnow()
@@ -76,8 +79,92 @@ def _save_feed_health_file(payload):
     except Exception as exc:
         log(f"WARN: feed health write failed: {exc}")
 
+def _load_feed_outages_file():
+    try:
+        with open(_FEED_OUTAGES_FP, "r", encoding="utf-8") as handle:
+            value = json.load(handle)
+        if isinstance(value, dict):
+            outages = value.get("outages")
+            if not isinstance(outages, list):
+                value["outages"] = []
+            return value
+    except Exception:
+        pass
+    return {"version": 1, "outages": []}
+
+def _save_feed_outages_file(payload):
+    try:
+        parent = os.path.dirname(_FEED_OUTAGES_FP)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        tmp = _FEED_OUTAGES_FP + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, indent=2, sort_keys=True)
+        os.replace(tmp, _FEED_OUTAGES_FP)
+    except Exception as exc:
+        log(f"WARN: feed outage history write failed: {exc}")
+
+def _update_feed_outage_history(success, now, error=None):
+    """Persist confirmed feed outages for the all-unit activity timelines.
+
+    A failed poll starts a candidate interval. The interval is published only
+    after failures continue for the same 20-minute threshold used by the feed
+    health banner. Once confirmed, its displayed start remains the first
+    failed poll; a successful poll closes it.
+    """
+    history = _load_feed_outages_file()
+    outages = [item for item in history.get("outages", []) if isinstance(item, dict) and item.get("start")]
+    history["version"] = 1
+    history["outages"] = outages
+    candidate = history.get("candidate") if isinstance(history.get("candidate"), dict) else None
+    open_outage = next((item for item in reversed(outages) if not item.get("end")), None)
+    changed = False
+
+    if success:
+        if open_outage is not None:
+            end_iso = _utc_iso(now)
+            open_outage["end"] = end_iso
+            open_outage["recovered_at"] = end_iso
+            start_epoch = _feed_health_epoch(open_outage.get("start"))
+            if start_epoch is not None:
+                open_outage["duration_seconds"] = max(0, int(now.replace(tzinfo=datetime.timezone.utc).timestamp() - start_epoch))
+            changed = True
+        if candidate is not None:
+            history.pop("candidate", None)
+            changed = True
+    elif open_outage is None:
+        if candidate is None:
+            candidate = {
+                "start": _utc_iso(now),
+                "reason": str(error or "feed request failed"),
+            }
+            history["candidate"] = candidate
+            changed = True
+        start_epoch = _feed_health_epoch(candidate.get("start"))
+        now_epoch = now.replace(tzinfo=datetime.timezone.utc).timestamp()
+        if start_epoch is None:
+            candidate["start"] = _utc_iso(now)
+            start_epoch = now_epoch
+            changed = True
+        if now_epoch - start_epoch >= FEED_HEALTH_THRESHOLD_SEC:
+            outages.append({
+                "start": candidate["start"],
+                "end": None,
+                "confirmed_at": _utc_iso(now),
+                "reason": candidate.get("reason") or str(error or "feed request failed"),
+                "source": "feed_monitor",
+            })
+            history["outages"] = outages[-FEED_OUTAGE_HISTORY_LIMIT:]
+            history.pop("candidate", None)
+            changed = True
+
+    if changed:
+        history["updated_at"] = _utc_iso(now)
+        _save_feed_outages_file(history)
+
 def update_feed_health(success, payload=None, http_status=None, error=None):
     now = datetime.datetime.utcnow()
+    _update_feed_outage_history(success, now, error=error)
     health = _load_feed_health_file()
     health["threshold_seconds"] = FEED_HEALTH_THRESHOLD_SEC
     health["checked_at"] = _utc_iso(now)
