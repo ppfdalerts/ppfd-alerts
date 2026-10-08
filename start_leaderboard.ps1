@@ -1345,6 +1345,17 @@ function Invoke-LeaderboardRun {
       Sort-Object LastWriteTimeUtc -Descending |
       Select-Object -First 1
     $feedHealth = if ($feedHealthItem) { $feedHealthItem.FullName } else { Join-Path $stateRoot 'feed_health.json' }
+    $feedOutageCandidates = @(
+      (Join-Path $stateRoot 'data\feed_outages.json'),
+      (Join-Path $here 'data\feed_outages.json'),
+      (Join-Path $repoRoot 'data\feed_outages.json')
+    ) | Select-Object -Unique
+    $feedOutageItem = $feedOutageCandidates |
+      Where-Object { Test-Path -LiteralPath $_ } |
+      ForEach-Object { Get-Item -LiteralPath $_ -ErrorAction SilentlyContinue } |
+      Sort-Object LastWriteTimeUtc -Descending |
+      Select-Object -First 1
+    $feedOutages = if ($feedOutageItem) { $feedOutageItem.FullName } else { Join-Path $stateRoot 'data\feed_outages.json' }
     $versionOut = Join-Path $generatedRoot 'docs\version.json'
     $backfillStatusOut = Join-Path $generatedRoot 'docs\backfill_status.json'
     $legacyCalc = Join-Path $here 'ppfd_leaderboard_calculator.py'
@@ -1361,6 +1372,7 @@ function Invoke-LeaderboardRun {
     $runFingerprint = @(
       $fp,
       (Get-FeedHealthFingerprint -Path $feedHealth),
+      (Get-FileFingerprint -Path $feedOutages),
       (Get-FileFingerprint -Path $genScript),
       (Get-FileFingerprint -Path $indexOut)
     ) -join ';;'
@@ -1407,7 +1419,7 @@ function Invoke-LeaderboardRun {
       if ($statsDir) { Write-Info "  SHIFT_STATS_DIR=$statsDir" }
       Write-Info "  OUT=$outData"
 
-      & $python $genScript --stats-dir $statsDir --out $outData --roster-out $outRoster --feed-health $feedHealth
+      & $python $genScript --stats-dir $statsDir --out $outData --roster-out $outRoster --feed-health $feedHealth --feed-outages $feedOutages
       if ($LASTEXITCODE -ne 0) {
         $hex = if ($LASTEXITCODE -lt 0) { ('0x{0:X8}' -f ([uint32]$LASTEXITCODE)) } else { $null }
         if ($hex) { throw "Leaderboard generator failed (exit $LASTEXITCODE / $hex)." }
