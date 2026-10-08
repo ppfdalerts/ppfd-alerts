@@ -488,6 +488,7 @@ function Get-SystemSourceMappings {
     @{ Base = $WorkspaceRoot; Rel = 'ppfd_telegram_alerts_v3.2.py';     Dest = 'ppfd_telegram_alerts_v3.2.py' },
     @{ Base = $RepoRoot;      Rel = '.github\workflows\pages-data.yml'; Dest = '.github/workflows/pages-data.yml' },
     @{ Base = $RepoRoot;      Rel = '.gitignore';                       Dest = '.gitignore' },
+    @{ Base = $RepoRoot;      Rel = 'data\feed_outages.json';           Dest = 'data/feed_outages.json' },
     @{ Base = $RepoRoot;      Rel = 'README.md';                        Dest = 'README.md' },
     @{ Base = $RepoRoot;      Rel = 'restart_all.bat';                  Dest = 'restart_all.bat' },
     @{ Base = $RepoRoot;      Rel = 'scripts\generate_leaderboard.py';  Dest = 'scripts/generate_leaderboard.py' },
