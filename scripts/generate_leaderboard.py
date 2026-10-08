@@ -2580,6 +2580,8 @@ def main():
     if feed_health is not None:
         payload["feed_health"] = feed_health
     feed_outages_path = Path(args.feed_outages) if args.feed_outages else stats_dir.parent / "feed_outages.json"
+    if not feed_outages_path.exists() and not args.feed_outages:
+        feed_outages_path = Path(__file__).resolve().parents[1] / "data" / "feed_outages.json"
     payload["feed_outages"] = load_feed_outages(feed_outages_path)
 
     tmp = out_path.with_suffix('.json.tmp')
