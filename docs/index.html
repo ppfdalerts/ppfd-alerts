@@ -48,14 +48,17 @@
   .activity-chart{display:block; width:274px; max-width:100%;}
   .activity-summary{margin-bottom:3px; color:#bfdbfe; font-size:9px; line-height:1.1; white-space:nowrap; text-align:left; font-variant-numeric:tabular-nums}
   .activity-timeline{position:relative; height:20px; width:100%; overflow:hidden; border:1px solid #334155; border-radius:5px; background:linear-gradient(90deg, #202b39 0 var(--activity-elapsed,100%), #151a20 var(--activity-elapsed,100%) 100%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
-  .activity-timeline::after{content:""; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(90deg, transparent 0 calc(16.666% - 1px), rgba(148,163,184,.28) calc(16.666% - 1px) 16.666%); z-index:1}
-  .activity-segment{position:absolute; top:3px; bottom:3px; min-width:4px; border:1px solid rgba(255,255,255,.78); box-sizing:border-box; border-radius:2px; z-index:2; box-shadow:0 0 0 1px rgba(15,23,42,.78); cursor:help}
+  .activity-timeline::after{content:""; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(90deg, transparent 0 calc(16.666% - 1px), rgba(148,163,184,.28) calc(16.666% - 1px) 16.666%); z-index:2}
+  .activity-outage{position:absolute; top:0; bottom:0; min-width:2px; box-sizing:border-box; z-index:1; cursor:help; background:repeating-linear-gradient(135deg, rgba(248,113,113,.92) 0 4px, rgba(69,10,10,.82) 4px 8px); border-left:1px solid #fecaca; border-right:1px solid #fecaca}
+  .activity-segment{position:absolute; top:3px; bottom:3px; min-width:4px; border:1px solid rgba(255,255,255,.78); box-sizing:border-box; border-radius:2px; z-index:3; box-shadow:0 0 0 1px rgba(15,23,42,.78); cursor:help}
   .activity-segment.short{background:#22c55e}
   .activity-segment.medium{background:#eab308}
   .activity-segment.long{background:#f97316}
   .activity-segment.critical{background:#ef4444}
   .activity-segment.unknown{background:#60a5fa; opacity:.8}
-  .activity-now{position:absolute; top:0; bottom:0; width:1px; background:#f8fafc; opacity:.72; z-index:3; pointer-events:none}
+  .activity-now{position:absolute; top:0; bottom:0; width:1px; background:#f8fafc; opacity:.72; z-index:4; pointer-events:none}
+  .activity-legend{display:block; margin-top:3px; color:#fecaca; font-size:9px; line-height:1; font-weight:600; white-space:nowrap}
+  .activity-outage-swatch{display:inline-block; width:14px; height:8px; margin-right:4px; vertical-align:-1px; border:1px solid #fecaca; border-radius:2px; background:repeating-linear-gradient(135deg, #f87171 0 3px, #450a0a 3px 6px)}
   .activity-scale{display:grid; grid-template-columns:repeat(7,1fr); color:#94a3b8; font-size:8px; line-height:1; margin-top:3px; font-variant-numeric:tabular-nums}
   .activity-scale span:nth-child(n+2){text-align:center}
   .activity-scale span:last-child{text-align:right}
@@ -222,12 +225,12 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)</th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>911 website downtime</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)</th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>911 website downtime</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
@@ -744,7 +747,7 @@
       var d=activityDate(value);
       return d ? d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : '--';
     }
-    function renderActivityTimeline(cell, records, rate, totalCalls, activeSeconds, utilization, exactDuration, meta){
+    function renderActivityTimeline(cell, records, rate, totalCalls, activeSeconds, utilization, exactDuration, meta, outages){
       var calls=Array.isArray(records) ? records : [];
       var chart=document.createElement('div');
       chart.className='activity-chart';
@@ -769,6 +772,38 @@
       var visibleEnd=isCurrent ? new Date(Math.min(shiftEnd.getTime(), Math.max(now.getTime(), shiftStart.getTime()+60*60*1000))) : shiftEnd;
       var visibleMs=Math.max(60*60*1000, visibleEnd.getTime()-shiftStart.getTime());
       timeline.style.setProperty('--activity-elapsed', (isCurrent ? Math.min(100, elapsed/visibleMs*100) : 100)+'%');
+      var visibleOutageCount=0;
+      (Array.isArray(outages) ? outages : []).forEach(function(record){
+        var start=activityDate(record && record.start);
+        if(!start) return;
+        var end=activityDate(record && record.end) || now;
+        if(end.getTime() <= shiftStart.getTime() || start.getTime() >= visibleEnd.getTime()) return;
+        var clippedStart=new Date(Math.max(start.getTime(), shiftStart.getTime()));
+        var clippedEnd=new Date(Math.min(end.getTime(), visibleEnd.getTime()));
+        if(clippedEnd.getTime() <= clippedStart.getTime()) return;
+        var left=((clippedStart.getTime()-shiftStart.getTime())/visibleMs)*100;
+        var width=((clippedEnd.getTime()-clippedStart.getTime())/visibleMs)*100;
+        var outage=document.createElement('div');
+        outage.className='activity-outage';
+        outage.style.left=Math.max(0,Math.min(100,left))+'%';
+        outage.style.width=Math.max(0,Math.min(100-left,width))+'%';
+        var fullDuration=Math.max(0,(end.getTime()-start.getTime())/1000);
+        var outageTooltip=[
+          '911 active calls website downtime',
+          'Start: '+activityTime(record.start),
+          'Restored: '+(record.end ? activityTime(record.end) : 'Ongoing'),
+          'Duration: '+formatActivityDuration(fullDuration)
+        ];
+        if(record.reason) outageTooltip.push('Reason: '+String(record.reason));
+        outage.title=outageTooltip.join('\n');
+        outage.setAttribute('role','img');
+        outage.setAttribute('aria-label',outageTooltip.slice(0,4).join('. '));
+        timeline.appendChild(outage);
+        visibleOutageCount += 1;
+      });
+      if(visibleOutageCount){
+        chart.setAttribute('aria-label','24-hour call activity timeline with '+Number(totalCalls || 0)+' calls and '+visibleOutageCount+' 911 website downtime interval'+(visibleOutageCount===1?'':'s'));
+      }
       calls.forEach(function(record){
         var start=activityDate(record.start);
         if(!start) return;
@@ -848,7 +883,7 @@
       var tdU=document.createElement('td'); tdU.textContent=r.unit; tdU.className='col-unit'; tr.appendChild(tdU);
       var tdC=document.createElement('td'); tdC.className='col-calls'; tdC.innerHTML='<span class="pill-badge calls-badge" style="'+callsHeat(r.calls||0)+'">'+(r.calls||0)+'</span>'; tr.appendChild(tdC);
       var tdRate=document.createElement('td'); tdRate.className='col-rate';
-      renderActivityTimeline(tdRate, r.call_timeline, r.avg_calls_per_hour, r.calls, r.active_seconds, r.utilization_pct, r.activity_duration_exact, data.meta || {});
+      renderActivityTimeline(tdRate, r.call_timeline, r.avg_calls_per_hour, r.calls, r.active_seconds, r.utilization_pct, r.activity_duration_exact, data.meta || {}, appState.payload && appState.payload.feed_outages);
       tr.appendChild(tdRate);
       var tdUtil=document.createElement('td'); tdUtil.className='col-util';
       var util=Number(r.utilization_pct || 0);
