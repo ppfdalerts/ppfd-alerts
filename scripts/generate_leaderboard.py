@@ -198,6 +198,41 @@ def load_feed_health(path: Path | None):
     }
 
 
+def load_feed_outages(path: Path | None) -> list[dict]:
+    """Load durable, monitor-confirmed 911 feed outage intervals."""
+    if not path or not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception:
+        return []
+    raw_outages = payload.get("outages", []) if isinstance(payload, dict) else payload
+    if not isinstance(raw_outages, list):
+        return []
+
+    outages: list[dict] = []
+    for raw in raw_outages:
+        if not isinstance(raw, dict) or not _parse_activity_datetime(raw.get("start")):
+            continue
+        end = raw.get("end")
+        if end and not _parse_activity_datetime(end):
+            end = None
+        record = {
+            "start": str(raw["start"]),
+            "end": str(end) if end else None,
+            "reason": str(raw.get("reason") or "911 active calls website unavailable"),
+            "source": str(raw.get("source") or "feed_monitor"),
+        }
+        duration = raw.get("duration_seconds")
+        try:
+            record["duration_seconds"] = max(0, int(duration)) if duration is not None else None
+        except (TypeError, ValueError):
+            record["duration_seconds"] = None
+        outages.append(record)
+    outages.sort(key=lambda item: item["start"])
+    return outages
+
+
 def load_personnel_stats(fp: Path):
     try:
         with fp.open("r", encoding="utf-8") as f:
@@ -2380,6 +2415,7 @@ def main():
     parser.add_argument('--roster-dir', default=os.environ.get('ROSTER_DIR', ''), help='Directory containing roster_units_*.json files')
     parser.add_argument('--roster-out', default=str(Path('docs') / 'roster_units.json'), help='Output path for roster_units.json')
     parser.add_argument('--feed-health', default=os.environ.get('PPFD_FEED_HEALTH_PATH', ''), help='Path to the live 911 feed health JSON file')
+    parser.add_argument('--feed-outages', default=os.environ.get('PPFD_FEED_OUTAGES_PATH', ''), help='Path to the durable 911 feed outage history JSON file')
     parser.add_argument('--no-roster', action='store_true', help='Skip generating roster_units.json')
     args = parser.parse_args()
 
@@ -2543,6 +2579,8 @@ def main():
     feed_health = load_feed_health(Path(args.feed_health) if args.feed_health else None)
     if feed_health is not None:
         payload["feed_health"] = feed_health
+    feed_outages_path = Path(args.feed_outages) if args.feed_outages else stats_dir.parent / "feed_outages.json"
+    payload["feed_outages"] = load_feed_outages(feed_outages_path)
 
     tmp = out_path.with_suffix('.json.tmp')
     with tmp.open('w', encoding='utf-8') as f:
