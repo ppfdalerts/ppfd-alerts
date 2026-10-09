@@ -1768,6 +1768,9 @@ def compute_shift_breakdown(
     sum_after: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
     max_after: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
     sum_ride_in: dict[str, dict[str, int]] = defaultdict(lambda: {l: 0 for l in letters})
+    sum_active_seconds: dict[str, float] = defaultdict(float)
+    unknown_activity_days: dict[str, int] = defaultdict(int)
+    duration_coverage_dates: list[datetime.date] = []
 
     for name in os.listdir(stats_dir):
         m = STATS_FILENAME_RE.fullmatch(name)
@@ -1781,6 +1784,28 @@ def compute_shift_breakdown(
             continue
         letter = _shift_letter_for(d)
         file_calls, file_dur, file_after, file_max, file_ride_in, file_duration_known = load_stats(stats_dir / name)
+        day_activity = _daily_call_activity(stats_dir, d, now)
+        day_active_seconds: dict[str, float] = {}
+        activity_units = set(file_calls) | set(file_dur) | set(day_activity)
+        for unit in activity_units:
+            if unit not in WATCH_SET:
+                continue
+            active_seconds = (day_activity.get(unit) or {}).get("active_seconds")
+            if active_seconds is None and float(file_dur.get(unit, 0) or 0) > 0:
+                active_seconds = float(file_dur.get(unit, 0) or 0)
+            if active_seconds is None:
+                continue
+            # One apparatus cannot be utilized for more than the full shift.
+            # Exact modern intervals are already unioned by _daily_call_activity;
+            # this cap also protects legacy aggregate totals from overlap.
+            day_active_seconds[unit] = min(86400.0, max(0.0, float(active_seconds)))
+        if day_active_seconds:
+            duration_coverage_dates.append(d)
+            for unit, active_seconds in day_active_seconds.items():
+                sum_active_seconds[unit] += active_seconds
+            for unit, count in file_calls.items():
+                if unit in WATCH_SET and int(count or 0) > 0 and unit not in day_active_seconds:
+                    unknown_activity_days[unit] += 1
         for unit in (set(file_calls) | set(file_dur) | set(file_after) | set(file_max) | set(file_ride_in)):
             if unit not in WATCH_SET:
                 continue
@@ -1812,6 +1837,14 @@ def compute_shift_breakdown(
         after_abc = [int(sum_after[unit][l]) for l in letters]
         after_max_abc = [int(max_after[unit][l]) for l in letters]
         ride_in_abc = [int(sum_ride_in[unit][l]) for l in letters]
+        utilization_coverage_days = max(0, len(duration_coverage_dates) - int(unknown_activity_days.get(unit, 0)))
+        active_seconds = float(sum_active_seconds.get(unit, 0.0))
+        utilization_pct = None
+        if utilization_coverage_days > 0:
+            utilization_pct = round(
+                min(100.0, max(0.0, active_seconds / (utilization_coverage_days * 86400.0) * 100.0)),
+                1,
+            )
         rows.append({
             "unit": unit,
             "calls_abc": calls_abc,
@@ -1825,6 +1858,9 @@ def compute_shift_breakdown(
             "total_after": sum(after_abc),
             "total_ride_ins": sum(ride_in_abc),
             "avg_calls_per_hour": round(sum(calls_abc) / float(_period_hours(start_date, end_date)), 2),
+            "active_seconds": round(active_seconds, 1) if utilization_coverage_days > 0 else None,
+            "utilization_pct": utilization_pct,
+            "utilization_coverage_days": utilization_coverage_days,
             "delta_calls": int((delta_map or {}).get(unit, 0)),
         })
     # Sort by total calls desc then unit
