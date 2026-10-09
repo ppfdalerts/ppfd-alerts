@@ -1343,7 +1343,7 @@ def _merge_activity_intervals(intervals: list[tuple[datetime.datetime, datetime.
 def _daily_call_activity(stats_dir: Path, shift_date: datetime.date, now: datetime.datetime) -> dict[str, dict]:
     """Build compact per-call timeline records for one 24-hour shift."""
     stats_path = stats_dir / f"shift_stats_{shift_date:%Y-%m-%d}.json"
-    calls, dur, _after, _max_sec, _ride_in, _duration_known = load_stats(stats_path)
+    calls, dur, _after, _max_sec, _ride_in, duration_known_calls = load_stats(stats_path)
     try:
         with stats_path.open("r", encoding="utf-8") as f:
             raw_events = json.load(f).get("call_events", {})
@@ -1445,30 +1445,47 @@ def _daily_call_activity(stats_dir: Path, shift_date: datetime.date, now: dateti
                 parsed_intervals.append((start, end))
         union_seconds = _merge_activity_intervals(parsed_intervals)
         aggregate_seconds = float(dur.get(unit, 0) or 0)
+        known_duration_count = int((duration_known_calls or {}).get(unit, 0) or 0)
         if all_durations_known:
             active_seconds = union_seconds
             exact = True
-        else:
+        elif aggregate_seconds > 0 or known_duration_count > 0:
             # Older files have call start events and aggregate durations but no
             # per-call clear records. Keep their existing duration totals without
             # fabricating individual clear times.
             active_seconds = aggregate_seconds
             exact = False
+        elif int(calls.get(unit, 0) or 0) <= 0:
+            active_seconds = 0.0
+            exact = False
+        else:
+            active_seconds = None
+            exact = False
         activity[unit] = {
             "records": records,
-            "active_seconds": round(max(0.0, active_seconds), 1),
+            "active_seconds": round(max(0.0, active_seconds), 1) if active_seconds is not None else None,
             "duration_exact": exact,
-            "utilization_pct": round(min(100.0, max(0.0, active_seconds / 86400.0 * 100.0)), 1),
+            "utilization_pct": (
+                round(min(100.0, max(0.0, active_seconds / 86400.0 * 100.0)), 1)
+                if active_seconds is not None
+                else None
+            ),
         }
     for unit, count in calls.items():
         if unit not in WATCH_SET or unit in activity or int(count or 0) <= 0:
             continue
         aggregate_seconds = float(dur.get(unit, 0) or 0)
+        known_duration_count = int((duration_known_calls or {}).get(unit, 0) or 0)
+        active_seconds = aggregate_seconds if aggregate_seconds > 0 or known_duration_count > 0 else None
         activity[unit] = {
             "records": [],
-            "active_seconds": round(max(0.0, aggregate_seconds), 1),
+            "active_seconds": round(max(0.0, active_seconds), 1) if active_seconds is not None else None,
             "duration_exact": False,
-            "utilization_pct": round(min(100.0, max(0.0, aggregate_seconds / 86400.0 * 100.0)), 1),
+            "utilization_pct": (
+                round(min(100.0, max(0.0, active_seconds / 86400.0 * 100.0)), 1)
+                if active_seconds is not None
+                else None
+            ),
         }
     return activity
 
@@ -1487,9 +1504,9 @@ def _attach_daily_call_activity(period_payload: dict, stats_dir: Path, shift_dat
         row["call_frequency"] = frequency.get(unit, [])
         unit_activity = activity.get(unit, {})
         row["call_timeline"] = unit_activity.get("records", [])
-        row["active_seconds"] = unit_activity.get("active_seconds", 0.0)
+        row["active_seconds"] = unit_activity.get("active_seconds")
         row["activity_duration_exact"] = bool(unit_activity.get("duration_exact", False))
-        row["utilization_pct"] = unit_activity.get("utilization_pct", 0.0)
+        row["utilization_pct"] = unit_activity.get("utilization_pct")
         # The live worker can atomically replace the stats file between the
         # daily-row read and the timeline read.  If that happens at the exact
         # moment a call clears, keep this published snapshot internally
