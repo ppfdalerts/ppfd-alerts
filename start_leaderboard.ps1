@@ -484,6 +484,7 @@ function Get-SystemSourceMappings {
     @{ Base = $WorkspaceRoot; Rel = 'backfill_groupme_call_times.py';   Dest = 'backfill_groupme_call_times.py' },
     @{ Base = $RepoRoot;      Rel = 'backfill_call_intervals.py';        Dest = 'backfill_call_intervals.py' },
     @{ Base = $RepoRoot;      Rel = 'backfill_csv_involved_intervals.py'; Dest = 'backfill_csv_involved_intervals.py' },
+    @{ Base = $RepoRoot;      Rel = 'backfill_unit_utilization.py';       Dest = 'backfill_unit_utilization.py' },
     @{ Base = $WorkspaceRoot; Rel = 'ppfd_leaderboard_calculator.py';   Dest = 'ppfd_leaderboard_calculator.py' },
     @{ Base = $WorkspaceRoot; Rel = 'ppfd_telegram_alerts_v3.2.py';     Dest = 'ppfd_telegram_alerts_v3.2.py' },
     @{ Base = $RepoRoot;      Rel = '.github\workflows\pages-data.yml'; Dest = '.github/workflows/pages-data.yml' },
