@@ -235,7 +235,7 @@
       <div class="body"><table id="board-week"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
-          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th>
+          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th><th class="col-util" rowspan="2">Utilization</th>
           <th colspan="3">Total Calls</th>
           <th colspan="3">Single-Shift Max Calls</th>
           <th colspan="3">Avg. Call Duration (Mins)</th>
@@ -260,7 +260,7 @@
       <div class="body"><table id="board-month"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
-          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th>
+          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th><th class="col-util" rowspan="2">Utilization</th>
           <th colspan="3">Total Calls</th>
           <th colspan="3">Single-Shift Max Calls</th>
           <th colspan="3">Avg. Call Duration (Mins)</th>
@@ -285,7 +285,7 @@
       <div class="body"><table id="board-year"><thead>
         <tr>
           <th class="col-unit" rowspan="2">Unit</th>
-          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th>
+          <th class="col-total" rowspan="2">Cumulative Calls</th><th class="col-rate" rowspan="2">Avg Calls/Hr</th><th class="col-util" rowspan="2">Utilization</th>
           <th colspan="3">Total Calls</th>
           <th colspan="3">Single-Shift Max Calls</th>
           <th colspan="3">Avg. Call Duration (Mins)</th>
@@ -905,7 +905,7 @@
     var tbody=table.querySelector('tbody');
     tbody.innerHTML='';
     var hasCumulative = periodKey === 'week' || periodKey === 'month' || periodKey === 'year' || periodKey === 'rolling_year';
-    var thCount=hasCumulative ? 24 : 23;
+    var thCount=hasCumulative ? 25 : 24;
     if(!data || !Array.isArray(data.rows) || data.rows.length===0){
       var tr=document.createElement('tr'); var td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
@@ -958,6 +958,19 @@
       tdRate.className='col-rate';
       tdRate.textContent = r.avg_calls_per_hour == null ? '--' : Number(r.avg_calls_per_hour).toFixed(2);
       tr.appendChild(tdRate);
+      var tdUtil=document.createElement('td');
+      tdUtil.className='col-util';
+      if(r.utilization_pct == null){
+        tdUtil.innerHTML='<span class="utilization-value">--</span>';
+        tdUtil.title='Unit utilization unavailable; no reliable unit duration data exists for this period.';
+      } else {
+        var util=Number(r.utilization_pct);
+        var utilClass=util>=20 ? 'utilization-peak' : util>=10 ? 'utilization-high' : util>=5 ? 'utilization-medium' : 'utilization-low';
+        tdUtil.innerHTML='<span class="utilization-value '+utilClass+'">'+util.toFixed(1)+'%</span>';
+        var activeHours=r.active_seconds == null ? '--' : (Number(r.active_seconds)/3600).toFixed(1);
+        tdUtil.title='Active time: '+activeHours+' hours across '+Number(r.utilization_coverage_days || 0)+' shifts with reliable duration data.';
+      }
+      tr.appendChild(tdUtil);
       (function(){
         var classes=['valA','valB','valC'];
         function renderGroup(arr, isFloat, lowestWins, allowZero){
@@ -1552,11 +1565,12 @@
         var afm = r.after_max_abc || [0,0,0];
         var ri = r.ride_in_abc || [0,0,0];
         var cumulative = (panel === 'week' || panel === 'month' || panel === 'year') ? [Number(r.total_calls || 0)] : [];
-        return [r.unit || ''].concat(cumulative, [csvMaybeFloat(r.avg_calls_per_hour), c[0], c[1], c[2], cm[0], cm[1], cm[2], csvMaybeFloat(a[0]), csvMaybeFloat(a[1]), csvMaybeFloat(a[2]), csvMaybeFloat(m[0]), csvMaybeFloat(m[1]), csvMaybeFloat(m[2]), af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2]]);
+        var utilization = r.utilization_pct == null ? '' : Number(r.utilization_pct).toFixed(1) + '%';
+        return [r.unit || ''].concat(cumulative, [csvMaybeFloat(r.avg_calls_per_hour), utilization, c[0], c[1], c[2], cm[0], cm[1], cm[2], csvMaybeFloat(a[0]), csvMaybeFloat(a[1]), csvMaybeFloat(a[2]), csvMaybeFloat(m[0]), csvMaybeFloat(m[1]), csvMaybeFloat(m[2]), af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2]]);
       });
       downloadCsv(
         'ppfd_' + exportKey + '_' + ts + '.csv',
-         (panel === 'week' || panel === 'month' || panel === 'year' ? ['Unit','Cumulative Calls','Avg Calls/Hr'] : ['Unit','Avg Calls/Hr']).concat(['Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Ride-Ins A','Ride-Ins B','Ride-Ins C']),
+         (panel === 'week' || panel === 'month' || panel === 'year' ? ['Unit','Cumulative Calls','Avg Calls/Hr','Utilization'] : ['Unit','Avg Calls/Hr','Utilization']).concat(['Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Ride-Ins A','Ride-Ins B','Ride-Ins C']),
         rowsW
       );
       return;
