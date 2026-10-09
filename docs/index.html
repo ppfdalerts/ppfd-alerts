@@ -225,12 +225,12 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>911 website downtime</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>Striped = Active 911 site is down</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>911 website downtime</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>Striped = Active 911 site is down</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
@@ -789,7 +789,7 @@
         outage.style.width=Math.max(0,Math.min(100-left,width))+'%';
         var fullDuration=Math.max(0,(end.getTime()-start.getTime())/1000);
         var outageTooltip=[
-          '911 active calls website downtime',
+          'Active 911 site is down',
           'Start: '+activityTime(record.start),
           'Restored: '+(record.end ? activityTime(record.end) : 'Ongoing'),
           'Duration: '+formatActivityDuration(fullDuration)
@@ -802,7 +802,7 @@
         visibleOutageCount += 1;
       });
       if(visibleOutageCount){
-        chart.setAttribute('aria-label','24-hour call activity timeline with '+Number(totalCalls || 0)+' calls and '+visibleOutageCount+' 911 website downtime interval'+(visibleOutageCount===1?'':'s'));
+        chart.setAttribute('aria-label','24-hour call activity timeline with '+Number(totalCalls || 0)+' calls and '+visibleOutageCount+' Active 911 site-down interval'+(visibleOutageCount===1?'':'s'));
       }
       calls.forEach(function(record){
         var start=activityDate(record.start);
