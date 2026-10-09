@@ -225,12 +225,12 @@
   <div class="canvas">
     <div class="panel" id="panel-today" style="left:2vw; top:8vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot today"></span><span>Today</span><span id="hdr-today" class="sub">--</span><button class="mini-btn csv-btn" data-panel="today">CSV</button></div>
-      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>Striped = Active 911 site is down</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-today"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>Striped = Active 911 site is down</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-prior" style="left:2vw; top:23vh; width:96vw; height:14vh">
       <div class="hdr"><span class="dot prior"></span><span>Prior Shift</span><span id="hdr-prior" class="sub">--</span><button class="mini-btn csv-btn" data-panel="prior">CSV</button></div>
-      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>Striped = Active 911 site is down</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-calls">Change vs Last Period</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
+      <div class="body"><table id="board-prior"><thead><tr><th class="col-unit">Unit</th><th class="col-calls">Calls</th><th class="col-rate">Shift Activity (24-Hour Timeline)<span class="activity-legend"><span class="activity-outage-swatch" aria-hidden="true"></span>Striped = Active 911 site is down</span></th><th class="col-util">Utilization</th><th class="col-calls">Ride-Ins</th><th class="col-avg">Avg. Time On Call (min)</th><th class="col-max">Highest Time On Call (min)</th><th class="col-after">Calls After Midnight</th></tr></thead><tbody></tbody></table></div>
       <svg class="grip" viewBox="0 0 24 24"><path d="M8 11h8v2H8zM8 15h8v2H8zM8 7h8v2H8z"/></svg>
     </div>
     <div class="panel" id="panel-week" style="left:2vw; top:38vh; width:96vw; height:14vh">
@@ -245,7 +245,7 @@
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
           <th colspan="3">Single-Shift Max After Midnight</th>
-          <th colspan="3">Ride-Ins</th><th rowspan="2">Change vs Last Period</th></tr>
+          <th colspan="3">Ride-Ins</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -270,7 +270,7 @@
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
           <th colspan="3">Single-Shift Max After Midnight</th>
-          <th colspan="3">Ride-Ins</th><th rowspan="2">Change vs Last Period</th></tr>
+          <th colspan="3">Ride-Ins</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -295,7 +295,7 @@
           <th colspan="3">Highest Call Duration (Mins)</th>
           <th colspan="3">Total Calls After Midnight</th>
           <th colspan="3">Single-Shift Max After Midnight</th>
-          <th colspan="3">Ride-Ins</th><th rowspan="2">Change vs Last Period</th></tr>
+          <th colspan="3">Ride-Ins</th></tr>
         <tr>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
           <th class="valA">A</th><th class="valB">B</th><th class="valC">C</th>
@@ -342,7 +342,7 @@
               <th data-sort="highest_call_duration_mins">Highest Call Duration (Mins)</th>
               <th data-sort="total_calls_after_midnight">Total Calls After Midnight</th>
               <th data-sort="single_shift_max_after_midnight">Single-Shift Max After Midnight</th>
-              <th data-sort="total_call_hours">Total Call Hours</th><th data-sort="delta_calls">Change vs Last Period</th>
+              <th data-sort="total_call_hours">Total Call Hours</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -755,7 +755,8 @@
       chart.setAttribute('aria-label','24-hour call activity timeline with '+Number(totalCalls || 0)+' calls');
       var summary=document.createElement('div');
       summary.className='activity-summary';
-      summary.textContent=(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr • '+Number(totalCalls || 0)+' calls • '+(exactDuration ? '' : '~')+formatActivityDuration(activeSeconds)+' active';
+      var activeSummary = activeSeconds == null ? 'active time unavailable' : (exactDuration ? '' : '~')+formatActivityDuration(activeSeconds)+' active';
+      summary.textContent=(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr • '+Number(totalCalls || 0)+' calls • '+activeSummary;
       chart.appendChild(summary);
 
       var timeline=document.createElement('div');
@@ -886,17 +887,21 @@
       renderActivityTimeline(tdRate, r.call_timeline, r.avg_calls_per_hour, r.calls, r.active_seconds, r.utilization_pct, r.activity_duration_exact, data.meta || {}, appState.payload && appState.payload.feed_outages);
       tr.appendChild(tdRate);
       var tdUtil=document.createElement('td'); tdUtil.className='col-util';
-      var util=Number(r.utilization_pct || 0);
-      var utilClass=util>=20 ? 'utilization-peak' : util>=10 ? 'utilization-high' : util>=5 ? 'utilization-medium' : 'utilization-low';
-      tdUtil.innerHTML='<span class="utilization-value '+utilClass+'">'+util.toFixed(1)+'%</span>';
-      tdUtil.title=(r.activity_duration_exact ? '' : 'Based on aggregate duration data; per-call clear times are unavailable for this shift.')+' Active time: '+formatActivityDuration(r.active_seconds);
+      if(r.utilization_pct == null){
+        tdUtil.innerHTML='<span class="utilization-value">--</span>';
+        tdUtil.title='Unit utilization unavailable; no reliable unit duration data exists for this shift.';
+      } else {
+        var util=Number(r.utilization_pct);
+        var utilClass=util>=20 ? 'utilization-peak' : util>=10 ? 'utilization-high' : util>=5 ? 'utilization-medium' : 'utilization-low';
+        tdUtil.innerHTML='<span class="utilization-value '+utilClass+'">'+util.toFixed(1)+'%</span>';
+        tdUtil.title=(r.activity_duration_exact ? '' : 'Based on retained unit duration totals; per-call clear times are unavailable for this shift.')+' Active time: '+formatActivityDuration(r.active_seconds);
+      }
       tr.appendChild(tdUtil);
       var tdR=document.createElement('td'); tdR.className='col-calls';
       var rideIns=r.ride_in_count||0;
       if(rideIns>0){ tdR.innerHTML='<span class="pill-badge ride-badge">'+rideIns+'</span>'; }
       else { tdR.textContent='0'; tdR.style.color='#9ca3af'; }
       tr.appendChild(tdR);
-      var tdD=document.createElement('td'); tdD.className='col-calls ' + deltaClass(r.delta_calls||0); tdD.textContent=formatDelta(r.delta_calls||0); tr.appendChild(tdD);
       var tdA=document.createElement('td'); tdA.className='col-avg'; tdA.innerHTML='<span class="pill-badge avg-badge">'+formatMaybeFloat(r.avg_min)+'</span>'; tr.appendChild(tdA);
       var thCount=table.querySelectorAll('thead th').length;
       if(thCount>=5){
@@ -917,7 +922,7 @@
     var tbody=table.querySelector('tbody');
     tbody.innerHTML='';
     var hasCumulative = periodKey === 'week' || periodKey === 'month' || periodKey === 'year' || periodKey === 'rolling_year';
-    var thCount=hasCumulative ? 25 : 24;
+    var thCount=hasCumulative ? 24 : 23;
     if(!data || !Array.isArray(data.rows) || data.rows.length===0){
       var tr=document.createElement('tr'); var td=document.createElement('td'); td.colSpan=thCount; td.textContent='No runs recorded.'; td.style.color='#9ca3af'; tr.appendChild(td); tbody.appendChild(tr); return;
     }
@@ -990,10 +995,6 @@
         renderGroup(r.after_max_abc, false, false);
         renderGroup(r.ride_in_abc, false, true, true);
       })();
-      var tdDelta=document.createElement('td');
-      tdDelta.className = deltaClass(r.delta_calls||0);
-      tdDelta.textContent = formatDelta(r.delta_calls||0);
-      tr.appendChild(tdDelta);
       tbody.appendChild(tr);
     });
   }
@@ -1398,7 +1399,6 @@
       addCell(String(r.total_calls_after_midnight || 0));
       addCell(String(r.single_shift_max_after_midnight || 0));
       addCell((r.total_call_hours != null ? Number(r.total_call_hours).toFixed(1) : '0.0'));
-      addCell(formatDelta(r.delta_calls || 0), deltaClass(r.delta_calls || 0));
       tbody.appendChild(tr);
     });
 
@@ -1546,13 +1546,12 @@
           activeSeconds == null ? '' : formatActivityDuration(activeSeconds),
           utilization == null ? '' : utilization.toFixed(1) + '%',
           Number(r.ride_in_count || 0),
-          Number(r.delta_calls || 0),
           csvMaybeFloat(r.avg_min),
           csvMaybeFloat(r.max_min),
           Number(r.after_0000 || 0)
         ];
       });
-      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Avg Calls/Hr','Active Time','Utilization','Ride-Ins','Change vs Last Period','Avg Min','Max Min','After 00:00'], rows);
+      downloadCsv('ppfd_' + panel + '_' + ts + '.csv', ['Unit','Calls','Avg Calls/Hr','Active Time','Utilization','Ride-Ins','Avg Min','Max Min','After 00:00'], rows);
       return;
     }
     if(panel === 'week' || panel === 'month' || panel === 'year'){
@@ -1571,11 +1570,11 @@
         var afm = r.after_max_abc || [0,0,0];
         var ri = r.ride_in_abc || [0,0,0];
         var cumulative = (panel === 'week' || panel === 'month' || panel === 'year') ? [Number(r.total_calls || 0)] : [];
-        return [r.unit || ''].concat(cumulative, [csvMaybeFloat(r.avg_calls_per_hour), c[0], c[1], c[2], cm[0], cm[1], cm[2], csvMaybeFloat(a[0]), csvMaybeFloat(a[1]), csvMaybeFloat(a[2]), csvMaybeFloat(m[0]), csvMaybeFloat(m[1]), csvMaybeFloat(m[2]), af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2], Number(r.delta_calls || 0)]);
+        return [r.unit || ''].concat(cumulative, [csvMaybeFloat(r.avg_calls_per_hour), c[0], c[1], c[2], cm[0], cm[1], cm[2], csvMaybeFloat(a[0]), csvMaybeFloat(a[1]), csvMaybeFloat(a[2]), csvMaybeFloat(m[0]), csvMaybeFloat(m[1]), csvMaybeFloat(m[2]), af[0], af[1], af[2], afm[0], afm[1], afm[2], ri[0], ri[1], ri[2]]);
       });
       downloadCsv(
         'ppfd_' + exportKey + '_' + ts + '.csv',
-         (panel === 'week' || panel === 'month' || panel === 'year' ? ['Unit','Cumulative Calls','Avg Calls/Hr'] : ['Unit','Avg Calls/Hr']).concat(['Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Ride-Ins A','Ride-Ins B','Ride-Ins C','Change vs Last Period']),
+         (panel === 'week' || panel === 'month' || panel === 'year' ? ['Unit','Cumulative Calls','Avg Calls/Hr'] : ['Unit','Avg Calls/Hr']).concat(['Calls A','Calls B','Calls C','Max Calls A','Max Calls B','Max Calls C','Avg Min A','Avg Min B','Avg Min C','Max Min A','Max Min B','Max Min C','After A','After B','After C','Max After A','Max After B','Max After C','Ride-Ins A','Ride-Ins B','Ride-Ins C']),
         rowsW
       );
       return;
@@ -1590,7 +1589,6 @@
           csvMaybeFloat(r.avg_calls_per_hour),
           r.total_hours_worked == null ? '' : Number(r.total_hours_worked).toFixed(1),
           Number(r.ride_in_count || 0),
-          Number(r.delta_calls || 0),
           Number(r.single_shift_max_calls || 0),
           csvMaybeFloat(r.avg_call_duration_mins),
           csvMaybeFloat(r.highest_call_duration_mins),
@@ -1601,7 +1599,7 @@
       });
       downloadCsv(
         'ppfd_personnel_' + (personnelState.period || 'period') + '_' + ts + '.csv',
-         ['#','Name','Total Calls','Avg Calls/Hr','Hours Worked','Ride-Ins','Change vs Last Period','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
+         ['#','Name','Total Calls','Avg Calls/Hr','Hours Worked','Ride-Ins','Single-Shift Max Calls','Avg Duration Min','Highest Duration Min','After Midnight','Max After Midnight','Total Call Hours'],
         rowsP
       );
       return;
