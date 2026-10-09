@@ -170,9 +170,6 @@
   .detail-pop .detail-close{background:transparent; border:0; color:var(--muted); cursor:pointer; font-size:16px; line-height:16px; padding:2px 6px}
   .detail-pop .detail-body{max-height:420px; overflow:auto}
   .detail-pop table{font-size:13px}
-  .delta-pos{color:#86efac; font-weight:700}
-  .delta-neg{color:#fca5a5; font-weight:700}
-  .delta-zero{color:#9ca3af}
   .health-grid{display:grid; grid-template-columns:220px 1fr; gap:6px 10px; font-size:13px; padding-top:8px}
   .health-grid .k{color:#9ca3af}
   .health-grid .v{color:#e5e7eb}
@@ -638,20 +635,6 @@
     var payload = data || appState.payload || {};
     var mode = resolveYearMode(payload);
     return payload[mode] || null;
-  }
-
-  function formatDelta(value){
-    var n = Number(value || 0);
-    if(!isFinite(n)) n = 0;
-    if(n > 0) return '+' + n;
-    return String(n);
-  }
-
-  function deltaClass(value){
-    var n = Number(value || 0);
-    if(n > 0) return 'delta-pos';
-    if(n < 0) return 'delta-neg';
-    return 'delta-zero';
   }
 
   function renderIntegritySummary(integrity){
@@ -1297,8 +1280,7 @@
     highest_call_duration_mins: 'number',
     total_calls_after_midnight: 'number',
     single_shift_max_after_midnight: 'number',
-    total_call_hours: 'number',
-    delta_calls: 'number'
+    total_call_hours: 'number'
   };
 
   function updatePersonnelSortIndicators(){
