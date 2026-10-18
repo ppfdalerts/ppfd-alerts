@@ -3,6 +3,7 @@ const $ = id => document.getElementById(id);
 let feeds = [];
 let activeFeed = null;
 let activeMetadata = null;
+let activeConfiguration = null;
 let requestVersion = 0;
 const customUrls = new Map();
 const detailFields = ["show_unit", "show_position", "show_work_code", "show_shift", "show_employee", "show_description", "all_day", "busy"];
@@ -12,13 +13,13 @@ const storageKey = feed => "roster-feed-choices-v1:" + feedToken(feed);
 const staticHosting = document.documentElement.dataset.hosting === "github-pages";
 let backendOrigin;
 function message(text = "") { $("message").textContent = text; }
-async function api(path, data) {
+async function api(path, data, live = false) {
   const options = {credentials: "omit", cache: "no-store"};
   if (data !== undefined) { options.method = "POST"; options.headers = {"Content-Type": "application/json"}; options.body = JSON.stringify(data); }
   let endpoint = path;
   if (staticHosting) {
     if (path === "/portal/links") endpoint = "./directory.json";
-    else if (path.startsWith("/portal/customization/")) endpoint = "./people/" + path.split("/").pop() + ".json";
+    else if (path.startsWith("/portal/customization/") && !live) endpoint = "./people/" + path.split("/").pop() + ".json";
     else {
       if (!backendOrigin) {
         const config = await fetch("./backend.json", {cache: "no-store"}).then(response => response.json());
@@ -89,30 +90,64 @@ function applyChoices(choices) {
     label.append(checkbox, document.createTextNode((code || "(No code)") + (source ? " · " + source.count : " · not currently on roster"))); labels.push(label);
   }
   $("code-choices").replaceChildren(...labels); updateFormVisibility();
+  const colorRows = [];
+  const overrides = choices.code_colors || {};
+  const colorCodes = new Set([...activeMetadata.codes.map(item => item.value), ...Object.keys(overrides)]);
+  for (const code of [...colorCodes].sort()) {
+    const source = activeMetadata.codes.find(item => item.value === code);
+    const sourceColor = source?.color || "#FFFFFF";
+    const row = document.createElement("div"); row.className = "code-color-row";
+    const label = document.createElement("label"); label.className = "code-color-label";
+    const text = document.createElement("span"); text.textContent = code || "(No code)";
+    const description = document.createElement("small"); description.textContent = source?.name || "Work code";
+    const input = document.createElement("input"); input.type = "color"; input.value = overrides[code] || sourceColor;
+    input.dataset.code = code; input.dataset.sourceColor = sourceColor;
+    input.dataset.overridden = Object.hasOwn(overrides, code) ? "true" : "false";
+    input.setAttribute("aria-label", "Color for " + (code || "no code"));
+    input.addEventListener("input", () => { input.dataset.overridden = "true"; });
+    label.append(input, text, description);
+    const reset = document.createElement("button"); reset.type = "button"; reset.className = "text-button"; reset.textContent = "TeleStaff color";
+    reset.setAttribute("aria-label", "Reset color for " + code + " to TeleStaff");
+    reset.addEventListener("click", () => { input.value = sourceColor; input.dataset.overridden = "false"; markUnsaved(); });
+    row.append(label, reset); colorRows.push(row);
+  }
+  $("code-colors").replaceChildren(...colorRows);
 }
 function readChoices() {
   const choices = {calendar_name: $("calendar-name").value, title_style: $("title-style").value,
     custom_title: $("custom-title").value, reminder_minutes: Number($("reminder-minutes").value),
     code_mode: $("code-mode").value, codes: [...$("code-choices").querySelectorAll("input:checked")].map(input => input.value),
     past_days: $("past-days").value === "" ? null : Number($("past-days").value),
-    ahead_days: $("ahead-days").value === "" ? null : Number($("ahead-days").value)};
+    ahead_days: $("ahead-days").value === "" ? null : Number($("ahead-days").value),
+    code_colors: Object.fromEntries([...$("code-colors").querySelectorAll('input[type="color"]')].filter(input => input.dataset.overridden === "true").map(input => [input.dataset.code, input.value.toUpperCase()]))};
   for (const field of detailFields) choices[field] = $(fieldId(field)).checked;
   return choices;
 }
 async function openCustomize(feed) {
   const version = ++requestVersion;
   message("Loading feed settings…");
-  const metadata = await api("/portal/customization/" + feedToken(feed));
+  let metadata = await api("/portal/customization/" + feedToken(feed));
+  if (staticHosting) {
+    try { metadata = await api("/portal/customization/" + feedToken(feed), undefined, true); }
+    catch { /* Published settings remain readable if the local service is offline. */ }
+  }
   if (version !== requestVersion) return;
   activeFeed = feed; activeMetadata = metadata;
-  let choices = metadata.defaults;
-  try {
-    const stored = localStorage.getItem(storageKey(feed));
-    if (stored && stored.length <= 8192) choices = {...choices, ...JSON.parse(stored)};
-  } catch { /* Browser storage is optional. */ }
+  const choices = $("saved-feed"); choices.replaceChildren();
+  const selectedUrl = customUrls.get(feed.url);
+  let selectedKey = "";
+  for (const configuration of metadata.feeds || []) {
+    const option = document.createElement("option"); option.value = configuration.choice_key;
+    option.textContent = configuration.choice_key ? (configuration.preferences.calendar_name || configuration.preferences.custom_title || "Saved custom calendar") + " · " + configuration.choice_key.slice(0,6) : "Main calendar · original URL";
+    choices.append(option);
+    if (configuration.url === selectedUrl) selectedKey = configuration.choice_key;
+  }
+  choices.value = selectedKey;
+  activeConfiguration = metadata.feeds?.find(item => item.choice_key === selectedKey);
+  if (!activeConfiguration) throw new Error("The calendar settings service is updating. Please refresh shortly.");
   $("custom-person").textContent = feed.name;
   $("calendar-name").placeholder = feed.name + " — Work Roster";
-  applyChoices(choices); $("custom-result").hidden = true; $("custom-message").textContent = "";
+  applyChoices(activeConfiguration.preferences); $("custom-result").hidden = true; $("custom-message").textContent = "";
   $("generate-feed").disabled = false; message();
   if (!$("customize-dialog").open) $("customize-dialog").showModal();
   $("calendar-name").focus();
@@ -124,8 +159,8 @@ async function generateFeed(remember = true) {
   const preferences = readChoices();
   $("generate-feed").disabled = true; $("custom-message").textContent = "Creating your preview…";
   try {
-    const route = remember && activeMetadata.hosted_publication ? "/portal/publish" : "/portal/customize";
-    const result = await api(route, {token: feedToken(feed), preferences});
+    const route = remember ? "/portal/publish" : "/portal/customize";
+    const result = await api(route, {token: feedToken(feed), preferences, choice_key: activeConfiguration.choice_key, expected_revision: activeConfiguration.revision});
     if (version !== requestVersion || !$("customize-dialog").open) return;
     $("custom-feed-url").value = result.url; $("custom-apple-link").href = result.webcal_url;
     $("copy-custom-feed").textContent = "Copy";
@@ -137,10 +172,22 @@ async function generateFeed(remember = true) {
     $("preview-location").hidden = !preview?.location;
     $("preview-description").textContent = preview ? preview.description : "";
     $("preview-description").hidden = !preview?.description;
+    const entries = [];
+    for (const entry of result.entries || []) {
+      const item = document.createElement("li");
+      const title = document.createElement("strong"); title.textContent = entry.title;
+      const times = document.createElement("span"); times.textContent = entry.start.length === 10 ? entry.start + " · All day" : new Date(entry.start).toLocaleString() + " – " + new Date(entry.end).toLocaleString();
+      const swatch = document.createElement("span"); swatch.className = "entry-swatch"; swatch.style.backgroundColor = entry.color || "#FFFFFF";
+      item.append(swatch, title, times); entries.push(item);
+    }
+    $("preview-entries").replaceChildren(...entries);
+    $("preview-title").style.borderLeft = preview?.color ? "6px solid " + preview.color : "";
+    $("preview-title").style.paddingLeft = preview?.color ? "10px" : "";
     $("custom-result").hidden = false;
-    $("custom-link-section").hidden = result.needs_save === true;
-    $("custom-message").textContent = result.needs_save ? "This is a preview. Choose ‘Preview and create my link’ to save these choices and publish the feed." : result.new_publication ? "Your choices are saved. GitHub can take a few minutes to publish a new link; wait before subscribing." : "";
+    $("custom-link-section").hidden = false;
+    $("custom-message").textContent = result.needs_save ? "Preview only. Save settings to apply these choices to this same URL." : result.new_publication ? "Saved to the same URL. GitHub may take a few minutes to publish; your calendar app will pick up the changes on its next refresh." : "These saved settings use the same subscription URL.";
     if (remember) {
+      activeConfiguration.preferences = preferences; activeConfiguration.revision = result.revision;
       customUrls.set(feed.url, result.url); renderFeeds();
       try {
         localStorage.setItem(storageKey(feed), JSON.stringify(preferences));
@@ -152,9 +199,16 @@ async function generateFeed(remember = true) {
   } finally { if (version === requestVersion) $("generate-feed").disabled = false; }
 }
 $("customize-form").addEventListener("submit", event => { event.preventDefault(); generateFeed(); });
-$("customize-form").addEventListener("input", () => {
+function markUnsaved() {
   ++requestVersion; updateFormVisibility(); $("custom-result").hidden = true;
-  $("generate-feed").disabled = false; $("custom-message").textContent = "Create a new link to preview these changes.";
+  $("generate-feed").disabled = false; $("custom-message").textContent = "Unsaved changes. Save to update this same subscription URL.";
+}
+$("customize-form").addEventListener("input", event => { if (event.target.id !== "saved-feed") markUnsaved(); });
+$("saved-feed").addEventListener("change", () => {
+  ++requestVersion;
+  activeConfiguration = activeMetadata.feeds.find(item => item.choice_key === $("saved-feed").value);
+  applyChoices(activeConfiguration.preferences); $("custom-result").hidden = true;
+  generateFeed(false);
 });
 $("close-customize").addEventListener("click", () => $("customize-dialog").close());
 $("customize-dialog").addEventListener("close", () => {
@@ -164,7 +218,7 @@ $("customize-dialog").addEventListener("close", () => {
 });
 $("reset-customize").addEventListener("click", () => {
   ++requestVersion; applyChoices(activeMetadata.defaults); $("custom-result").hidden = true; $("generate-feed").disabled = false;
-  $("custom-message").textContent = "Defaults restored. Create a new link to apply them.";
+  $("custom-message").textContent = "Defaults restored, including all codes and exact times. Save to update this same URL.";
   try {
     localStorage.removeItem(storageKey(activeFeed)); localStorage.removeItem(storageKey(activeFeed) + ":url");
   } catch { /* Optional. */ }
