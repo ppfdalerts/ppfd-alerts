@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -198,10 +198,13 @@
     .grip{display:none}
     body.edit-on .grip{display:block}
   }
+
+/* roster-calendar-navigation */
+.toolbar-shortcuts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.calendar-navigation{display:inline-block;text-decoration:none}
 </style>
 <div class="wrap">
   <div class="toolbar-shell">
-  <button id="toolbarToggle" class="toolbar-toggle" type="button" aria-expanded="false">Controls</button>
+  <div class="toolbar-shortcuts"><button id="toolbarToggle" class="toolbar-toggle" type="button" aria-expanded="false">Controls</button><a id="rosterCalendarLink" class="toolbar-toggle calendar-navigation" href="calendar/">Calendars</a></div>
   <div id="toolbar" class="toolbar" hidden>
     <div class="pill">PPFD Leaderboards</div>
     <div id="buildInfo" class="pill">Build: -- | Commit: -------</div>

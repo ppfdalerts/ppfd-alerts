@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" data-hosting="github-pages">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Work Roster · Calendar Sync</title>
+  <link rel="stylesheet" href="./assets/portal.css">
+  <script src="./assets/portal.js" defer></script>
+</head>
+<body class="show-list">
+  <header class="masthead"><a class="brand" href="../" aria-label="Work Roster home"><span class="brand-mark" aria-hidden="true">▦</span><span>WORK ROSTER<span class="brand-sub">Calendar sync</span></span></a><span class="private-label">Calendar subscriptions</span></header>
+  <main>
+    <section class="intro"><h1>Roster calendar links</h1><p class="lead">Names and personal calendar subscription URLs.</p></section>
+    <section class="card" aria-label="Get your calendar link">
+      <div id="list-view"><div class="list-toolbar"><label for="name-search">Find a name<input id="name-search" type="search" autocomplete="off" placeholder="Search names"></label></div><table class="feed-list"><thead><tr><th scope="col">Name</th><th scope="col">Calendar URL</th></tr></thead><tbody id="feed-rows"></tbody></table><p id="empty-list" class="muted" hidden>No matching names.</p><p id="updated-time" class="fine-print"></p><p id="coverage-time" class="fine-print"></p></div>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <dialog id="customize-dialog" aria-labelledby="customize-title">
+    <div class="dialog-heading"><div><h2 id="customize-title">Customize your feed</h2><p id="custom-person" class="muted"></p></div><button type="button" id="close-customize" class="close-button" aria-label="Close customization">×</button></div>
+    <form id="customize-form">
+      <fieldset><legend>Calendar and event titles</legend><label for="calendar-name">Calendar name</label><input id="calendar-name" maxlength="80" autocomplete="off" placeholder="Use the employee’s name"><div class="settings-grid"><div><label for="title-style">Event title</label><select id="title-style"><option value="assignment">Unit · position · work code</option><option value="code">Work code only</option><option value="shift">Shift name only</option><option value="custom">My own title</option></select></div><div id="custom-title-group" hidden><label for="custom-title">Your event title</label><input id="custom-title" maxlength="80" placeholder="For example: Work"></div></div></fieldset>
+      <fieldset><legend>Details to include</legend><div class="check-grid"><label class="option-check"><input id="show-unit" type="checkbox">Unit / apparatus</label><label class="option-check"><input id="show-position" type="checkbox">Position / role</label><label class="option-check"><input id="show-work-code" type="checkbox">Work code</label><label class="option-check"><input id="show-shift" type="checkbox">Shift name in notes</label><label class="option-check"><input id="show-employee" type="checkbox">Employee name in notes</label><label class="option-check"><input id="show-description" type="checkbox">Event notes</label></div><p class="fine-print">Unchecking a detail removes it from the generated event title or notes. Hiding the unit also removes the event’s location.</p></fieldset>
+      <fieldset><legend>Which entries to send</legend><label for="code-mode">Work codes</label><select id="code-mode"><option value="all">All work codes, including new ones</option><option value="only">Only the codes I select</option><option value="except">All except the codes I select</option></select><div id="code-choices" class="code-choices" hidden></div><p class="fine-print">Codes come directly from this person’s roster. “Only” will not include new codes until selected.</p><div class="settings-grid"><div><label for="past-days">Past entries</label><select id="past-days"><option value="">Full available history (3 days)</option><option value="0">Today onward</option><option value="1">Include yesterday</option><option value="2">Include the past 2 days</option><option value="3">Include the past 3 days</option></select></div><div><label for="ahead-days">Future entries</label><select id="ahead-days"><option value="">Full available range (up to 1 year)</option><option value="0">Today only</option><option value="7">Next 7 days</option><option value="14">Next 14 days</option><option value="30">Next 30 days</option><option value="60">Next 60 days</option><option value="90">Next 90 days</option><option value="180">Next 180 days</option><option value="365">Next 365 days</option></select></div></div><p class="fine-print">The next month is checked frequently; later dates refresh overnight. The full range grows as those reports finish collecting.</p></fieldset>
+      <fieldset><legend>Display and reminders</legend><div class="check-grid"><label class="option-check"><input id="all-day" type="checkbox">Show entries as all-day events</label><label class="option-check"><input id="busy" type="checkbox">Show time as busy</label></div><label for="reminder-minutes">Reminder before each entry</label><select id="reminder-minutes"><option value="0">No reminder</option><option value="15">15 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option><option value="120">2 hours before</option><option value="1440">1 day before</option></select><p class="fine-print">All-day mode replaces each entry’s exact shift times with a block on its roster date; separate entries stay separate. Calendar apps may handle subscription reminders differently.</p></fieldset>
+      <div class="dialog-actions"><button type="button" id="reset-customize" class="text-button">Reset to defaults</button><button type="submit" id="generate-feed" class="primary">Preview and create my link</button></div>
+    </form>
+    <p id="custom-message" class="message" role="status" aria-live="polite"></p>
+    <section id="custom-result" hidden aria-label="Customized calendar preview">
+      <div class="event-preview"><p id="preview-count" class="fine-print"></p><h3 id="preview-title"></h3><p id="preview-time" class="preview-time"></p><p id="preview-location" class="preview-time"></p><pre id="preview-description"></pre></div>
+      <div id="custom-link-section"><label for="custom-feed-url">Your customized subscription URL</label><div class="custom-url"><input id="custom-feed-url" readonly aria-label="Customized calendar URL"><button id="copy-custom-feed" type="button">Copy</button></div><a id="custom-apple-link" class="text-button" href="#">Open in Apple Calendar ↗</a>
+      <p class="fine-print">Subscribe using this URL. If you change these choices later, replace the old subscription with the new URL to avoid duplicates. Other people’s feeds are unchanged. Choices are remembered in this browser.</p></div>
+    </section>
+  </dialog>
+  <footer><div><strong>Calendar refresh timing</strong><p>The next month is checked regularly; later dates refresh overnight. Calendar apps control how quickly updates appear.</p></div><div class="preview-note"><span class="status-dot"></span>Hosted on GitHub Pages · Updates need the collector online</div></footer>
+</body>
+</html>
