@@ -1,0 +1,45 @@
+name: Publish leaderboard and roster calendars
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/publish-calendar-pages.yml'
+      - '.github/scripts/prepare-calendar-site.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout public site sources
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            docs
+            .github/scripts
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Keep calendar navigation in the generated leaderboard
+        run: python3 .github/scripts/prepare-calendar-site.py
+      - name: Upload public site only
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
