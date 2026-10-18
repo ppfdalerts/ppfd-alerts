@@ -6,7 +6,7 @@ let activeMetadata = null;
 let activeConfiguration = null;
 let requestVersion = 0;
 const customUrls = new Map();
-const detailFields = ["show_unit", "show_position", "show_work_code", "show_shift", "show_employee", "show_description", "all_day", "busy"];
+const detailFields = ["show_unit", "show_position", "show_work_code", "show_shift", "show_employee", "show_description", "all_day", "busy", "show_symbols"];
 const fieldId = name => name.replaceAll("_", "-");
 const feedToken = feed => new URL(feed.url).pathname.split("/").pop().replace(/\.ics$/, "");
 const storageKey = feed => "roster-feed-choices-v1:" + feedToken(feed);
@@ -92,7 +92,8 @@ function applyChoices(choices) {
   $("code-choices").replaceChildren(...labels); updateFormVisibility();
   const colorRows = [];
   const overrides = choices.code_colors || {};
-  const colorCodes = new Set([...activeMetadata.codes.map(item => item.value), ...Object.keys(overrides)]);
+  const symbols = choices.code_symbols || {};
+  const colorCodes = new Set([...activeMetadata.codes.map(item => item.value), ...Object.keys(overrides), ...Object.keys(symbols)]);
   for (const code of [...colorCodes].sort()) {
     const source = activeMetadata.codes.find(item => item.value === code);
     const sourceColor = source?.color || "#FFFFFF";
@@ -109,7 +110,18 @@ function applyChoices(choices) {
     const reset = document.createElement("button"); reset.type = "button"; reset.className = "text-button"; reset.textContent = "TeleStaff color";
     reset.setAttribute("aria-label", "Reset color for " + code + " to TeleStaff");
     reset.addEventListener("click", () => { input.value = sourceColor; input.dataset.overridden = "false"; markUnsaved(); });
-    row.append(label, reset); colorRows.push(row);
+    const symbolLabel = document.createElement("label"); symbolLabel.className = "symbol-control";
+    const symbolName = document.createElement("span"); symbolName.textContent = "Title symbol";
+    const symbol = document.createElement("select"); symbol.dataset.code = code;
+    symbol.setAttribute("aria-label", "Title symbol for " + code);
+    for (const choice of [{value:"auto",label:"Automatic · follows color"},{value:"",label:"No symbol"},...(activeMetadata.symbol_choices || [])]) {
+      const option = document.createElement("option"); option.value = choice.value;
+      option.textContent = (choice.value && choice.value !== "auto" ? choice.value + " " : "") + choice.label;
+      symbol.append(option);
+    }
+    symbol.value = Object.hasOwn(symbols,code) ? symbols[code] : "auto";
+    symbolLabel.append(symbolName,symbol);
+    row.append(label, reset, symbolLabel); colorRows.push(row);
   }
   $("code-colors").replaceChildren(...colorRows);
 }
@@ -119,7 +131,8 @@ function readChoices() {
     code_mode: $("code-mode").value, codes: [...$("code-choices").querySelectorAll("input:checked")].map(input => input.value),
     past_days: $("past-days").value === "" ? null : Number($("past-days").value),
     ahead_days: $("ahead-days").value === "" ? null : Number($("ahead-days").value),
-    code_colors: Object.fromEntries([...$("code-colors").querySelectorAll('input[type="color"]')].filter(input => input.dataset.overridden === "true").map(input => [input.dataset.code, input.value.toUpperCase()]))};
+    code_colors: Object.fromEntries([...$("code-colors").querySelectorAll('input[type="color"]')].filter(input => input.dataset.overridden === "true").map(input => [input.dataset.code, input.value.toUpperCase()])),
+    code_symbols: Object.fromEntries([...$("code-colors").querySelectorAll('select[data-code]')].filter(input => input.value !== "auto").map(input => [input.dataset.code,input.value]))};
   for (const field of detailFields) choices[field] = $(fieldId(field)).checked;
   return choices;
 }
@@ -148,6 +161,7 @@ async function openCustomize(feed) {
   $("custom-person").textContent = feed.name;
   $("calendar-name").placeholder = feed.name + " — Work Roster";
   applyChoices(activeConfiguration.preferences); $("custom-result").hidden = true; $("custom-message").textContent = "";
+  renderCodeCalendars();
   $("generate-feed").disabled = false; message();
   if (!$("customize-dialog").open) $("customize-dialog").showModal();
   $("calendar-name").focus();
@@ -188,6 +202,15 @@ async function generateFeed(remember = true) {
     $("custom-message").textContent = result.needs_save ? "Preview only. Save settings to apply these choices to this same URL." : result.new_publication ? "Saved to the same URL. GitHub may take a few minutes to publish; your calendar app will pick up the changes on its next refresh." : "These saved settings use the same subscription URL.";
     if (remember) {
       activeConfiguration.preferences = preferences; activeConfiguration.revision = result.revision;
+      try {
+        const fresh = await api("/portal/customization/" + feedToken(feed),undefined,true);
+        if (version === requestVersion && activeFeed === feed) {
+          activeMetadata = fresh;
+          activeConfiguration = fresh.feeds.find(item => item.choice_key === activeConfiguration.choice_key);
+        }
+      } catch { /* The saved settings are already durable; published metadata can catch up. */ }
+      if (version !== requestVersion || activeFeed !== feed || !$("customize-dialog").open) return;
+      renderCodeCalendars();
       customUrls.set(feed.url, result.url); renderFeeds();
       try {
         localStorage.setItem(storageKey(feed), JSON.stringify(preferences));
@@ -202,12 +225,15 @@ $("customize-form").addEventListener("submit", event => { event.preventDefault()
 function markUnsaved() {
   ++requestVersion; updateFormVisibility(); $("custom-result").hidden = true;
   $("generate-feed").disabled = false; $("custom-message").textContent = "Unsaved changes. Save to update this same subscription URL.";
+  $("enable-code-calendars").disabled = true;
+  $("code-calendar-message").textContent = "Save the settings above before creating or updating these optional calendars.";
 }
 $("customize-form").addEventListener("input", event => { if (event.target.id !== "saved-feed") markUnsaved(); });
 $("saved-feed").addEventListener("change", () => {
   ++requestVersion;
   activeConfiguration = activeMetadata.feeds.find(item => item.choice_key === $("saved-feed").value);
   applyChoices(activeConfiguration.preferences); $("custom-result").hidden = true;
+  renderCodeCalendars();
   generateFeed(false);
 });
 $("close-customize").addEventListener("click", () => $("customize-dialog").close());
@@ -219,6 +245,8 @@ $("customize-dialog").addEventListener("close", () => {
 $("reset-customize").addEventListener("click", () => {
   ++requestVersion; applyChoices(activeMetadata.defaults); $("custom-result").hidden = true; $("generate-feed").disabled = false;
   $("custom-message").textContent = "Defaults restored, including all codes and exact times. Save to update this same URL.";
+  $("enable-code-calendars").disabled = true;
+  $("code-calendar-message").textContent = "Save the restored settings above first.";
   try {
     localStorage.removeItem(storageKey(activeFeed)); localStorage.removeItem(storageKey(activeFeed) + ":url");
   } catch { /* Optional. */ }
@@ -226,6 +254,48 @@ $("reset-customize").addEventListener("click", () => {
 $("copy-custom-feed").addEventListener("click", async () => {
   try { await navigator.clipboard.writeText($("custom-feed-url").value); $("copy-custom-feed").textContent = "Copied!"; }
   catch { $("custom-feed-url").focus(); $("custom-feed-url").select(); $("custom-message").textContent = "Copy the highlighted complete URL."; }
+});
+function renderCodeCalendars() {
+  const info = activeConfiguration?.code_calendars || {enabled:false,calendars:[]};
+  $("enable-code-calendars").hidden = info.enabled;
+  $("enable-code-calendars").disabled = !info.calendars.length;
+  $("code-calendar-message").textContent = info.enabled ? "Keep these URLs after subscribing. Set each calendar’s color inside your calendar app." : "These extra subscriptions are optional. Your combined feed is unchanged.";
+  const rows=[];
+  for (const item of info.calendars) {
+    const row = document.createElement("div"); row.className = "code-calendar-item";
+    const title = document.createElement("strong"); title.textContent = (item.symbol ? item.symbol + " " : "") + (item.code || "No code") + " · " + item.entry_count + " entries";
+    const color = document.createElement("span"); color.className = "calendar-color-hint"; color.textContent = "Suggested color: " + item.color;
+    const swatch = document.createElement("i"); swatch.style.backgroundColor = item.color; swatch.className = "entry-swatch"; swatch.setAttribute("aria-hidden","true"); color.prepend(swatch);
+    row.append(title,color);
+    if (info.enabled) {
+      const box = document.createElement("div"); box.className = "custom-url";
+      const input = document.createElement("input"); input.readOnly = true; input.value = item.url; input.setAttribute("aria-label", "Calendar URL for " + item.code);
+      const copy = document.createElement("button"); copy.type = "button"; copy.textContent = "Copy";
+      copy.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(item.url); copy.textContent = "Copied!"; }
+        catch { input.focus(); input.select(); }
+      });
+      box.append(input,copy); row.append(box);
+      const apple = document.createElement("a"); apple.className = "text-button"; apple.href = item.url.replace("https://","webcal://"); apple.textContent = "Open in Apple Calendar ↗";
+      row.append(apple);
+    }
+    rows.push(row);
+  }
+  $("code-calendar-links").replaceChildren(...rows);
+}
+$("enable-code-calendars").addEventListener("click", async () => {
+  const feed=activeFeed, configuration=activeConfiguration;
+  $("enable-code-calendars").disabled=true;
+  $("code-calendar-message").textContent="Preparing separate calendar links…";
+  try {
+    const result=await api("/portal/code-calendars",{token:feedToken(feed),choice_key:configuration.choice_key});
+    configuration.code_calendars=result;
+    if (activeFeed!==feed || activeConfiguration!==configuration || !$("customize-dialog").open) return;
+    renderCodeCalendars();
+    $("code-calendar-message").textContent=result.new_publication && result.hosted_publication ? "Links saved. GitHub may take a few minutes to publish them before you can subscribe. Choose each calendar’s color in your calendar app." : "Your separate calendar links are ready. Choose each calendar’s color in your calendar app.";
+  } catch(error) {
+    if(activeConfiguration===configuration) { $("code-calendar-message").textContent=error.message; $("enable-code-calendars").disabled=false; }
+  }
 });
 async function loadFeeds() {
   const result = await api("/portal/links");
