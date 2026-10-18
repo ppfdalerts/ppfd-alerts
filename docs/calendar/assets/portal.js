@@ -15,6 +15,10 @@ let backendOrigin;
 function message(text = "") { $("message").textContent = text; }
 async function api(path, data, live = false) {
   const options = {credentials: "omit", cache: "no-store"};
+  const controller = new AbortController();
+  options.signal = controller.signal;
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  try {
   if (data !== undefined) { options.method = "POST"; options.headers = {"Content-Type": "application/json"}; options.body = JSON.stringify(data); }
   let endpoint = path;
   if (staticHosting) {
@@ -22,7 +26,7 @@ async function api(path, data, live = false) {
     else if (path.startsWith("/portal/customization/") && !live) endpoint = "./people/" + path.split("/").pop() + ".json";
     else {
       if (!backendOrigin) {
-        const config = await fetch("./backend.json", {cache: "no-store"}).then(response => response.json());
+        const config = await fetch("./backend.json", {cache: "no-store", signal:controller.signal}).then(response => response.json());
         const parsed = new URL(config.api_origin);
         if (parsed.protocol !== "https:" || parsed.pathname !== "/" || parsed.search || parsed.hash || parsed.username || parsed.password) throw new Error("The customization service is not configured.");
         backendOrigin = parsed.origin;
@@ -36,6 +40,10 @@ async function api(path, data, live = false) {
     throw new Error(typeof body.detail === "string" ? body.detail : "Something went wrong. Please try again.");
   }
   return body;
+  } catch (error) {
+    if (error.name === "AbortError" || error instanceof TypeError || error instanceof SyntaxError) throw new Error("The settings service is unavailable right now. Existing calendar links still work. Please try again later.");
+    throw error;
+  } finally { clearTimeout(timeout); }
 }
 function renderFeeds() {
   const words = $("name-search").value.toLowerCase().trim().split(/\s+/);
@@ -49,23 +57,42 @@ function renderFeeds() {
     const url = customUrls.get(feed.url) || feed.url;
     const link = document.createElement("a"); link.className = "feed-url"; link.href = url;
     link.textContent = url.includes("?options=") ? url.split("?")[0] + "?options=…" : url;
-    const copy = document.createElement("button"); copy.className = "copy-link"; copy.type = "button"; copy.textContent = "Copy";
+    const copy = document.createElement("button"); copy.className = "copy-link"; copy.type = "button"; copy.textContent = "Copy link";
     copy.setAttribute("aria-label", "Copy calendar URL for " + feed.name);
     copy.addEventListener("click", async () => {
       try { await navigator.clipboard.writeText(url); copy.textContent = "Copied!"; }
       catch {
-        await openCustomize(feed);
-        message("Open Customize to select and copy the complete subscription URL.");
+        try {
+          await openCustomize(feed);
+          $("combined-url-details").open = true;
+          $("custom-feed-url").focus(); $("custom-feed-url").select();
+        } catch (error) { message(error.message); }
       }
     });
-    const customize = document.createElement("button"); customize.type = "button"; customize.className = "customize-link"; customize.textContent = "Customize";
+    const customize = document.createElement("button"); customize.type = "button"; customize.className = "customize-link"; customize.textContent = "Set up calendar";
     customize.dataset.token = feedToken(feed);
-    customize.setAttribute("aria-label", "Customize calendar for " + feed.name);
+    customize.setAttribute("aria-label", "Set up calendar for " + feed.name);
     customize.addEventListener("click", () => openCustomize(feed).catch(error => message(error.message)));
-    const actions = document.createElement("div"); actions.className = "row-actions"; actions.append(copy, customize);
-    box.append(link, actions); cell.append(box); row.append(name, cell); rows.push(row);
+    const actions = document.createElement("div"); actions.className = "row-actions"; actions.append(customize, copy);
+    const urlDetails = document.createElement("details"); urlDetails.className = "row-url";
+    const summary = document.createElement("summary"); summary.textContent = "View link";
+    urlDetails.append(summary, link);
+    box.append(actions, urlDetails); cell.append(box); row.append(name, cell); rows.push(row);
   }
   $("feed-rows").replaceChildren(...rows); $("empty-list").hidden = rows.length !== 0;
+  $("people-count").textContent = rows.length === feeds.length ? feeds.length + " people" : rows.length + " of " + feeds.length + " people";
+}
+function setCalendarMode(mode) {
+  const separate = mode === "separate";
+  $("mode-combined").checked = !separate; $("mode-separate").checked = separate;
+  $("combined-setup").hidden = separate; $("separate-calendars").hidden = !separate;
+}
+for (const radio of document.querySelectorAll('input[name="calendar-mode"]')) radio.addEventListener("change", () => setCalendarMode(radio.value));
+function showSubscription(url, webcalUrl) {
+  $("custom-feed-url").value = url;
+  $("custom-apple-link").href = webcalUrl || url.replace(/^https?:/, "webcal:");
+  $("copy-custom-feed").textContent = "Copy calendar link";
+  $("custom-link-section").hidden = false;
 }
 function updateFormVisibility() {
   $("custom-title-group").hidden = $("title-style").value !== "custom";
@@ -138,7 +165,7 @@ function readChoices() {
 }
 async function openCustomize(feed) {
   const version = ++requestVersion;
-  message("Loading feed settings…");
+  message("Opening calendar setup…");
   let metadata = await api("/portal/customization/" + feedToken(feed));
   if (staticHosting) {
     try { metadata = await api("/portal/customization/" + feedToken(feed), undefined, true); }
@@ -156,15 +183,20 @@ async function openCustomize(feed) {
     if (configuration.url === selectedUrl) selectedKey = configuration.choice_key;
   }
   choices.value = selectedKey;
+  $("saved-feed-options").hidden = (metadata.feeds || []).length < 2;
   activeConfiguration = metadata.feeds?.find(item => item.choice_key === selectedKey);
   if (!activeConfiguration) throw new Error("The calendar settings service is updating. Please refresh shortly.");
   $("custom-person").textContent = feed.name;
   $("calendar-name").placeholder = feed.name + " — Work Roster";
+  for (const details of $("customize-dialog").querySelectorAll("details")) details.open = false;
+  setCalendarMode("combined");
   applyChoices(activeConfiguration.preferences); $("custom-result").hidden = true; $("custom-message").textContent = "";
+  showSubscription(activeConfiguration.url);
   renderCodeCalendars();
   $("generate-feed").disabled = false; message();
   if (!$("customize-dialog").open) $("customize-dialog").showModal();
-  $("calendar-name").focus();
+  $("customize-dialog").scrollTop = 0;
+  $("mode-combined").focus({preventScroll:true});
   await generateFeed(false);
 }
 async function generateFeed(remember = true) {
@@ -176,8 +208,7 @@ async function generateFeed(remember = true) {
     const route = remember ? "/portal/publish" : "/portal/customize";
     const result = await api(route, {token: feedToken(feed), preferences, choice_key: activeConfiguration.choice_key, expected_revision: activeConfiguration.revision});
     if (version !== requestVersion || !$("customize-dialog").open) return;
-    $("custom-feed-url").value = result.url; $("custom-apple-link").href = result.webcal_url;
-    $("copy-custom-feed").textContent = "Copy";
+    showSubscription(result.url, result.webcal_url);
     $("preview-count").textContent = result.entry_count + " matching entries · " + result.calendar_name;
     const preview = result.preview;
     $("preview-title").textContent = preview ? preview.title : "No entries match these choices";
@@ -199,7 +230,7 @@ async function generateFeed(remember = true) {
     $("preview-title").style.paddingLeft = preview?.color ? "10px" : "";
     $("custom-result").hidden = false;
     $("custom-link-section").hidden = false;
-    $("custom-message").textContent = result.needs_save ? "Preview only. Save settings to apply these choices to this same URL." : result.new_publication ? "Saved to the same URL. GitHub may take a few minutes to publish; your calendar app will pick up the changes on its next refresh." : "These saved settings use the same subscription URL.";
+    $("custom-message").textContent = result.needs_save ? "Preview only. Save changes to update this same calendar link." : remember ? (result.new_publication ? "Saved to the same URL. Your link stays the same. Updates may take a few minutes to publish and appear after your calendar refreshes." : "Saved to the same URL. Keep your existing subscription.") : "";
     if (remember) {
       activeConfiguration.preferences = preferences; activeConfiguration.revision = result.revision;
       try {
@@ -233,6 +264,7 @@ $("saved-feed").addEventListener("change", () => {
   ++requestVersion;
   activeConfiguration = activeMetadata.feeds.find(item => item.choice_key === $("saved-feed").value);
   applyChoices(activeConfiguration.preferences); $("custom-result").hidden = true;
+  showSubscription(activeConfiguration.url);
   renderCodeCalendars();
   generateFeed(false);
 });
@@ -253,31 +285,38 @@ $("reset-customize").addEventListener("click", () => {
 });
 $("copy-custom-feed").addEventListener("click", async () => {
   try { await navigator.clipboard.writeText($("custom-feed-url").value); $("copy-custom-feed").textContent = "Copied!"; }
-  catch { $("custom-feed-url").focus(); $("custom-feed-url").select(); $("custom-message").textContent = "Copy the highlighted complete URL."; }
+  catch { $("combined-url-details").open = true; $("custom-feed-url").focus(); $("custom-feed-url").select(); $("custom-message").textContent = "Copy the highlighted calendar link."; }
 });
 function renderCodeCalendars() {
   const info = activeConfiguration?.code_calendars || {enabled:false,calendars:[]};
   $("enable-code-calendars").hidden = info.enabled;
   $("enable-code-calendars").disabled = !info.calendars.length;
-  $("code-calendar-message").textContent = info.enabled ? "Keep these URLs after subscribing. Set each calendar’s color inside your calendar app." : "These extra subscriptions are optional. Your combined feed is unchanged.";
+  $("code-calendar-message").textContent = info.enabled ? "Your links are ready. Add each calendar you want, then choose its color in your calendar app." : info.calendars.length ? "Creating these links won’t change your existing calendar." : "No work-code calendars are available for these settings yet.";
   const rows=[];
   for (const item of info.calendars) {
     const row = document.createElement("div"); row.className = "code-calendar-item";
-    const title = document.createElement("strong"); title.textContent = (item.symbol ? item.symbol + " " : "") + (item.code || "No code") + " · " + item.entry_count + " entries";
-    const color = document.createElement("span"); color.className = "calendar-color-hint"; color.textContent = "Suggested color: " + item.color;
-    const swatch = document.createElement("i"); swatch.style.backgroundColor = item.color; swatch.className = "entry-swatch"; swatch.setAttribute("aria-hidden","true"); color.prepend(swatch);
-    row.append(title,color);
+    const heading = document.createElement("div"); heading.className = "code-calendar-heading";
+    const title = document.createElement("strong"); title.textContent = (item.code || "No code").replace(/^[.*^+~!?]+/, "");
+    const swatch = document.createElement("i"); swatch.style.backgroundColor = item.color; swatch.className = "entry-swatch"; swatch.setAttribute("aria-hidden","true");
+    heading.append(swatch,title);
+    const description = document.createElement("p"); description.className = "code-calendar-description"; description.textContent = (item.name ? item.name + " · " : "") + item.entry_count + " entries";
+    row.append(heading,description);
     if (info.enabled) {
-      const box = document.createElement("div"); box.className = "custom-url";
+      const details = document.createElement("details"); details.className = "link-details";
+      const summary = document.createElement("summary"); summary.textContent = "View link & suggested color";
       const input = document.createElement("input"); input.readOnly = true; input.value = item.url; input.setAttribute("aria-label", "Calendar URL for " + item.code);
-      const copy = document.createElement("button"); copy.type = "button"; copy.textContent = "Copy";
+      const color = document.createElement("span"); color.className = "calendar-color-hint"; color.textContent = "Suggested color: " + item.color;
+      details.append(summary,input,color);
+      const box = document.createElement("div"); box.className = "calendar-code-actions";
+      const copy = document.createElement("button"); copy.type = "button"; copy.className = "secondary"; copy.textContent = "Copy link";
+      copy.setAttribute("aria-label", "Copy link for " + item.code);
       copy.addEventListener("click", async () => {
         try { await navigator.clipboard.writeText(item.url); copy.textContent = "Copied!"; }
-        catch { input.focus(); input.select(); }
+        catch { details.open = true; input.focus(); input.select(); }
       });
-      box.append(input,copy); row.append(box);
-      const apple = document.createElement("a"); apple.className = "text-button"; apple.href = item.url.replace("https://","webcal://"); apple.textContent = "Open in Apple Calendar ↗";
-      row.append(apple);
+      const apple = document.createElement("a"); apple.className = "primary"; apple.href = item.url.replace(/^https?:/,"webcal:"); apple.textContent = "Add to Apple Calendar ↗";
+      apple.setAttribute("aria-label", "Add " + (item.code || "no code") + " to Apple Calendar");
+      box.append(apple,copy); row.append(box,details);
     }
     rows.push(row);
   }
@@ -292,7 +331,7 @@ $("enable-code-calendars").addEventListener("click", async () => {
     configuration.code_calendars=result;
     if (activeFeed!==feed || activeConfiguration!==configuration || !$("customize-dialog").open) return;
     renderCodeCalendars();
-    $("code-calendar-message").textContent=result.new_publication && result.hosted_publication ? "Links saved. GitHub may take a few minutes to publish them before you can subscribe. Choose each calendar’s color in your calendar app." : "Your separate calendar links are ready. Choose each calendar’s color in your calendar app.";
+    $("code-calendar-message").textContent=result.new_publication && result.hosted_publication ? "Links created. Wait a few minutes for them to publish, then add each calendar below." : "Your links are ready. Add each calendar you want, then choose its color in your calendar app.";
   } catch(error) {
     if(activeConfiguration===configuration) { $("code-calendar-message").textContent=error.message; $("enable-code-calendars").disabled=false; }
   }
