@@ -257,7 +257,7 @@ function markUnsaved() {
   ++requestVersion; updateFormVisibility(); $("custom-result").hidden = true;
   $("generate-feed").disabled = false; $("custom-message").textContent = "Unsaved changes. Save to update this same subscription URL.";
   $("enable-code-calendars").disabled = true;
-  $("code-calendar-message").textContent = "Save the settings above before creating or updating these optional calendars.";
+  $("code-calendar-message").textContent = "Save your changes in Calendar settings before creating these links.";
 }
 $("customize-form").addEventListener("input", event => { if (event.target.id !== "saved-feed") markUnsaved(); });
 $("saved-feed").addEventListener("change", () => {
@@ -278,7 +278,7 @@ $("reset-customize").addEventListener("click", () => {
   ++requestVersion; applyChoices(activeMetadata.defaults); $("custom-result").hidden = true; $("generate-feed").disabled = false;
   $("custom-message").textContent = "Defaults restored, including all codes and exact times. Save to update this same URL.";
   $("enable-code-calendars").disabled = true;
-  $("code-calendar-message").textContent = "Save the restored settings above first.";
+  $("code-calendar-message").textContent = "Save the reset in Calendar settings first.";
   try {
     localStorage.removeItem(storageKey(activeFeed)); localStorage.removeItem(storageKey(activeFeed) + ":url");
   } catch { /* Optional. */ }
