@@ -8,7 +8,7 @@
   dialog.className = 'personnel-calls-dialog';
   dialog.innerHTML = '<header><div><h2 id="personnelCallsTitle">Personnel calls</h2><p id="personnelCallsRange"></p></div><button type="button" id="personnelCallsClose" aria-label="Close call history">Close</button></header>' +
     '<div class="personnel-call-tools"><label>Find a call <input type="search" id="personnelCallsSearch" placeholder="Incident, unit, type, location"></label><label>Show <select id="personnelCallsScope"><option value="period">Selected period</option><option value="all">All since last backfill</option></select></label><button type="button" id="personnelCallsCsv">Download calls (CSV)</button></div>' +
-    '<p id="personnelCallsNote" class="personnel-call-note"></p><div class="personnel-call-scroll"><table><thead><tr><th>Date / dispatch (Eastern)</th><th>Incident</th><th>Unit / position</th><th>Call type</th><th>Location</th><th>Unit clear (Eastern)</th><th>Recorded call time</th></tr></thead><tbody id="personnelCallsRows"></tbody></table></div><footer><span id="personnelCallsCount"></span><button type="button" id="personnelCallsMore">Show more</button></footer>';
+    '<p id="personnelCallsNote" class="personnel-call-note"></p><div class="personnel-call-scroll"><table><thead><tr><th>Date / recorded start (Eastern)</th><th>Incident</th><th>Unit / position</th><th>Call type</th><th>Location</th><th>Recorded end (Eastern)</th><th>Recorded call time</th></tr></thead><tbody id="personnelCallsRows"></tbody></table></div><footer><span id="personnelCallsCount"></span><button type="button" id="personnelCallsMore">Show more</button></footer>';
   document.body.appendChild(dialog);
   var byId = function (id) { return document.getElementById(id); };
   var tableBody = byId('personnelCallsRows');
@@ -43,7 +43,7 @@
     });
     byId('personnelCallsTitle').textContent = person ? person.name : selected.name;
     byId('personnelCallsRange').textContent = range[0] + ' through ' + range[1] + ' · One count per incident per person';
-    byId('personnelCallsNote').textContent = 'Matched to the unit’s roster at dispatch, including exact assignment times. “Not retained” means the older source did not save that field. Missing roster or call records are not estimated.';
+    byId('personnelCallsNote').textContent = 'Matched to the unit’s roster at the recorded call start, using exact assignment times. “Not retained” means the older source did not save that field. Recorded end times can be limited by the shift window. Missing roster or call records are not estimated.';
     tableBody.replaceChildren();
     filtered.slice(0, limit).forEach(function (call) {
       var tr = document.createElement('tr');
@@ -52,7 +52,7 @@
       cell(tr, (call.assignments || []).map(function (assignment) { return assignment.unit + (assignment.position ? ' · ' + assignment.position : ''); }).join('\n') || (call.units || []).join(', '));
       cell(tr, call.type || 'Not retained');
       cell(tr, call.location || 'Not retained');
-      cell(tr, call.ongoing ? 'Still active / awaiting clear' : localTime(call.end));
+      cell(tr, call.ongoing ? 'Active at last source update' : localTime(call.end));
       cell(tr, call.duration_known ? (call.duration_sec / 60).toFixed(1) + ' min' : 'Not retained');
       tableBody.appendChild(tr);
     });
@@ -79,7 +79,7 @@
     return loading;
   }
   function open(id, name) {
-    selected = {id:id, name:name}; limit = 50; query = '';
+    selected = {id:id, name:name}; limit = 50; query = ''; filtered = [];
     byId('personnelCallsSearch').value = '';
     byId('personnelCallsScope').value = 'period';
     byId('personnelCallsTitle').textContent = name || 'Personnel calls';
@@ -116,8 +116,12 @@
     if (!note) { note = document.createElement('p'); note.id = 'personnelCoverageNote'; note.className = 'personnel-coverage-note'; container.insertAdjacentElement('afterend', note); }
     var info = data.personnel_history;
     var gaps = (info.missing_stats_dates || []).length + (info.missing_roster_dates || []).length;
-    note.textContent = 'Click a name for individual calls. Verified roster matching since ' + info.from + '. ' + (info.complete ? 'Backfill complete.' : 'Partial history: ' + gaps + ' day-coverage gaps; ' + (info.missing_call_records || 0) + ' calls without retained timestamps; ' + (info.unattributed_unit_calls || 0) + ' unit calls without a verified crew match.');
+    var period = byId('personnelPeriod') ? byId('personnelPeriod').value : 'backfill';
+    var countingNote = data.personnel && data.personnel[period] && data.personnel[period].meta ? data.personnel[period].meta.counting_note : '';
+    note.textContent = 'Click a name for individual calls. Roster matching since ' + info.from + '. ' + (info.complete ? 'Backfill complete.' : 'Partial history: ' + gaps + ' day-coverage gaps; ' + (info.missing_call_records || 0) + ' unit calls without saved incident records; ' + (info.unattributed_unit_calls || 0) + ' unit calls without a verified crew match.') + (countingNote ? ' ' + countingNote : '');
+    if (dialog.open) loadHistory().then(render).catch(function () { /* Keep the last verified open view during a refresh failure. */ });
   }
   document.addEventListener('ppfd:data', function (event) { update(event.detail); });
+  document.addEventListener('change', function (event) { if (event.target.id === 'personnelPeriod' && payload) update(payload); });
   if (window.ppfdData) update(window.ppfdData);
 })();

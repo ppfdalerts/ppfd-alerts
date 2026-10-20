@@ -62,3 +62,26 @@ def test_ui_overlay_is_idempotent():
     assert module.personnel_ui(first) == first
     assert first.count('data-ppfd-personnel-bridge') == 1
     assert first.count('value="backfill"') == 1
+
+
+def test_overlay_repairs_a_legacy_publisher_template():
+    path = ROOT / ".github/scripts/prepare-calendar-site.py"
+    spec = importlib.util.spec_from_file_location("legacy_site", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    html = '''<!doctype html><title>PPFD Live Leaderboards</title>
+    <select id="personnelPeriod"></select><script>
+    appState.payload = data || null;
+    personnelState.data.week = personnel.week || null;
+    function coversTime(entry, atMinute){
+    if(atMinute==null) return true;
+    var useActive=!!(el.rosterNow && el.rosterNow.checked);
+    time.textContent=from+'-'+through;
+    </script>'''
+    result = module.personnel_ui(html)
+    assert module.personnel_ui(result) == result
+    assert 'Date.parse(entry.start)' in result
+    assert 'time.title=entry.start' in result
+    assert 'periodKey ===' in result
+    assert '<meta charset="utf-8">' in result
+    assert 'data-ppfd-personnel-bridge' in result

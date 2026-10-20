@@ -7,6 +7,7 @@ import re
 
 def personnel_ui(html):
     """Keep the read-only history UI even if the legacy publisher sends old HTML."""
+    html = html.replace('personnel-calls.js?v=20261020-1', 'personnel-calls.js?v=20261020-2').replace('personnel-calls.css?v=20261020-1', 'personnel-calls.css?v=20261020-2')
     if '<meta charset=' not in html.lower():
         html = html.replace('<!doctype html>', '<!doctype html>\n<meta charset="utf-8">', 1)
     if 'window.ppfdData = data;' not in html:
@@ -21,10 +22,25 @@ def personnel_ui(html):
                             'personnelState.data.backfill = personnel.backfill || null;\n    personnelState.data.week = personnel.week || null;', 1)
     html = html.replace("data: { week: null, month: null, year: null, rolling_year: null },\n    period: 'week',",
                         "data: { backfill: null, week: null, month: null, year: null, rolling_year: null },\n    period: 'backfill',")
+    if '// ppfd-exact-staffing-times' not in html:
+        hook = 'function coversTime(entry, atMinute){\n    if(atMinute==null) return true;'
+        if 'if(entry.start && entry.end){ return Date.parse(entry.start)' not in html:
+            html = html.replace(hook, hook + '\n    // ppfd-exact-staffing-times\n    if(entry.start && entry.end){ return Date.parse(entry.start) <= Date.now() && Date.now() < Date.parse(entry.end); }', 1)
+    html = html.replace('var useActive=!!(el.rosterNow && el.rosterNow.checked);',
+                        "var useActive=periodKey === 'today' && !!(el.rosterNow && el.rosterNow.checked);")
+    if 'time.title=entry.start' not in html:
+        html = html.replace("time.textContent=from+'-'+through;", """time.textContent=from+'-'+through;
+        if(entry.start && entry.end){
+          var startDay=entry.start.slice(0,10), endDay=entry.end.slice(0,10);
+          if(startDay !== rosterDate){ time.textContent=startDay.slice(5)+' '+from+' - '+endDay.slice(5)+' '+through; }
+          else if(endDay !== startDay){ time.textContent=from+'-'+through+' (+1 day)'; }
+          time.title=entry.start+' to '+entry.end;
+        }""", 1)
+    html = html.replace("addCell(String(r.ride_in_count || 0));", "addCell(r.ride_in_count == null ? '--' : String(r.ride_in_count));")
     if 'personnel-calls.css?' not in html:
-        html = html.replace('<title>PPFD Live Leaderboards</title>', '<title>PPFD Live Leaderboards</title>\n<link rel="stylesheet" href="personnel-calls.css?v=20261020-1">', 1)
+        html = html.replace('<title>PPFD Live Leaderboards</title>', '<title>PPFD Live Leaderboards</title>\n<link rel="stylesheet" href="personnel-calls.css?v=20261020-2">', 1)
     if 'data-ppfd-personnel-bridge' not in html:
-        html += '\n<script src="personnel-calls.js?v=20261020-1" data-ppfd-personnel-bridge></script>\n'
+        html += '\n<script src="personnel-calls.js?v=20261020-2" data-ppfd-personnel-bridge></script>\n'
     return html
 
 
