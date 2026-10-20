@@ -493,6 +493,7 @@ function Get-SystemSourceMappings {
     @{ Base = $RepoRoot;      Rel = 'README.md';                        Dest = 'README.md' },
     @{ Base = $RepoRoot;      Rel = 'restart_all.bat';                  Dest = 'restart_all.bat' },
     @{ Base = $RepoRoot;      Rel = 'scripts\generate_leaderboard.py';  Dest = 'scripts/generate_leaderboard.py' },
+    @{ Base = $RepoRoot;      Rel = 'scripts\personnel_ledger.py';      Dest = 'scripts/personnel_ledger.py' },
     @{ Base = $RepoRoot;      Rel = 'scripts\install_tasks.ps1';        Dest = 'scripts/install_tasks.ps1' },
     @{ Base = $RepoRoot;      Rel = 'scripts\restart_all.ps1';          Dest = 'scripts/restart_all.ps1' },
     @{ Base = $RepoRoot;      Rel = 'scripts\start_alerts.ps1';         Dest = 'scripts/start_alerts.ps1' },
@@ -1376,6 +1377,8 @@ function Invoke-LeaderboardRun {
       (Get-FeedHealthFingerprint -Path $feedHealth),
       (Get-FileFingerprint -Path $feedOutages),
       (Get-FileFingerprint -Path $genScript),
+      (Get-FileFingerprint -Path (Join-Path $repoRoot 'scripts\personnel_ledger.py')),
+      (Get-FileFingerprint -Path (Join-Path $repoRoot 'docs\staffing\index.json')),
       (Get-FileFingerprint -Path $indexOut)
     ) -join ';;'
     $sourceMappings = Get-SystemSourceMappings -WorkspaceRoot $here -RepoRoot $repoRoot
@@ -1463,6 +1466,10 @@ function Invoke-LeaderboardRun {
       if ($shouldUpdateLeaderboard) {
         $msg = "Update leaderboard data $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
         Push-GitHubFile -Owner $ctx.Owner -Repo $ctx.Repo -Branch $ctx.Branch -DestPath 'docs/data.json' -SourcePath $outData -Token $token -ApiBase $ctx.ApiBase -Message $msg | Out-Null
+        $personnelHistoryOut = Join-Path (Split-Path -Parent $outData) 'personnel_calls.json'
+        if (Test-Path -LiteralPath $personnelHistoryOut) {
+          Push-GitHubFile -Owner $ctx.Owner -Repo $ctx.Repo -Branch $ctx.Branch -DestPath 'docs/personnel_calls.json' -SourcePath $personnelHistoryOut -Token $token -ApiBase $ctx.ApiBase -Message $msg | Out-Null
+        }
         if (Test-Path $legacyOut) {
           Push-GitHubFile -Owner $ctx.Owner -Repo $ctx.Repo -Branch $ctx.Branch -DestPath 'data/leaderboards.json' -SourcePath $legacyOut -Token $token -ApiBase $ctx.ApiBase -Message $msg | Out-Null
         }

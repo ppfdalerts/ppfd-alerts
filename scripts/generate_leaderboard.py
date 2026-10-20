@@ -6,6 +6,7 @@ import math
 from collections import defaultdict
 from pathlib import Path
 import argparse
+import personnel_ledger
 
 
 SHIFT_HOUR = 7
@@ -304,7 +305,7 @@ def _default_roster_dir(stats_dir: Path | None = None):
     for c in candidates:
         if c and c.exists():
             return c
-    return None
+    return personnel_ledger.STAFFING if personnel_ledger.STAFFING.exists() else None
 
 
 def _default_personnel_stats_dir(stats_dir: Path):
@@ -360,6 +361,9 @@ def _roster_path_for_date(roster_dir: Path, target_date: datetime.date) -> Path:
 
 
 def _load_roster_payload(roster_path: Path):
+    live = personnel_ledger.roster_for_path(roster_path)
+    if live is not None:
+        return live
     if not roster_path.exists():
         return None
     try:
@@ -408,11 +412,6 @@ def _build_roster_bundle(roster_dir: Path):
 
     today_payload = _load_roster_payload(_roster_path_for_date(roster_dir, shift_date))
     prior_payload = _load_roster_payload(_roster_path_for_date(roster_dir, prior_date))
-
-    if not today_payload and not prior_payload:
-        latest = _pick_latest_roster(roster_dir)
-        if latest:
-            today_payload = _load_roster_payload(latest)
 
     if not today_payload and not prior_payload:
         return None
@@ -706,6 +705,9 @@ def _effective_personnel_assignments(
 
 
 def _roster_personnel_hours(roster_payload: dict, shift_date: datetime.date) -> dict[str, float]:
+    if roster_payload.get("operational_only") and roster_payload.get("complete"):
+        result = personnel_ledger.attribute(shift_date, {}, [personnel_ledger.bridge_roster(shift_date-datetime.timedelta(days=1)), roster_payload])
+        return {pid: info["hours_worked"] for pid, info in result["people"].items()}
     """Return rostered hours by person for one 24-hour shift.
 
     The roster document provides an explicit hours value. Use it instead of
@@ -763,6 +765,8 @@ def _compute_shift_personnel_from_roster(
     stats_path: Path,
     roster_payload: dict,
 ) -> tuple[dict, dict, dict, dict, dict]:
+    if (personnel_ledger.STAFFING / "index.json").exists() and shift_date >= personnel_ledger.backfill_start():
+        return personnel_ledger.stats_tuple(personnel_ledger.shift_result(stats_path, shift_date))
     calls, dur, after, max_sec, _ride_in, _duration_known = load_stats(stats_path)
     roster_map = _build_roster_map(roster_payload, shift_date)
     effective_assignments = _effective_personnel_assignments(
@@ -1538,7 +1542,7 @@ def _list_shift_stat_dates(stats_dir: Path) -> list[datetime.date]:
 
 
 def _list_roster_dates(roster_dir: Path | None) -> list[datetime.date]:
-    dates: list[datetime.date] = []
+    dates = [datetime.date.fromisoformat(day) for day in personnel_ledger.available_dates()]
     if not roster_dir or not roster_dir.exists():
         return dates
     for name in os.listdir(roster_dir):
@@ -1549,7 +1553,7 @@ def _list_roster_dates(roster_dir: Path | None) -> list[datetime.date]:
             dates.append(datetime.datetime.strptime(m.group(1), "%Y-%m-%d").date())
         except Exception:
             continue
-    return sorted(dates)
+    return sorted(set(dates))
 
 
 def _list_personnel_dates(personnel_dir: Path | None) -> list[datetime.date]:
@@ -2293,6 +2297,10 @@ def compute_backfill_health(
         if unit_calls <= 0:
             continue
         personnel_calls = _sum_personnel_calls_for_date(personnel_dir, day)
+        if personnel_ledger.bridge_roster(day):
+            result = personnel_ledger.shift_result(stats_dir / f"shift_stats_{day:%Y-%m-%d}.json", day)
+            if result["coverage"]["roster_complete"] and not result["coverage"]["missing_call_records"] and not result["coverage"]["unattributed"]:
+                continue
         if personnel_calls <= 0:
             missing_personnel_days.append(day.isoformat())
 
@@ -2636,6 +2644,8 @@ def main():
     if not feed_outages_path.exists() and not args.feed_outages:
         feed_outages_path = Path(__file__).resolve().parents[1] / "data" / "feed_outages.json"
     payload["feed_outages"] = load_feed_outages(feed_outages_path)
+    personnel_ledger.apply_exact_history(payload, stats_dir, now, out_path)
+    payload["integrity_checks"] = compute_integrity_checks(payload)
 
     tmp = out_path.with_suffix('.json.tmp')
     with tmp.open('w', encoding='utf-8') as f:
