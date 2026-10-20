@@ -8,6 +8,7 @@ import re
 def personnel_ui(html):
     """Keep the read-only history UI even if the legacy publisher sends old HTML."""
     html = html.replace('personnel-calls.js?v=20261020-1', 'personnel-calls.js?v=20261020-2').replace('personnel-calls.css?v=20261020-1', 'personnel-calls.css?v=20261020-2')
+    html = html.replace('leaderboard-type.js?v=20261020-1', 'leaderboard-type.js?v=20261020-2').replace('leaderboard-type.css?v=20261020-1', 'leaderboard-type.css?v=20261020-2')
     if '<meta charset=' not in html.lower():
         html = html.replace('<!doctype html>', '<!doctype html>\n<meta charset="utf-8">', 1)
     if 'window.ppfdData = data;' not in html:
@@ -42,8 +43,8 @@ def personnel_ui(html):
     if 'data-ppfd-personnel-bridge' not in html:
         html += '\n<script src="personnel-calls.js?v=20261020-2" data-ppfd-personnel-bridge></script>\n'
     if 'data-ppfd-fit-type' not in html:
-        html += ('\n<link rel="stylesheet" href="leaderboard-type.css?v=20261020-1">'
-                 '\n<script src="leaderboard-type.js?v=20261020-1" data-ppfd-fit-type></script>\n')
+        html += ('\n<link rel="stylesheet" href="leaderboard-type.css?v=20261020-2">'
+                 '\n<script src="leaderboard-type.js?v=20261020-2" data-ppfd-fit-type></script>\n')
     return html
 
 

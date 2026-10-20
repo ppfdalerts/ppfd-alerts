@@ -61,6 +61,11 @@ def main():
               daily_unit: getComputedStyle(document.querySelector('#board-today tbody td .ppfd-fit-content')).fontSize,
               daily_calls: getComputedStyle(document.querySelector('#board-today .calls-badge')||document.querySelector('#board-today tbody td:nth-child(2) .ppfd-fit-content')).fontSize,
               daily_row:document.querySelector('#board-today tbody tr').getBoundingClientRect().height,
+              badHeaderText:[...document.querySelectorAll('.panel .hdr>span:not(.dot)')].filter(e=>{
+                const next=e.nextElementSibling;if(!next||!e.textContent.trim())return false;
+                const range=document.createRange();range.selectNodeContents(e);
+                return range.getBoundingClientRect().right>next.getBoundingClientRect().left-2;
+              }).map(e=>e.textContent),
               badCells:[...document.querySelectorAll('.ppfd-fit-content')].filter(e=>e.scrollWidth>e.clientWidth+1).length})""")
             page.screenshot(path=str(args.output / f'{width}-after.png'), full_page=False)
             if width == 1440:
@@ -96,7 +101,7 @@ def main():
             page.close()
         browser.close()
     (args.output / 'acceptance.json').write_text(json.dumps(results, indent=2)+'\n', encoding='utf-8')
-    assert not any(row['changed_count'] or row['browser_errors'] or row['metrics']['badCells'] or row['metrics'].get('error') for row in results), 'Type fitting changed layout or overflowed; see acceptance.json'
+    assert not any(row['changed_count'] or row['browser_errors'] or row['metrics']['badCells'] or row['metrics']['badHeaderText'] or row['metrics'].get('error') for row in results), 'Type fitting changed layout or overflowed; see acceptance.json'
 
 
 if __name__ == '__main__':

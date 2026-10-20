@@ -124,12 +124,9 @@
     var base = number(style.fontSize), line = number(style.lineHeight) || base * 1.2;
     var width = rect.width - number(style.paddingLeft) - number(style.paddingRight) - number(style.borderLeftWidth) - number(style.borderRightWidth);
     var height = rect.height - number(style.paddingTop) - number(style.paddingBottom) - number(style.borderTopWidth) - number(style.borderBottomWidth);
-    var headerSpace = 0, alignRight = false;
+    var headerSpace = 0;
     if (node.matches('.panel .hdr>span') && rect.height < line * 1.6) {
-      if (node.classList.contains('sub')) {
-        headerSpace = Math.max(0, number(style.marginLeft)) / 2;
-        alignRight = headerSpace > 0;
-      } else if (node.nextElementSibling && node.nextElementSibling.classList.contains('sub')) {
+      if (!node.classList.contains('sub') && node.nextElementSibling && node.nextElementSibling.classList.contains('sub')) {
         headerSpace = Math.max(0, node.nextElementSibling.getBoundingClientRect().left - rect.right - number(getComputedStyle(node.parentElement).gap)) / 2;
       }
       width += headerSpace;
@@ -146,7 +143,7 @@
     node.style.width = rect.width + 'px'; node.style.height = rect.height + 'px';
     if (style.display === 'inline') node.style.display = 'inline-block';
     node.style.flexShrink = '0'; node.style.lineHeight = line + 'px';
-    if (headerSpace) { node.style.whiteSpace = 'nowrap'; if (alignRight) node.style.textAlign = 'right'; }
+    if (headerSpace) node.style.whiteSpace = 'nowrap';
     node.style.fontSize = size + 'px';
     /* Preserve wrapped notes and names: a larger font must use the same lines. */
     while (size > base && ((!headerSpace && node.scrollWidth > node.clientWidth + 1) || node.scrollHeight > node.clientHeight + 1)) {
