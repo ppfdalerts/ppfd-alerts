@@ -1,0 +1,5 @@
+/* Text is fitted to measured, existing slots; no padding, gaps or layout change. */
+.ppfd-fit-content{display:block;max-width:100%;overflow:visible}
+th.ppfd-fit-cell::after{display:none}
+th.ppfd-fit-cell.sort-asc>.ppfd-fit-content::after{content:" ^";color:var(--muted);font-size:calc(11px * var(--ppfd-type-factor,1))}
+th.ppfd-fit-cell.sort-desc>.ppfd-fit-content::after{content:" v";color:var(--muted);font-size:calc(11px * var(--ppfd-type-factor,1))}

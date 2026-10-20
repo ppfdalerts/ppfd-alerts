@@ -66,6 +66,8 @@ def test_ui_overlay_is_idempotent():
     assert module.personnel_ui(first) == first
     assert first.count('data-ppfd-personnel-bridge') == 1
     assert first.count('value="backfill"') == 1
+    assert first.count('data-ppfd-fit-type') == 1
+    assert first.count('leaderboard-type.css?') == 1
 
 
 def test_overlay_repairs_a_legacy_publisher_template():
@@ -89,3 +91,4 @@ def test_overlay_repairs_a_legacy_publisher_template():
     assert 'periodKey ===' in result
     assert '<meta charset="utf-8">' in result
     assert 'data-ppfd-personnel-bridge' in result
+    assert 'leaderboard-type.js?v=' in result

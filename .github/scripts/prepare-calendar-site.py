@@ -41,6 +41,9 @@ def personnel_ui(html):
         html = html.replace('<title>PPFD Live Leaderboards</title>', '<title>PPFD Live Leaderboards</title>\n<link rel="stylesheet" href="personnel-calls.css?v=20261020-2">', 1)
     if 'data-ppfd-personnel-bridge' not in html:
         html += '\n<script src="personnel-calls.js?v=20261020-2" data-ppfd-personnel-bridge></script>\n'
+    if 'data-ppfd-fit-type' not in html:
+        html += ('\n<link rel="stylesheet" href="leaderboard-type.css?v=20261020-1">'
+                 '\n<script src="leaderboard-type.js?v=20261020-1" data-ppfd-fit-type></script>\n')
     return html
 
 

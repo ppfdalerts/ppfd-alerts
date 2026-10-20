@@ -21,7 +21,7 @@ def main():
     from roster_sync.github_pages import GitHubClient, blob_sha
     api = GitHubClient(load_settings(args.calendar_project / "config.local.json"))
     root = Path(__file__).resolve().parents[1]
-    allowed = ("scripts/", "tests/", ".github/", "docs/personnel-", "docs/call_archive/", "docs/index.html", "start_leaderboard.ps1", "README_PERSONNEL.md", ".gitignore")
+    allowed = ("scripts/", "tests/", ".github/", "docs/personnel-", "docs/leaderboard-type.", "docs/call_archive/", "docs/index.html", "start_leaderboard.ps1", "README_PERSONNEL.md", ".gitignore")
     changes = {}
     if args.include_call_archive:
         args.files.extend(path.relative_to(root).as_posix() for path in (root / "docs/call_archive").glob("*.json"))
