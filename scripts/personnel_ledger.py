@@ -303,12 +303,60 @@ def apply_exact_history(payload, stats_dir, now, output):
             payload["personnel"][period] = exact
     for period in ("year", "rolling_year"):
         if period in payload.get("personnel", {}):
+            legacy = payload.get("details", {}).get("personnel", {}).get(period, {})
+            exact_rows = {row["person_id"]: dict(row) for row in history_period(history, start, current)["rows"]}
+            year_start = dt.date(current.year, 1, 1) if period == "year" else current-dt.timedelta(days=364)
+            for pid, old in legacy.items():
+                shifts = [row for row in old.get("shifts", []) if str(year_start) <= row.get("date", "") < str(start)]
+                if not shifts:
+                    continue
+                row = exact_rows.setdefault(pid, {"person_id": pid, "name": old.get("name") or pid,
+                                                 "total_calls": 0, "total_hours_worked": 0, "ride_in_count": 0,
+                                                 "single_shift_max_calls": 0, "total_calls_after_midnight": 0,
+                                                 "single_shift_max_after_midnight": 0, "total_call_hours": 0,
+                                                 "highest_call_duration_mins": None, "avg_call_duration_mins": None})
+                legacy_calls = sum(int(shift.get("calls") or 0) for shift in shifts)
+                legacy_seconds = sum(float(shift.get("avg_min") or 0)*int(shift.get("calls") or 0)*60 for shift in shifts)
+                row["total_calls"] += legacy_calls
+                row["total_hours_worked"] = round((row.get("total_hours_worked") or 0) + sum(float(shift.get("hours_worked") or 0) for shift in shifts), 1)
+                row["total_call_hours"] = round((row.get("total_call_hours") or 0) + legacy_seconds/3600, 1)
+                row["ride_in_count"] = (row.get("ride_in_count") or 0) + sum(int(shift.get("ride_in_count") or 0) for shift in shifts)
+                row["single_shift_max_calls"] = max([row.get("single_shift_max_calls") or 0] + [int(shift.get("calls") or 0) for shift in shifts])
+                row["total_calls_after_midnight"] += sum(int(shift.get("after_0000") or 0) for shift in shifts)
+                row["single_shift_max_after_midnight"] = max([row.get("single_shift_max_after_midnight") or 0] + [int(shift.get("after_0000") or 0) for shift in shifts])
+                row["highest_call_duration_mins"] = max([row.get("highest_call_duration_mins") or 0] + [float(shift.get("max_min") or 0) for shift in shifts])
+                row["avg_calls_per_hour"] = round(row["total_calls"]/row["total_hours_worked"], 2) if row["total_hours_worked"] else None
+                row["avg_call_duration_mins"] = round(row["total_call_hours"]*60/row["total_calls"], 1) if row["total_calls"] else None
+                row["delta_calls"] = None
+            payload["personnel"][period]["rows"] = sorted(exact_rows.values(), key=lambda row: (-row["total_calls"], row["name"]))
             payload["personnel"][period].setdefault("meta", {})["counting_note"] = "Exact incident matching since " + str(start) + "; older totals retain legacy shift-based estimates."
+            payload["personnel"][period]["meta"]["partial"] = not summary["complete"]
     payload["backfill_health"]["exact_personnel"] = summary
     health = payload["backfill_health"]
     health["last_backfill_status"] = {"status": "complete" if summary["complete"] else "partial",
                                       "message": "Historical staffing recovered; incident-level coverage is reported separately.",
                                       "updated_at": dt.datetime.now(UTC).isoformat()}
+
+
+def display_roster(day):
+    """A 07:00 leaderboard shift includes the prior calendar day's 07:00-07:30 crew."""
+    units = defaultdict(list)
+    begin = timestamp(str(day) + "T07:00:00")
+    end = timestamp(str(day+dt.timedelta(days=1)) + "T07:00:00")
+    for calendar_day in (day-dt.timedelta(days=1), day):
+        roster = bridge_roster(calendar_day)
+        if not roster:
+            continue
+        for unit in roster["units"]:
+            for entry in unit.get("entries", []):
+                left, right = timestamp(entry.get("start")), timestamp(entry.get("end"))
+                if left and right and left < end and right > begin:
+                    units[normalize_unit(unit["unit_code"])].append(entry)
+    if not units:
+        return None
+    return {"date": str(day), "source": "telestaff-authorized-full-roster", "timezone": "America/New_York",
+            "units": [{"unit_code": code, "unit_name": code, "shift": "Fire Department / Suppression", "entries": entries}
+                      for code, entries in sorted(units.items())]}
 
 
 def history_period(history, start, end):

@@ -6,11 +6,12 @@ on:
     paths:
       - 'docs/**'
       - '.github/workflows/publish-calendar-pages.yml'
-      - '.github/scripts/prepare-calendar-site.py'
+      - '.github/scripts/**'
+      - 'scripts/personnel_ledger.py'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -32,6 +33,7 @@ jobs:
           sparse-checkout: |
             docs
             .github/scripts
+            scripts
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Keep calendar navigation in the generated leaderboard
@@ -43,3 +45,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+      - name: Retain public incident timelines for future personnel backfills
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/persist_call_archive.py

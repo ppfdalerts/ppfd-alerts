@@ -1,10 +1,12 @@
-﻿<!doctype html>
+<!doctype html>
+<meta charset="utf-8">
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <!-- personnel-order-column-v1 -->
 <title>PPFD Live Leaderboards</title>
+<link rel="stylesheet" href="personnel-calls.css?v=20261020-1">
 <style>
   :root{
     --bg:#0b0d10; --panel:#151a20; --text:#e5e7eb; --muted:#9ca3af;
@@ -198,10 +200,12 @@
     .grip{display:none}
     body.edit-on .grip{display:block}
   }
+
+.toolbar-shortcuts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.calendar-navigation{display:inline-block;text-decoration:none}
 </style>
 <div class="wrap">
   <div class="toolbar-shell">
-  <button id="toolbarToggle" class="toolbar-toggle" type="button" aria-expanded="false">Controls</button>
+  <div class="toolbar-shortcuts"><button id="toolbarToggle" class="toolbar-toggle" type="button" aria-expanded="false">Controls</button><a id="rosterCalendarLink" class="toolbar-toggle calendar-navigation" href="calendar/">Calendars</a></div>
   <div id="toolbar" class="toolbar" hidden>
     <div class="pill">PPFD Leaderboards</div>
     <div id="buildInfo" class="pill">Build: -- | Commit: -------</div>
@@ -315,6 +319,7 @@
         <div class="personnel-controls">
           <label>Period
             <select id="personnelPeriod">
+              <option value="backfill">Since last backfill</option>
               <option value="week">Week</option>
               <option value="month">Month</option>
               <option value="year">Year to Date</option>
@@ -1004,8 +1009,8 @@
     open: null
   };
   var personnelState = {
-    data: { week: null, month: null, year: null, rolling_year: null },
-    period: 'week',
+    data: { backfill: null, week: null, month: null, year: null, rolling_year: null },
+    period: 'backfill',
     sortKey: 'total_calls',
     sortDir: 'desc',
     filter: '',
@@ -1036,6 +1041,7 @@
 
   function coversTime(entry, atMinute){
     if(atMinute==null) return true;
+    if(entry.start && entry.end){ return Date.parse(entry.start) <= Date.now() && Date.now() < Date.parse(entry.end); }
     var start=parseTimeToMinutes(entry.from);
     var end=parseTimeToMinutes(entry.through);
     var hours=entry.hours;
@@ -1105,7 +1111,7 @@
     var code=normalizeUnitCode(unitCode);
     var periodKey = period || 'today';
     rosterState.open = { unit: code, period: periodKey };
-    var useActive=!!(el.rosterNow && el.rosterNow.checked);
+    var useActive=periodKey === 'today' && !!(el.rosterNow && el.rosterNow.checked);
     var atMinute=useActive ? nowMinutes() : null;
     var payload = rosterState.payload && rosterState.payload[periodKey] ? rosterState.payload[periodKey] : null;
     var index = rosterState.index && rosterState.index[periodKey] ? rosterState.index[periodKey] : null;
@@ -1168,6 +1174,12 @@
         var from=entry.from || '--';
         var through=entry.through || '--';
         time.textContent=from+'-'+through;
+        if(entry.start && entry.end){
+          var startDay=entry.start.slice(0,10), endDay=entry.end.slice(0,10);
+          if(startDay !== rosterDate){ time.textContent=startDay.slice(5)+' '+from+' - '+endDay.slice(5)+' '+through; }
+          else if(endDay !== startDay){ time.textContent=from+'-'+through+' (+1 day)'; }
+          time.title=entry.start+' to '+entry.end;
+        }
         var detail=document.createElement('div');
         var name=document.createElement('div');
         name.className='name';
@@ -1387,7 +1399,7 @@
       addCell(String(r.total_calls || 0));
       addCell(r.avg_calls_per_hour != null ? Number(r.avg_calls_per_hour).toFixed(2) : '--');
       addCell(r.total_hours_worked != null ? Number(r.total_hours_worked).toFixed(1) : '--');
-      addCell(String(r.ride_in_count || 0));
+      addCell(r.ride_in_count == null ? '--' : String(r.ride_in_count));
       addCell(String(r.single_shift_max_calls || 0));
       addCell(formatMaybeFloat(r.avg_call_duration_mins));
       addCell(formatMaybeFloat(r.highest_call_duration_mins));
@@ -1413,6 +1425,7 @@
 
   function applyPersonnel(personnel){
     if(!personnel) return;
+    personnelState.data.backfill = personnel.backfill || null;
     personnelState.data.week = personnel.week || null;
     personnelState.data.month = personnel.month || null;
     personnelState.data.year = personnel.year || null;
@@ -1450,6 +1463,8 @@
 
   function apply(data){
     appState.payload = data || null;
+    window.ppfdData = data;
+    document.dispatchEvent(new CustomEvent('ppfd:data', {detail:data}));
     var errors=[]; function safe(label,fn){ try{ fn(); } catch(e){ console.error('render error',label,e); errors.push(label); } }
     safe('YearlySummary', function(){ renderYearlySummary(data.yearly_summary); });
     safe('FeedHealth', function(){ renderFeedHealth(data.feed_health); });
@@ -1792,4 +1807,5 @@ el.winners.onchange=function(){ document.body.classList.toggle('winners-on', el.
   window.addEventListener('resize', function(){ updateFlowMode(); applyPageScrollLayout(); });
   fetchOnce(); startAuto();
 </script>
+<script src="personnel-calls.js?v=20261020-1" data-ppfd-personnel-bridge></script>
 
