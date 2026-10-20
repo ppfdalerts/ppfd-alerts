@@ -59,6 +59,33 @@ def test_overnight_crew_and_pending_not_counted():
     assert result["coverage"]["attributed_unit_calls"] == 1
 
 
+def test_display_roster_keeps_days_separate_and_preserves_split_assignments(monkeypatch):
+    prior = DAY-dt.timedelta(days=1)
+    previous = employee("prior", day=prior)
+    previous["end"] = f"{DAY}T07:30:00-04:00"
+    early = employee("early", start="06:00", end="12:00")
+    late = employee("late", start="12:00", end="07:30")
+    late["end"] = f"{DAY+dt.timedelta(days=1)}T07:30:00-04:00"
+    sources = {prior: roster(prior, {"E34": [previous]}),
+               DAY: roster(entries={"E34": [early, late]})}
+    monkeypatch.setattr(ledger, "bridge_roster", sources.get)
+
+    today = ledger.display_roster(DAY)
+    yesterday = ledger.display_roster(prior)
+    assert today["date"] == str(DAY)
+    assert today["units"][0]["entries"] == [early, late]
+    assert yesterday["date"] == str(prior)
+    assert yesterday["units"][0]["entries"] == [previous]
+
+
+def test_display_roster_does_not_fall_back_to_prior_day(monkeypatch):
+    prior = DAY-dt.timedelta(days=1)
+    carryover = employee("prior", day=prior)
+    carryover["end"] = f"{DAY}T07:30:00-04:00"
+    monkeypatch.setattr(ledger, "bridge_roster", {prior: roster(prior, {"E34": [carryover]})}.get)
+    assert ledger.display_roster(DAY) is None
+
+
 def test_simultaneous_unit_conflict_flagged_not_guessed():
     source = roster(entries={"E34": [employee("1")], "R34": [employee("1")]})
     result = ledger.attribute(DAY, stats({"a|E34": f"{DAY}T08:00:00"}), [source])

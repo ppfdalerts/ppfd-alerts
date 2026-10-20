@@ -43,8 +43,12 @@ def test_full_story_exact_totals_history_roster_and_idempotency(tmp_path, monkey
     history = json.loads((tmp_path / "personnel_calls.json").read_text())
     assert {call["incident_id"] for call in history["people"]["1"]["calls"]} == {"a", "b"}
     roster = json.loads((tmp_path / "roster_units.json").read_text())
-    assert roster["today"]["date"] == "2026-10-20"
-    assert roster["today"]["units"][0]["entries"][0]["id"] == "1"
+    for period, day in (("today", "2026-10-20"), ("prior", "2026-10-19")):
+        assert roster[period]["date"] == day
+        entries = roster[period]["units"][0]["entries"]
+        assert len(entries) == 1
+        assert entries[0]["id"] == "1"
+        assert entries[0]["start"].startswith(day)
     build.prepare_data(tmp_path)
     second = json.loads((tmp_path / "data.json").read_text())
     assert second["personnel"]["backfill"]["rows"] == first["personnel"]["backfill"]["rows"]

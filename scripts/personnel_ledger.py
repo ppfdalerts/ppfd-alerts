@@ -339,19 +339,20 @@ def apply_exact_history(payload, stats_dir, now, output):
 
 
 def display_roster(day):
-    """A 07:00 leaderboard shift includes the prior calendar day's 07:00-07:30 crew."""
+    """Show only the selected roster date's crew, including split assignments.
+
+    Call attribution separately uses adjacent dates to match overnight calls;
+    those carryover assignments must not be added to this day's unit popup.
+    """
+    roster = bridge_roster(day)
+    if not roster:
+        return None
     units = defaultdict(list)
-    begin = timestamp(str(day) + "T07:00:00")
-    end = timestamp(str(day+dt.timedelta(days=1)) + "T07:00:00")
-    for calendar_day in (day-dt.timedelta(days=1), day):
-        roster = bridge_roster(calendar_day)
-        if not roster:
-            continue
-        for unit in roster["units"]:
-            for entry in unit.get("entries", []):
-                left, right = timestamp(entry.get("start")), timestamp(entry.get("end"))
-                if left and right and left < end and right > begin:
-                    units[normalize_unit(unit["unit_code"])].append(entry)
+    for unit in roster["units"]:
+        for entry in unit.get("entries", []):
+            left, right = timestamp(entry.get("start")), timestamp(entry.get("end"))
+            if left and right and right > left:
+                units[normalize_unit(unit["unit_code"])].append(entry)
     if not units:
         return None
     return {"date": str(day), "source": "telestaff-authorized-full-roster", "timezone": "America/New_York",
