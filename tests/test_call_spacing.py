@@ -12,9 +12,9 @@ sys.path.insert(0, str(ROOT / ".github/scripts"))
 import prepare_call_spacing as spacing
 
 
-@pytest.mark.parametrize("hours,calls,expected", [(24,12,120), (8,4,120), (7*24,67,150.4), (360.5,83,260.6), (24,0,None), (None,3,None), (0,3,None), (-5,3,None), (24,float('nan'),None)])
-def test_minutes_per_call(hours, calls, expected):
-    assert spacing.minutes_per_call(hours,calls) == expected
+@pytest.mark.parametrize("hours,calls,expected", [(24,12,2), (8,4,2), (7*24,67,2.51), (360.5,83,4.34), (24,0,None), (None,3,None), (0,3,None), (-5,3,None), (24,float('nan'),None)])
+def test_hours_per_call(hours, calls, expected):
+    assert spacing.hours_per_call(hours,calls) == expected
 
 
 def test_exact_period_exposure_not_inverse_of_rounded_rate():
@@ -29,12 +29,13 @@ def test_exact_period_exposure_not_inverse_of_rounded_rate():
     }
     original = copy.deepcopy(payload)
     result = spacing.add_spacing(payload)
-    assert result["today"]["rows"][0][spacing.FIELD] == 25.7
-    assert result["prior"]["rows"][0][spacing.FIELD] == 144.0  # Not 60 / 0.42.
-    assert result["week"]["rows"][0][spacing.FIELD] == 150.4  # Not 60 / 0.4.
+    assert result["today"]["rows"][0][spacing.FIELD] == 0.43
+    assert result["prior"]["rows"][0][spacing.FIELD] == 2.4  # Not 1 / 0.42.
+    assert result["week"]["rows"][0][spacing.FIELD] == 2.51  # Not 1 / 0.4.
     assert result["month"]["meta"]["call_spacing"]["period_hours"] == 30*24
     assert result["year"]["meta"]["call_spacing"]["period_hours"] == 294*24
-    assert result["personnel"]["backfill"]["rows"][0][spacing.FIELD] == 260.6
+    assert result["personnel"]["backfill"]["rows"][0][spacing.FIELD] == 4.34
+    assert result["today"]["meta"]["call_spacing"]["units"] == "hours"
     assert result["personnel"]["backfill"]["rows"][0]["avg_calls_per_hour"] == original["personnel"]["backfill"]["rows"][0]["avg_calls_per_hour"]
     assert spacing.add_spacing(copy.deepcopy(result)) == result
 
@@ -52,10 +53,33 @@ def test_ui_all_boards_sorting_and_csv_are_converted_idempotently():
     html = module.personnel_ui((ROOT / "docs/index.html").read_text(encoding="utf-8-sig"))
     assert module.personnel_ui(html) == html
     assert 'data-sort="'+spacing.FIELD+'"' in html
-    assert 'min between calls' in html
+    assert 'hrs between calls' in html
     assert 'avg_calls_per_hour' not in html and 'calls/hr' not in html and 'Avg Calls/Hr' not in html
-    assert "Number(r."+spacing.FIELD+").toFixed(2)" not in html
-    assert "'Avg. Time Between Calls (min)'" in html  # CSV heading, not only visible UI.
+    assert "Number(r."+spacing.FIELD+").toFixed(1)" not in html
+    assert "'Avg. Time Between Calls (hours)'" in html  # CSV heading, not only visible UI.
+    assert 'avg_time_between_calls_mins' not in html and 'min between calls' not in html
+    assert 'csvMaybeFloat(r.'+spacing.FIELD+', 2)' in html
     assert '// ppfd-spacing-nulls-last' in html
     assert '// ppfd-call-spacing-csv' in html
     assert r"lines.join('\\r\\n')" not in html
+    assert 'decimals' not in html.split('function formatMaybeFloat(',1)[1].split('\n  }',1)[0]
+
+
+def test_legacy_rate_and_duration_formats_upgrade_independently():
+    original = '''<th data-sort="avg_calls_per_hour">Avg Calls/Hr</th>
+  function csvMaybeFloat(value){
+    var num=Number(value);
+    return num.toFixed(1);
+  }
+  function formatMaybeFloat(value){
+    var num=Number(value);
+    return num.toFixed(1);
+  }
+  summary.textContent=(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr • '+Number(totalCalls || 0)+' calls • '+activeSummary;
+  csvMaybeFloat(r.avg_calls_per_hour);
+'''
+    converted = spacing.update_ui(original)
+    assert spacing.update_ui(converted) == converted
+    assert 'hrs between calls' in converted
+    assert 'csvMaybeFloat(r.'+spacing.FIELD+', 2)' in converted
+    assert 'decimals' not in converted.split('function formatMaybeFloat(',1)[1].split('\n  }',1)[0]

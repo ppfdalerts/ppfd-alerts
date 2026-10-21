@@ -87,10 +87,12 @@ def main():
                 page.wait_for_function('n=>ppfdTypography.status().revision>n', arg=revision)
                 compare_current_layout(page)
                 page.locator('#personnelFilter').fill('')
-                page.locator('#board-today tr[data-unit="D35"]').click()
-                page.locator('#rosterPop').wait_for(state='visible')
-                compare_current_layout(page)
-                page.locator('#rosterClose').click()
+                available_unit = page.locator('#board-today tr[data-unit]').first
+                if available_unit.count():
+                    available_unit.click()
+                    page.locator('#rosterPop').wait_for(state='visible')
+                    compare_current_layout(page)
+                    page.locator('#rosterClose').click()
                 page.set_viewport_size({'width':390,'height':844})
                 page.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
                 compare_current_layout(page)

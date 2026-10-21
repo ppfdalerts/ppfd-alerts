@@ -1,4 +1,4 @@
-"""Verify period minutes-per-call values, labels, sorting and CSV end to end."""
+"""Verify period hours-per-call values, labels, sorting and CSV end to end."""
 import argparse
 import csv
 import io
@@ -7,8 +7,8 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-FIELD = 'avg_time_between_calls_mins'
-LABEL = 'Avg. Time Between Calls (min)'
+FIELD = 'avg_time_between_calls_hours'
+LABEL = 'Avg. Time Between Calls (hours)'
 
 
 def main():
@@ -34,21 +34,21 @@ def main():
             assert hours > 0
             for row in period['rows']:
                 calls = row.get('calls') if key in ('today','prior') else row.get('total_calls')
-                expected = round(hours*60/calls,1) if calls else None
+                expected = round(hours/calls,2) if calls else None
                 assert row[FIELD] == expected, (key,row['unit'])
                 checked += 1
         for key, period in payload['personnel'].items():
             for row in period['rows']:
                 hours, calls = row.get('total_hours_worked'), row.get('total_calls')
-                expected = round(hours*60/calls,1) if hours and calls else None
+                expected = round(hours/calls,2) if hours and calls else None
                 assert row[FIELD] == expected, (key,row['person_id'])
                 checked += 1
         for key in ('today','prior'):
             first = page.locator('#board-'+key+' tbody tr[data-unit]').first
             unit = first.get_attribute('data-unit')
             row = next(row for row in payload[key]['rows'] if row['unit']==unit)
-            value = '--' if row[FIELD] is None else f'{row[FIELD]:.1f}'
-            assert first.locator('.activity-summary').inner_text().startswith(value+' min between calls')
+            value = '--' if row[FIELD] is None else f'{row[FIELD]:.2f}'
+            assert first.locator('.activity-summary').inner_text().startswith(value+' hrs between calls')
         assert 'calls/hr' not in page.locator('body').inner_text().lower()
         assert page.locator('#board-personnel th[data-sort="'+FIELD+'"]').count()==1
         unit_samples = {}
@@ -56,16 +56,16 @@ def main():
             first = page.locator('#board-'+key+' tbody tr[data-unit]').first
             unit = first.get_attribute('data-unit')
             row = next(row for row in payload[key]['rows'] if row['unit']==unit)
-            expected = '--' if row[FIELD] is None else f'{row[FIELD]:.1f}'
+            expected = '--' if row[FIELD] is None else f'{row[FIELD]:.2f}'
             assert first.locator('td').nth(2).inner_text()==expected
-            unit_samples[key] = {'unit':unit,'minutes':row[FIELD]}
+            unit_samples[key] = {'unit':unit,'hours':row[FIELD]}
         page.screenshot(path=str(args.output/'desktop.png'))
         for period in payload['personnel']:
             page.select_option('#personnelPeriod',period)
             first = page.locator('#board-personnel tbody tr[data-person-id]').first
             pid = first.get_attribute('data-person-id')
             row = next(row for row in payload['personnel'][period]['rows'] if str(row['person_id'])==pid)
-            expected = '--' if row[FIELD] is None else f'{row[FIELD]:.1f}'
+            expected = '--' if row[FIELD] is None else f'{row[FIELD]:.2f}'
             assert first.locator('td').nth(3).inner_text()==expected
         page.select_option('#personnelPeriod','backfill')
         page.locator('#board-personnel th[data-sort="'+FIELD+'"]').click()
@@ -93,7 +93,7 @@ def main():
         page.screenshot(path=str(args.output/'mobile.png'))
         assert not errors, errors
         report = {'url':args.url,'validated_rows':checked,'units':unit_samples,'exports':exports,
-                  'definition':'Period/working minutes per call, not clear-to-next-call downtime',
+                  'definition':'Period/working hours per call, not clear-to-next-call downtime',
                   'sorting_periods_labels_csv_mobile':'passed','browser_errors':errors}
         (args.output/'acceptance.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
         print(json.dumps(report,indent=2))

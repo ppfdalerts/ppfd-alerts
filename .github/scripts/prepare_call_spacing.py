@@ -1,6 +1,6 @@
 """Replace call rate with its time-per-call equivalent, without rounding a rate.
 
-This is observed/scheduled minutes per call, not measured end-to-next-start
+This is observed/scheduled hours per call, not measured end-to-next-start
 downtime. Keep the legacy rate fields for compatibility with the source host.
 """
 import datetime as dt
@@ -13,9 +13,9 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 import personnel_ledger as ledger
 
-FIELD = "avg_time_between_calls_mins"
-LABEL = "Avg. Time Between Calls (min)"
-NOTE = ("Average minutes per call: period hours x 60 / calls; personnel use hours worked. "
+FIELD = "avg_time_between_calls_hours"
+LABEL = "Avg. Time Between Calls (hours)"
+NOTE = ("Average hours per call: period hours / calls; personnel use hours worked. "
         "Includes time on calls, not just downtime between calls. Blank when there are no calls or no valid hours.")
 
 
@@ -27,9 +27,9 @@ def positive(value):
         return None
 
 
-def minutes_per_call(hours, calls):
+def hours_per_call(hours, calls):
     hours, calls = positive(hours), positive(calls)
-    return round(hours * 60 / calls, 1) if hours is not None and calls is not None else None
+    return round(hours / calls, 2) if hours is not None and calls is not None else None
 
 
 def shift_day(payload):
@@ -78,32 +78,42 @@ def add_spacing(payload):
         if not isinstance(period, dict):
             continue
         hours = period_hours(key, period, current)
-        period.setdefault("meta", {})["call_spacing"] = {"period_hours":hours, "formula":"Period hours x 60 / calls", "units":"minutes"}
+        period.setdefault("meta", {})["call_spacing"] = {"period_hours":hours, "formula":"Period hours / calls", "units":"hours"}
         for row in period.get("rows", []):
             calls = row.get("calls") if key in {"today", "prior"} else row.get("total_calls")
-            row[FIELD] = minutes_per_call(hours, calls)
+            row.pop("avg_time_between_calls_mins", None)
+            row[FIELD] = hours_per_call(hours, calls)
     for period in payload.get("personnel", {}).values():
         if not isinstance(period, dict):
             continue
-        period.setdefault("meta", {})["call_spacing"] = {"formula":"Hours worked x 60 / calls", "units":"minutes"}
+        period.setdefault("meta", {})["call_spacing"] = {"formula":"Hours worked / calls", "units":"hours"}
         for row in period.get("rows", []):
-            row[FIELD] = minutes_per_call(row.get("total_hours_worked"), row.get("total_calls"))
+            row.pop("avg_time_between_calls_mins", None)
+            row[FIELD] = hours_per_call(row.get("total_hours_worked"), row.get("total_calls"))
     return payload
 
 
 def update_ui(html):
     html = html.replace("avg_calls_per_hour", FIELD).replace("Avg Calls/Hr", LABEL)
-    html = html.replace("Number(r."+FIELD+").toFixed(2)", "Number(r."+FIELD+").toFixed(1)")
+    html = html.replace("avg_time_between_calls_mins", FIELD).replace("Avg. Time Between Calls (min)", LABEL)
+    html = html.replace("Average minutes per call: period hours x 60 / calls;", "Average hours per call: period hours / calls;")
+    html = html.replace("Number(r."+FIELD+").toFixed(1)", "Number(r."+FIELD+").toFixed(2)")
     old = "summary.textContent=(rate == null ? '--' : Number(rate).toFixed(2))+' calls/hr • '+Number(totalCalls || 0)+' calls • '+activeSummary;"
-    new = ("summary.textContent=(rate == null ? '--' : Number(rate).toFixed(1))+' min between calls • '+Number(totalCalls || 0)+' calls • '+activeSummary;"
+    timeline = "summary.textContent=(rate == null ? '--' : Number(rate).toFixed(2))+' hrs between calls • '+Number(totalCalls || 0)+' calls • '+activeSummary;"
+    new = (timeline +
            "\n      summary.title=" + json.dumps(NOTE) + "; // ppfd-call-spacing-v1")
     html = html.replace(old, new)
+    html = html.replace("summary.textContent=(rate == null ? '--' : Number(rate).toFixed(1))+' min between calls • '+Number(totalCalls || 0)+' calls • '+activeSummary;", timeline)
+    html = html.replace("function csvMaybeFloat(value){", "function csvMaybeFloat(value, decimals){")
+    html = re.sub(r"function csvMaybeFloat\(value, decimals\)\{.*?\n  \}",
+                  lambda match: match.group().replace("return num.toFixed(1);", "return num.toFixed(decimals == null ? 1 : decimals);"), html, count=1, flags=re.S)
+    html = html.replace("csvMaybeFloat(r."+FIELD+")", "csvMaybeFloat(r."+FIELD+", 2)")
     html = html.replace("personnelState.sortDir = (key === 'name') ? 'asc' : 'desc';",
                         "personnelState.sortDir = (key === 'name' || key === '"+FIELD+"') ? 'asc' : 'desc';")
     if '// ppfd-spacing-nulls-last' not in html:
         html = html.replace("rows.sort(function(a,b){\n      var av =", """rows.sort(function(a,b){
       // ppfd-spacing-nulls-last
-      if(sortKey === 'avg_time_between_calls_mins'){
+      if(sortKey === 'avg_time_between_calls_hours'){
         var missingA=a[sortKey]==null, missingB=b[sortKey]==null;
         if(missingA !== missingB) return missingA ? 1 : -1;
       }

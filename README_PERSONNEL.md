@@ -42,9 +42,9 @@ backfill is never presented as complete.
 
 ## Verification
 
-The rate column is displayed as **Avg. Time Between Calls (min)**: period hours
-times 60 divided by calls, or hours worked times 60 divided by a person's calls.
-This means "one call every X minutes", including time spent on calls, not measured
+The rate column is displayed as **Avg. Time Between Calls (hours)**: period hours
+divided by calls, or hours worked divided by a person's calls, to two decimals.
+This means "one call every X hours", including time spent on calls, not measured
 clear-to-next-dispatch downtime. The current unit shift uses reported elapsed
 time (the source's one-hour minimum and 24-hour cap); prior shifts use 24 hours,
 and summary periods use their full calendar windows. Zero calls or unknown hours
