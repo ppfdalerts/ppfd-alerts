@@ -45,6 +45,8 @@ def personnel_ui(html):
     if 'data-ppfd-fit-type' not in html:
         html += ('\n<link rel="stylesheet" href="leaderboard-type.css?v=20261020-2">'
                  '\n<script src="leaderboard-type.js?v=20261020-2" data-ppfd-fit-type></script>\n')
+    from prepare_call_spacing import update_ui
+    html = update_ui(html)
     return html
 
 
@@ -66,6 +68,8 @@ def prepare(root=Path("docs")):
     # totals or replace current staffing with a stale cached roster.
     from prepare_personnel_data import prepare_data
     prepare_data(root)
+    from prepare_call_spacing import prepare as prepare_call_spacing
+    prepare_call_spacing(root)
     version = root / "version.json"
     if version.exists():
         metadata = json.loads(version.read_text(encoding="utf-8-sig"))

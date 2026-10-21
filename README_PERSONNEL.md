@@ -42,6 +42,16 @@ backfill is never presented as complete.
 
 ## Verification
 
+The rate column is displayed as **Avg. Time Between Calls (min)**: period hours
+times 60 divided by calls, or hours worked times 60 divided by a person's calls.
+This means "one call every X minutes", including time spent on calls, not measured
+clear-to-next-dispatch downtime. The current unit shift uses reported elapsed
+time (the source's one-hour minimum and 24-hour cap); prior shifts use 24 hours,
+and summary periods use their full calendar windows. Zero calls or unknown hours
+produce a blank/`--`, not zero or infinity. Partial-history caveats still apply.
+`.github/scripts/prepare_call_spacing.py` computes from counts and hours, not the
+rounded legacy rate. Labels, personnel sorting and CSV exports use the new field.
+
 Run `python -m pytest -q tests`. The tests cover exact interval boundaries,
 overnight carryover, approved/pending work, split units, incident deduplication,
 ambiguous DST times, missing fields, source-to-UI data, and repeat-build
