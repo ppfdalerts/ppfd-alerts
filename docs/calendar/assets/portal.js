@@ -88,9 +88,13 @@ function setCalendarMode(mode) {
   $("combined-setup").hidden = separate; $("separate-calendars").hidden = !separate;
 }
 for (const radio of document.querySelectorAll('input[name="calendar-mode"]')) radio.addEventListener("change", () => setCalendarMode(radio.value));
+function googleCalendarUrl(url) {
+  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url.replace(/^https?:/, "webcal:"));
+}
 function showSubscription(url, webcalUrl) {
   $("custom-feed-url").value = url;
   $("custom-apple-link").href = webcalUrl || url.replace(/^https?:/, "webcal:");
+  $("custom-google-link").href = googleCalendarUrl(url);
   $("copy-custom-feed").textContent = "Copy calendar link";
   $("custom-link-section").hidden = false;
 }
@@ -316,7 +320,10 @@ function renderCodeCalendars() {
       });
       const apple = document.createElement("a"); apple.className = "primary"; apple.href = item.url.replace(/^https?:/,"webcal:"); apple.textContent = "Add to Apple Calendar ↗";
       apple.setAttribute("aria-label", "Add " + (item.code || "no code") + " to Apple Calendar");
-      box.append(apple,copy); row.append(box,details);
+      const google = document.createElement("a"); google.className = "primary google-calendar-link"; google.href = googleCalendarUrl(item.url); google.textContent = "Add to Google Calendar ↗";
+      google.target = "_blank"; google.rel = "noopener noreferrer";
+      google.setAttribute("aria-label", "Add " + (item.code || "no code") + " to Google Calendar");
+      box.append(apple,google,copy); row.append(box,details);
     }
     rows.push(row);
   }

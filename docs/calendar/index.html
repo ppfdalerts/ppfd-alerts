@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Your work calendar · Work Roster</title>
-  <link rel="stylesheet" href="./assets/portal.css?v=20261018-setup">
-  <script src="./assets/portal.js?v=20261018-setup" defer></script>
+  <link rel="stylesheet" href="./assets/portal.css?v=20261104-google">
+  <script src="./assets/portal.js?v=20261104-google" defer></script>
 </head>
 <body class="show-list">
   <header class="masthead"><a class="brand" href="../" aria-label="Work Roster home"><span class="brand-mark" aria-hidden="true">▦</span><span>WORK ROSTER<span class="brand-sub">Calendar sync</span></span></a><span class="private-label">Calendar subscriptions</span></header>
@@ -26,7 +26,7 @@
       </fieldset>
       <section id="combined-setup" class="setup-panel" aria-labelledby="combined-title">
         <div class="panel-heading"><span class="step-number">✓</span><div><h3 id="combined-title">Your calendar link is ready</h3><p>Add it once. Future updates use the same link.</p></div></div>
-        <div id="custom-link-section"><div class="subscribe-actions"><a id="custom-apple-link" class="primary" href="#">Add to Apple Calendar <span aria-hidden="true">↗</span></a><button id="copy-custom-feed" class="secondary" type="button">Copy calendar link</button></div><details class="link-details" id="combined-url-details"><summary>View calendar link</summary><label class="sr-only" for="custom-feed-url">Calendar subscription URL</label><input id="custom-feed-url" readonly aria-label="Customized calendar URL"></details><p class="fine-print">Already subscribed? Keep your current calendar — there’s no need to add it again.</p></div>
+        <div id="custom-link-section"><div class="subscribe-actions"><a id="custom-apple-link" class="primary" href="#">Add to Apple Calendar <span aria-hidden="true">↗</span></a><a id="custom-google-link" class="primary google-calendar-link" href="#" target="_blank" rel="noopener noreferrer">Add to Google Calendar <span aria-hidden="true">↗</span></a><button id="copy-custom-feed" class="secondary" type="button">Copy calendar link</button></div><details class="link-details" id="combined-url-details"><summary>View calendar link</summary><label class="sr-only" for="custom-feed-url">Calendar subscription URL</label><input id="custom-feed-url" readonly aria-label="Customized calendar URL"></details><p class="fine-print">Already subscribed? Keep your current calendar — there’s no need to add it again.</p></div>
       </section>
       <section id="separate-calendars" class="setup-panel" hidden aria-labelledby="separate-title">
         <div class="panel-heading"><span class="step-number">2</span><div><h3 id="separate-title">A calendar for each work code</h3><p>Create the links, then add the calendars you want.</p></div></div>
@@ -35,7 +35,7 @@
         <p id="code-calendar-message" class="message" role="status" aria-live="polite"></p><div id="code-calendar-links" class="code-calendar-links"></div>
         <details class="setup-help"><summary>How do the colors work?</summary><ol><li>Subscribe to each work-code calendar you want.</li><li>Choose each calendar’s color inside Apple Calendar, Google Calendar, or Outlook.</li><li>Keep those subscriptions. Their links stay the same as the roster updates.</li></ol><p>The website’s colors are suggestions; your calendar app controls the actual colors. If a new work code appears later, add its calendar too. The one-calendar option includes new codes automatically.</p></details>
       </section>
-      <details class="setup-help calendar-app-help"><summary>Using Google Calendar or Outlook?</summary><p>Choose <strong>Copy calendar link</strong> for one calendar, or <strong>Copy link</strong> beside each work code. In your calendar app, choose to add a calendar <strong>from a URL</strong> or <strong>subscribe from the web</strong>, then paste the link. Subscribe rather than importing a one-time file.</p></details>
+      <details class="setup-help calendar-app-help"><summary>Using Google Calendar or Outlook?</summary><p>Choose <strong>Add to Google Calendar</strong> to open Google’s subscription page in your browser. If you need to add it manually, choose <strong>Copy calendar link</strong> for one calendar, or <strong>Copy link</strong> beside each work code. In Google Calendar, choose <strong>Other calendars → From URL</strong>. In Outlook, choose <strong>Subscribe from web</strong>, then paste the link. Subscribe rather than importing a one-time file.</p></details>
       <details id="calendar-settings" class="settings-disclosure"><summary><span>Calendar settings <small>Optional · titles, work codes, dates &amp; reminders</small></span><span aria-hidden="true">+</span></summary>
         <p class="fine-print settings-note">These settings update the existing link, including its separate work-code calendars. Everyone using the same link sees its saved settings.</p>
         <form id="customize-form">
