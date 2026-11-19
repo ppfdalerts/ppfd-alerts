@@ -117,8 +117,8 @@ def prepare_data(root=Path("docs")):
             check["status"] = "partial" if not summary["complete"] else "ok"
     payload.setdefault("integrity_checks", {})["status"] = "partial" if not summary["complete"] else "ok"
     (root / "data.json").write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    roster = {"generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
-              "today": ledger.display_roster(current), "prior": ledger.display_roster(current-dt.timedelta(days=1))}
+    from roster_continuity import display_bundle
+    roster = display_bundle(root, ledger, current)
     (root / "roster_units.json").write_text(json.dumps(roster, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(json.dumps({"personnel_build": summary}, ensure_ascii=False))
     return summary
@@ -126,3 +126,4 @@ def prepare_data(root=Path("docs")):
 
 if __name__ == "__main__":
     prepare_data()
+

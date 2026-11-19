@@ -62,6 +62,8 @@ def prepare(root=Path("docs")):
         html = html[:match.start()] + navigation + html[match.end():]
         html = html.replace("</style>", "\n.toolbar-shortcuts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.calendar-navigation{display:inline-block;text-decoration:none}\n</style>", 1)
     html = personnel_ui(html)
+    from roster_continuity import continuity_ui
+    html = continuity_ui(html)
     path.write_text(html, encoding="utf-8", newline="\n")
     # The legacy collector runs on a different computer. Build-time attribution
     # ensures its frequent data pushes cannot overwrite the repaired personnel
@@ -81,3 +83,4 @@ def prepare(root=Path("docs")):
 
 if __name__ == "__main__":
     prepare()
+
