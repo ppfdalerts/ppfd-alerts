@@ -5,63 +5,45 @@ CALSCALE:GREGORIAN
 X-WR-CALNAME:Dudley 12, Richard (AL/EO) — Work Roster
 REFRESH-INTERVAL;VALUE=DURATION:PT30M
 X-PUBLISHED-TTL:PT30M
-X-ROSTER-FROM:2026-11-10
+X-ROSTER-FROM:2026-11-16
 X-ROSTER-THROUGH:2027-11-12
 BEGIN:VEVENT
-SUMMARY:🟩 SINE · Station 36 Assignment · 36-FF 1
-DTSTART:20261112T123000Z
-DTEND:20261113T123000Z
-DTSTAMP:20261117T033632Z
-UID:51ca0ef7-b768-5481-83d4-b0ebde611de6@telestaff-calendar-sync
-SEQUENCE:7
-CATEGORIES:.SINE
-COLOR:chartreuse
-DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-12
- \nUnit: Station 36 Assignment\nShift: B shift\nPosition: 36-FF 1\nWork cod
- e: .SINE\nCode description: FD Sick Union/Non Exempt SINE
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+SUMMARY:🩷 DS36
+DTSTART:20261118T123000Z
+DTEND:20261119T123000Z
+DTSTAMP:20261119T131146Z
+UID:1c81e66e-bf2c-501c-ad86-f60456aa8f08@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:^DS36
+COLOR:brown
+DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-18
+ \nShift: B shift\nPosition: \nWork code: ^DS36\nCode description: FD Drive
+ r's Pay - S36 DS36
+LAST-MODIFIED:20261119T131146Z
 STATUS:CONFIRMED
 TRANSP:OPAQUE
-X-ROSTER-COLOR:#7FFF00
+X-ROSTER-COLOR:#7F003F
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟨 DEO · Station 36 Assignment · 36-FF 1
-DTSTART:20261115T123000Z
-DTEND:20261115T170000Z
-DTSTAMP:20261117T033632Z
-UID:78bfbc28-2187-5622-b5df-7905eade38a4@telestaff-calendar-sync
-SEQUENCE:6
-CATEGORIES:.DEO
-COLOR:yellow
-DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-15
- \nUnit: Station 36 Assignment\nShift: B shift\nPosition: 36-FF 1\nWork cod
- e: .DEO\nCode description: FD Duty Exchange - Off DEO
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
-STATUS:CONFIRMED
-TRANSP:OPAQUE
-X-ROSTER-COLOR:#FFFF00
-X-ROSTER-REQUEST-STATUS:APPROVED
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:⬜ FDRD · S36
-DTSTART:20261115T170000Z
-DTEND:20261116T123000Z
-DTSTAMP:20261117T033632Z
-UID:b23eb1e7-bd20-59da-8c29-26fa12926c47@telestaff-calendar-sync
-SEQUENCE:1
+SUMMARY:⬜ FDRD · S36 · Engine Operator
+DTSTART:20261118T123000Z
+DTEND:20261119T123000Z
+DTSTAMP:20261119T131146Z
+UID:20f4eda8-4718-5a64-993f-44db0688cc08@telestaff-calendar-sync
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
-DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-15
- \nUnit: S36\nShift: B shift\nPosition: \nWork code: FDRD\nCode description
- : FD Regular Duty FDRD\n\nOther staff at Station 36:\nHuestis Lt-4\, Micha
- el (ADC/LFTI) — E36\nPickett 12\, Jason (AL/ALR36/EO/FTOPM/HM/PM/TO) —
-  E36\nRichardson 12\, David (DP/EO/HM/TO) — E36\nDavies Lt-7\, Brian (AD
- C/LR/PM/SWAT/TRT) — LR36\nCampbell 4\, Jonathan (DP/EO/HM/PM/SWAT) — S
- 36\nNichols 7\, Robert (AL/EO/TO) — S36
-LAST-MODIFIED:20261117T033632Z
+DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-18
+ \nUnit: S36\nShift: B shift\nPosition: Engine Operator\nWork code: FDRD\nC
+ ode description: FD Regular Duty FDRD\n\nOther staff at Station 36:\nGrigs
+ by 4\, Brandon (EO/PM/TRT) — E36\nHuestis Lt-4\, Michael (ADC/LFTI) — 
+ E36\nRichardson 12\, David (DP/EO/HM/TO) — E36\nDavies Lt-7\, Brian (ADC
+ /LR/PM/SWAT/TRT) — LR36 (11/18 15:30 EST – 11/19 07:30 EST)\nHuertas L
+ t-7\, Kenneth (ADC/LFTI/LR/PM) — LR36 (11/18 07:30 EST – 11/18 15:30 E
+ ST)\nHuffman Lt-5\, Christopher (SWAT) — S36\nPickett 12\, Jason (AL/ALR
+ 36/EO/FTOPM/HM/PM/TO) — S36
+LAST-MODIFIED:20261119T131146Z
 LOCATION:S36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -69,64 +51,68 @@ X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · 36-FF 1
-DTSTART:20261118T123000Z
-DTEND:20261119T123000Z
-DTSTAMP:20261117T033632Z
-UID:20f4eda8-4718-5a64-993f-44db0688cc08@telestaff-calendar-sync
-SEQUENCE:4
-CATEGORIES:FDRD
-COLOR:white
-DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-18
- \nUnit: Station 36 Assignment\nShift: B shift\nPosition: 36-FF 1\nWork cod
- e: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 
- 36:\nHuestis Lt-4\, Michael (ADC/LFTI)\nHuffman Lt-5\, Christopher (SWAT)
- \nNichols 7\, Robert (AL/EO/TO)\nRichardson 12\, David (DP/EO/HM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
-STATUS:CONFIRMED
-TRANSP:OPAQUE
-X-ROSTER-COLOR:#FFFFFF
-X-ROSTER-REQUEST-STATUS:APPROVED
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · 36-FF 1
+SUMMARY:⬜ FDRD · S36 · Engine Operator
 DTSTART:20261121T123000Z
 DTEND:20261122T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261119T131146Z
 UID:78eb9521-a240-5344-8dfa-943f2350d504@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-21
- \nUnit: Station 36 Assignment\nShift: B shift\nPosition: 36-FF 1\nWork cod
- e: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 
- 36:\nConnolly Lt-7\, Christopher (ADC/TRT)\nHuffman Lt-5\, Christopher (SW
- AT)\nMurphy 4\, Sean (FTOPM/PM)\nMurphy 8\, Patrick (AL/ALR36/EO/FTOPM/PM)
- \nNichols 7\, Robert (AL/EO/TO)\nRichardson 12\, David (DP/EO/HM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ \nUnit: S36\nShift: B shift\nPosition: Engine Operator\nWork code: FDRD\nC
+ ode description: FD Regular Duty FDRD\n\nOther staff at Station 36:\nMurph
+ y 4\, Sean (FTOPM/PM) — E36\nNichols 7\, Robert (AL/EO/TO) — E36\nRich
+ ardson 12\, David (DP/EO/HM/TO) — E36\nNestor Lt-5\, Jared (ALR36/LFTI/P
+ M/SWAT/TRT) — LR36\nHuffman Lt-5\, Christopher (SWAT) — S36\nMurphy 8
+ \, Patrick (AL/ALR36/EO/FTOPM/PM) — S36
+LAST-MODIFIED:20261119T131146Z
+LOCATION:S36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · 36-FF 1
+SUMMARY:🟦 TRNGCME · Station 36 Assignment · 36-FF 1
 DTSTART:20261124T123000Z
-DTEND:20261125T123000Z
-DTSTAMP:20261117T033632Z
+DTEND:20261124T163000Z
+DTSTAMP:20261119T131146Z
 UID:3882a11c-13c1-52e5-9438-b7d7b7b4a3ed@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
+CATEGORIES:TRNGCME
+COLOR:blue
+DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-24
+ \nUnit: Station 36 Assignment\nShift: B shift\nPosition: 36-FF 1\nWork cod
+ e: TRNGCME\nCode description: FD Training - CME TRNGCME\n\nOther staff at 
+ Station 36:\nHuestis Lt-4\, Michael (ADC/LFTI) — E36\nNichols 7\, Robert
+  (AL/EO/TO) — E36\nBrooke Lt-7\, Timothy (ADC/ALR36/HM/PM) — LR36\nHou
+ ghtaling 4\, Kent (EO/PM/TRT) — S36\nHuffman Lt-5\, Christopher (SWAT) 
+ — S36\nTeramae 9\, Zachary (AL/ALR36/DP/FTOPM/HM/PM/TRT) — S36
+LAST-MODIFIED:20261119T131146Z
+LOCATION:Station 36 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#0000FF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · S36
+DTSTART:20261124T163000Z
+DTEND:20261125T123000Z
+DTSTAMP:20261119T131146Z
+UID:bc022f1c-5dcc-5fd6-833c-7286a79bc8f0@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Dudley 12\, Richard (AL/EO)\nRoster date: 2026-11-24
- \nUnit: Station 36 Assignment\nShift: B shift\nPosition: 36-FF 1\nWork cod
- e: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 
- 36:\nHuestis Lt-4\, Michael (ADC/LFTI)\nHuffman Lt-5\, Christopher (SWAT)
- \nMurphy 4\, Sean (FTOPM/PM)\nNichols 7\, Robert (AL/EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ \nUnit: S36\nShift: B shift\nPosition: \nWork code: FDRD\nCode description
+ : FD Regular Duty FDRD\n\nOther staff at Station 36:\nHuestis Lt-4\, Micha
+ el (ADC/LFTI) — E36\nNichols 7\, Robert (AL/EO/TO) — E36\nBrooke Lt-7
+ \, Timothy (ADC/ALR36/HM/PM) — LR36\nHoughtaling 4\, Kent (EO/PM/TRT) 
+ — S36\nHuffman Lt-5\, Christopher (SWAT) — S36
+LAST-MODIFIED:20261119T131146Z
+LOCATION:S36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
