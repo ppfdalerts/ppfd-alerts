@@ -2,11 +2,11 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//TeleStaff Calendar Sync//Read-only roster subscriptions//EN
 CALSCALE:GREGORIAN
-X-WR-CALNAME:Figari 2, Christopher (PROBY) — Work Roster
+X-WR-CALNAME:Figari 2, Christopher — Work Roster
 REFRESH-INTERVAL;VALUE=DURATION:PT30M
 X-PUBLISHED-TTL:PT30M
 X-ROSTER-FROM:2026-11-17
-X-ROSTER-THROUGH:2027-11-12
+X-ROSTER-THROUGH:2027-11-20
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · R33 · FD Firefighter
 DTSTART:20261117T123000Z
@@ -356,18 +356,18 @@ TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFF00
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟪 NS · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station 36 Assignment
 DTSTART:20261223T123000Z
 DTEND:20261224T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:72e8d562-bf79-5a78-a2d7-5b8c2fc75cbf@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:.NS
 COLOR:darkviolet
 DESCRIPTION:Employee: Figari 2\, Christopher (C Proby)\nRoster date: 2026-
- 12-23\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWo
- rk code: .NS\nCode description: FD N/S Day NS
-LAST-MODIFIED:20261117T033632Z
+ 12-23\nUnit: Station 36 Assignment\nShift: A shift\nPosition: \nWork code:
+  .NS\nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -375,299 +375,352 @@ X-ROSTER-COLOR:#5F00BF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station33 Assignment · 33-FF 5
+DTSTART:20261223T123000Z
+DTEND:20261224T123000Z
+DTSTAMP:20261120T094508Z
+UID:de658bb0-caf0-50fc-b11e-538fd809607a@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:.NS
+COLOR:darkviolet
+DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2026-12
+ -23\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: .NS\nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#5F00BF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20261226T123000Z
 DTEND:20261227T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:f15c3ddc-a067-5576-ac48-91804cacf611@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2026-12
- -26\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nS
- alas 4\, Joshua (EO/FTOPM/HM/PM)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -26\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (
+ ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/
+ DP/EO/FTOPM/HM/PM/SWAT)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20261229T123000Z
 DTEND:20261230T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:9ff1d42f-5b6a-5ae9-96ec-9aa8141701a3@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2026-12
- -29\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -29\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270101T123000Z
 DTEND:20270102T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:34bcafb2-015d-58bb-a79f-ab06161cb5dc@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -01\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nS
- alas 4\, Joshua (EO/FTOPM/HM/PM)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -01\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (
+ ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/
+ DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (.PRO
+ V/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270104T123000Z
 DTEND:20270105T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:08bfb157-f526-5886-93e0-3d19a897cfea@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -04\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -04\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nMcGinnis 5\, Levi 
+ (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (
+ .PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270107T123000Z
 DTEND:20270108T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:e1140720-07cc-5c94-8d2a-4712c64e1ab4@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -07\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -07\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270110T123000Z
 DTEND:20270111T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:14d8758a-ce54-57fb-9779-bf17cae5617f@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -10\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSwiger 12\, Daniel (EO/TO)\nTwardows
- ki 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -10\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270113T123000Z
 DTEND:20270114T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:ff9a860f-509f-5de4-883a-3f0218a74716@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -13\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt-7\, Anthony (ADC/DP/HM/
- LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwar
- dowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -13\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270116T123000Z
 DTEND:20270117T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:76fc1754-8422-576e-a529-e517a84a803f@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -16\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -16\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270119T123000Z
 DTEND:20270120T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:d8829f40-3b6b-5422-9906-57352a152143@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -19\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSwiger 12\, Daniel (EO/TO)\nTwardows
- ki 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -19\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nSchlatterer 4\, Kyle (PM
+ )\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270122T123000Z
 DTEND:20270123T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:c5db7c76-a60c-545c-8daa-8032b4985e84@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -22\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSwiger 12\, Daniel (EO/TO)\nTwardows
- ki 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -22\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nDawson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/
+ LFTI/LR/PM)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4
+ \, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270125T123000Z
 DTEND:20270126T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:4a41ce18-4df8-5522-9d58-8d4ed56b614d@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -25\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -25\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP
+ /EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/
+ PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270128T123000Z
 DTEND:20270129T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:9c8b325d-59fd-5800-8163-417cb58d992e@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -28\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LF
- TI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardo
- wski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -28\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nMcGinnis 5\, Levi 
+ (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (
+ .PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270131T123000Z
 DTEND:20270201T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:25554827-0c8c-5639-9725-fa874e32cefe@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-01
- -31\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nS
- alas 4\, Joshua (EO/FTOPM/HM/PM)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -31\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟪 NS · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station33 Assignment · 33-FF 5
 DTSTART:20270203T123000Z
 DTEND:20270204T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
+UID:66948d1d-48a9-5b22-9d6b-a7aa1b4dc7f0@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:.NS
+COLOR:darkviolet
+DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
+ -03\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: .NS\nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#5F00BF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🟪 NS · Station 36 Assignment
+DTSTART:20270203T123000Z
+DTEND:20270204T123000Z
+DTSTAMP:20261120T094508Z
 UID:d89280a8-7231-56b1-bfe3-46f83c69e7e6@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:.NS
 COLOR:darkviolet
 DESCRIPTION:Employee: Figari 2\, Christopher (C Proby)\nRoster date: 2027-
- 02-03\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWo
- rk code: .NS\nCode description: FD N/S Day NS
-LAST-MODIFIED:20261117T033632Z
+ 02-03\nUnit: Station 36 Assignment\nShift: A shift\nPosition: \nWork code:
+  .NS\nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -675,308 +728,318 @@ X-ROSTER-COLOR:#5F00BF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270206T123000Z
 DTEND:20270207T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:10b16782-5915-52dc-8e25-349603053e51@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
- -06\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LF
- TI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardo
- wski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -06\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (
+ ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/
+ DP/EO/FTOPM/HM/PM/SWAT)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270209T123000Z
 DTEND:20270210T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:165c2f65-2966-552a-b5b9-79109663c237@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
- -09\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LF
- TI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardo
- wski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -09\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270212T123000Z
 DTEND:20270213T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:51c6529f-5f0e-5f27-8bc6-08a7969e2ae8@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
- -12\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -12\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270215T123000Z
 DTEND:20270216T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:95b2c761-6d1c-560a-aba4-5f20923aa8c5@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
- -15\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -15\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP
+ /EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/
+ PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270218T123000Z
 DTEND:20270219T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:f18ee105-2fee-51c9-9530-11e91033b36c@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
- -18\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -18\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 
+ 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270221T123000Z
 DTEND:20270222T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:6223d5da-0546-5215-830e-8a13c03f218a@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
- -21\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -21\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP
+ /EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/
+ PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270224T123000Z
 DTEND:20270225T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:a3f87308-488c-5160-8028-1f3a149ca33c@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
- -24\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt-7\, Anthony (ADC/DP/HM/
- LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwar
- dowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -24\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nDawson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nLombardo 12\, Aaron (DP/EO/H
+ M/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle
+  (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270227T123000Z
 DTEND:20270228T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:2f664999-0531-5b10-a182-36b404d0c00a@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-02
- -27\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -27\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270302T123000Z
 DTEND:20270303T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:5231e3fd-7318-5b23-9274-83861d92d6e2@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -02\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -02\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PRO
+ BY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270305T123000Z
 DTEND:20270306T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:2fd9599f-6263-5475-8920-7826da57db2d@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -05\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -05\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nDawson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/
+ LFTI/LR/PM)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4
+ \, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270308T123000Z
 DTEND:20270309T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:82683c95-9017-5d5a-a242-fff65f60022b@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -08\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -08\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP
+ /EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/
+ PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270311T123000Z
 DTEND:20270312T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:abfbfebd-8f54-5b0f-91ef-f94fa0ba9a69@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -11\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LF
- TI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardo
- wski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -11\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270314T113000Z
 DTEND:20270315T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:fc5d0959-be6a-54da-9c5f-06fc6b97affd@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -14\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nBrown 4\, Craig (AL/EO/FTOPM/HM/PM) (03/14 07:30 EDT – 03/14 08
- :30 EDT)\nCrabbe 12\, Christopher (EO/TO) (03/14 07:30 EDT – 03/14 08:30
-  EDT)\nDay Lt-7\, Robert (PM) (03/14 07:30 EDT – 03/14 08:30 EDT)\nDean 
- 8\, James (AL/EO/TO/TRT)\nFogarty 4\, Christopher (FTOPM/PM) (03/14 07:30 
- EDT – 03/14 08:30 EDT)\nLangley 2\, Rebekah (PROBY) (03/14 07:30 EDT –
-  03/14 08:30 EDT)\nRiley Lt-7\, Christopher (ADC/HM/LFTI) (03/14 07:30 EDT
-  – 03/14 08:30 EDT)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nTwardowski 12\, 
- Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -14\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nCampbell 4\, Jonathan (DP/EO/HM/PM/SWAT) (03/14 07:30 EDT – 03/14
+  08:30 EDT)\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nClayton 11\, Chris
+ tian (AL/ALR36/DP/EO/FTOPM/HM/PM/TO) (03/14 07:30 EDT – 03/14 08:30 EDT)
+ \nDawson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/
+ LR/PM)\nJames\, Christian (.PROV/.R No Driv/PROBY) (03/14 07:30 EDT – 03
+ /14 08:30 EDT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/D
+ P/EO/FTOPM/HM/PM/SWAT)\nRehse 3\, Sean (HM) (03/14 07:30 EDT – 03/14 08:
+ 30 EDT)\nSchlatterer 4\, Kyle (PM)\nWyatt 4\, Zachary (DP/EO/FTOPM/HM/PM) 
+ (03/14 07:30 EDT – 03/14 08:30 EDT)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟪 NS · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station 36 Assignment
 DTSTART:20270317T113000Z
 DTEND:20270318T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:5f8b989c-c014-5a05-900f-0c9b155c9cff@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:.NS
 COLOR:darkviolet
 DESCRIPTION:Employee: Figari 2\, Christopher (C Proby)\nRoster date: 2027-
- 03-17\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWo
- rk code: .NS\nCode description: FD N/S Day NS
-LAST-MODIFIED:20261117T033632Z
+ 03-17\nUnit: Station 36 Assignment\nShift: A shift\nPosition: \nWork code:
+  .NS\nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -984,303 +1047,352 @@ X-ROSTER-COLOR:#5F00BF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station33 Assignment · 33-FF 5
+DTSTART:20270317T113000Z
+DTEND:20270318T113000Z
+DTSTAMP:20261120T094508Z
+UID:f0c7dbc3-e596-5e3d-8861-b9a65adf3272@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:.NS
+COLOR:darkviolet
+DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
+ -17\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: .NS\nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#5F00BF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270320T113000Z
 DTEND:20270321T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:cb355223-464b-5649-9a0e-8754dcb991bf@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -20\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -20\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (
+ ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/
+ DP/EO/FTOPM/HM/PM/SWAT)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270323T113000Z
 DTEND:20270324T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:9247db2c-d9d6-5dba-b3e4-8de4b43f2d03@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -23\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -23\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270326T113000Z
 DTEND:20270327T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:b71c65ff-f3b1-5753-a6b4-4e8f5595e3b9@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -26\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nT
- wardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -26\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP
+ /EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/
+ PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270329T113000Z
 DTEND:20270330T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:5af1e344-e751-5b12-9313-03c32997188e@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-03
- -29\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -29\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270401T113000Z
 DTEND:20270402T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:3e51744f-ec6d-5ac7-8dc3-dc806015087d@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-04
- -01\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -01\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270404T113000Z
 DTEND:20270405T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:41b5228a-b165-58e3-8ff5-5c2b71ef0a33@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-04
- -04\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nS
- wiger 12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -04\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270407T113000Z
 DTEND:20270408T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:97682ad0-72c1-5b71-bc10-c6d6622fd0e7@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-04
- -07\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt-7\, Anthony (ADC/DP/HM/
- LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwar
- dowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -07\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270410T113000Z
 DTEND:20270411T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:7970c6c7-5584-5526-8e5e-db0c511b4fe8@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-04
- -10\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nI
- orio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -10\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlattere
+ r 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PROBY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270413T113000Z
 DTEND:20270414T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:aa6ee917-e54e-5bef-9267-1537e1a5e6ce@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher (PROBY)\nRoster date: 2027-04
- -13\nUnit: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork
-  code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Stat
- ion 36:\nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM) (0
- 4/13 19:30 EDT – 04/14 07:30 EDT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)
- \nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowsk
- i 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ -13\nUnit: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork c
+ ode: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Statio
+ n 33:\nChapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOP
+ M/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaro
+ n (DP/EO/HM/TO)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (.PROV/PM/PRO
+ BY)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270416T113000Z
 DTEND:20270417T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:97126d95-6624-55bf-9dac-e9c29d4bd22b@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-04-16\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM) (04/16 19
- :30 EDT – 04/17 07:30 EDT)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12
- \, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nD
+ awson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/
+ PM)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (
+ PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270419T113000Z
 DTEND:20270420T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:71045b28-66d9-51ac-8470-d9993b9419ea@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-04-19\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM) (04/19 19
- :30 EDT – 04/20 07:30 EDT)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12
- \, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270422T113000Z
 DTEND:20270423T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:d5d51ff1-fe6d-542f-9271-20764e024d9b@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-04-22\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger
-  12\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270425T113000Z
 DTEND:20270426T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:1203208e-25aa-53ac-a68a-3879f111db15@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-04-25\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nSalas 4
- \, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12\, De
- rek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟪 NS · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station33 Assignment · 33-FF 5
 DTSTART:20270428T113000Z
 DTEND:20270429T113000Z
-DTSTAMP:20261117T033632Z
-UID:2a0e9f07-acdb-52dd-8e72-81bc8ba6b95f@telestaff-calendar-sync
-SEQUENCE:4
+DTSTAMP:20261120T094508Z
+UID:24773fb6-8c1d-5a25-b62c-f9d0fb539ceb@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:.NS
 COLOR:darkviolet
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-04-28\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: .
- NS\nCode description: FD N/S Day NS
-LAST-MODIFIED:20261117T033632Z
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: .NS
+ \nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#5F00BF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🟪 NS · Station 36 Assignment
+DTSTART:20270428T113000Z
+DTEND:20270429T113000Z
+DTSTAMP:20261120T094508Z
+UID:2a0e9f07-acdb-52dd-8e72-81bc8ba6b95f@telestaff-calendar-sync
+SEQUENCE:5
+CATEGORIES:.NS
+COLOR:darkviolet
+DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-04-28\nUni
+ t: Station 36 Assignment\nShift: A shift\nPosition: \nWork code: .NS\nCode
+  description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -1288,302 +1400,331 @@ X-ROSTER-COLOR:#5F00BF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270501T113000Z
 DTEND:20270502T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:93cfc89b-4228-5d85-a035-d4fe504045f7@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-01\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (ADC/LFTI
+ /LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FT
+ OPM/HM/PM/SWAT)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270504T113000Z
 DTEND:20270505T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:6b13b871-e1bc-57b6-abf3-dd37004e19dc@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-04\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270507T113000Z
 DTEND:20270508T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:e8433050-1d12-5912-a3a8-42f77dd0d14e@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-07\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM) (05/07 19
- :30 EDT – 05/08 07:30 EDT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas
-  4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12\, 
- Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270510T113000Z
 DTEND:20270511T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:db21e3ba-25ec-5a00-b9ef-b5f8203c2e97@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-10\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270513T113000Z
 DTEND:20270514T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:f2250255-13f1-5e66-bb21-f32ce9c1955f@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-13\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270516T113000Z
 DTEND:20270517T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:72ed14c4-e398-58c7-bb10-6c9889a7c8d4@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-16\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270519T113000Z
 DTEND:20270520T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:edf7dbcc-cc50-5581-b701-84160f52fb30@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-19\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\n
- Salas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 
- 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270522T113000Z
 DTEND:20270523T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:0f42f286-9f8f-523a-a537-fe631632abe6@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-22\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270525T113000Z
 DTEND:20270526T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:bb79866c-af0b-5881-a6d3-b4bdc6fed45c@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-25\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270528T113000Z
 DTEND:20270529T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:005e1523-9c58-5c62-98e9-95caa2a55064@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-28\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nD
+ awson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/
+ PM)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (
+ PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270531T113000Z
 DTEND:20270601T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:c985d284-4061-55ba-8e0b-b401332eb648@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-05-31\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270603T113000Z
 DTEND:20270604T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:90fef02c-4724-5cfc-9aeb-e044399c0ec9@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-03\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270606T113000Z
 DTEND:20270607T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:0e88b22c-a837-5e90-a15c-7004f7acc915@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-06\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nTwardo
- wski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟪 NS · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station33 Assignment · 33-FF 5
 DTSTART:20270609T113000Z
 DTEND:20270610T113000Z
-DTSTAMP:20261117T033632Z
-UID:de7c6085-1561-55a3-8df6-3ef58bbf1a4b@telestaff-calendar-sync
-SEQUENCE:4
+DTSTAMP:20261120T094508Z
+UID:70414321-f43f-53e5-a6fb-c7391cdcbfa9@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:.NS
 COLOR:darkviolet
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-09\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: .
- NS\nCode description: FD N/S Day NS
-LAST-MODIFIED:20261117T033632Z
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: .NS
+ \nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#5F00BF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🟪 NS · Station 36 Assignment
+DTSTART:20270609T113000Z
+DTEND:20270610T113000Z
+DTSTAMP:20261120T094508Z
+UID:de7c6085-1561-55a3-8df6-3ef58bbf1a4b@telestaff-calendar-sync
+SEQUENCE:5
+CATEGORIES:.NS
+COLOR:darkviolet
+DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-09\nUni
+ t: Station 36 Assignment\nShift: A shift\nPosition: \nWork code: .NS\nCode
+  description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -1591,302 +1732,312 @@ X-ROSTER-COLOR:#5F00BF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270612T113000Z
 DTEND:20270613T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:e8d7ee18-3b7f-5e50-b5f1-674a7138e0e9@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-12\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (ADC/LFTI
+ /LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FT
+ OPM/HM/PM/SWAT)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270615T113000Z
 DTEND:20270616T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:60776368-e8c5-5d2c-8fb3-c67a7cddaff8@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-15\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270618T113000Z
 DTEND:20270619T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:1e270972-3fbb-5576-bc2d-56b838dea270@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-18\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270621T113000Z
 DTEND:20270622T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:091edc2a-0350-575b-9c34-a603551a75c7@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-21\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270624T113000Z
 DTEND:20270625T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:bd7c0279-4c50-53cc-b55a-bafe163fc474@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-24\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270627T113000Z
 DTEND:20270628T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:35867c0a-6c48-58e8-875b-4cdebd930fcf@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-27\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270630T113000Z
 DTEND:20270701T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:05c953b0-9a64-5ae4-a6f7-2269cd3cf84f@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-06-30\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\n
- Salas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 
- 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270703T113000Z
 DTEND:20270704T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:14be7734-e62d-5525-90ad-220230e487f8@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-03\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270706T113000Z
 DTEND:20270707T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:5535eb87-c6a3-5c9d-a1bb-f3356f07765d@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-06\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nTwardows
- ki 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270709T113000Z
 DTEND:20270710T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:4e6e7ff4-f094-509b-b713-5580b92477a3@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-09\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nD
+ awson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/
+ PM)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (
+ PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270712T113000Z
 DTEND:20270713T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:0fe58fe3-b852-5b6d-9fe7-d813938e3bde@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-12\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270715T113000Z
 DTEND:20270716T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:36121f6d-e817-5237-aac4-ffeec6f4d684@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-15\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270718T113000Z
 DTEND:20270719T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:5264bf54-b365-5109-be59-6d8bed6d2db6@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-18\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nSalas 4
- \, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12\, De
- rek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟪 NS · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station 36 Assignment
 DTSTART:20270721T113000Z
 DTEND:20270722T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:0969fa9b-44b5-54e9-9030-ab7d3463829e@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:.NS
 COLOR:darkviolet
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-21\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: .
- NS\nCode description: FD N/S Day NS
-LAST-MODIFIED:20261117T033632Z
+ t: Station 36 Assignment\nShift: A shift\nPosition: \nWork code: .NS\nCode
+  description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -1894,304 +2045,331 @@ X-ROSTER-COLOR:#5F00BF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station33 Assignment · 33-FF 5
+DTSTART:20270721T113000Z
+DTEND:20270722T113000Z
+DTSTAMP:20261120T094508Z
+UID:4c4d9700-9d35-5bde-bcd2-7b09f2f16fdb@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:.NS
+COLOR:darkviolet
+DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-21\nUni
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: .NS
+ \nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#5F00BF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270724T113000Z
 DTEND:20270725T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:e3ea1aca-76f9-580c-a3f8-dda1dfa37df8@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-24\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (ADC/LFTI
+ /LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FT
+ OPM/HM/PM/SWAT)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270727T113000Z
 DTEND:20270728T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:00be5cb6-6cd8-5a5f-90c9-448a23ba3922@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-27\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM) (07/27 19
- :30 EDT – 07/28 07:30 EDT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSalas
-  4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12\, 
- Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270730T113000Z
 DTEND:20270731T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:59620781-4c89-5ea3-afaa-0689e9caa39b@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-07-30\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270802T113000Z
 DTEND:20270803T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:c4525de1-80be-5426-bc78-ba181a748242@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-02\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270805T113000Z
 DTEND:20270806T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:1680b86d-e3f7-50ba-9fde-ddea26ba8313@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-05\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270808T113000Z
 DTEND:20270809T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:beac9748-9f7a-5aa4-8753-5d55e8517f43@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-08\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270811T113000Z
 DTEND:20270812T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:ad655e55-d4b5-5d30-b361-142c8bc2ece7@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-11\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\n
- Salas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 
- 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270814T113000Z
 DTEND:20270815T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:9fdcae41-4816-52e5-8f18-adbec06a5cf4@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-14\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270817T113000Z
 DTEND:20270818T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:368e9770-0b7d-5fdc-9603-769de56f4bd8@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-17\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270820T113000Z
 DTEND:20270821T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:a9696294-1d80-5778-9b80-803552a8ec8b@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-20\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nD
+ awson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/
+ PM)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (
+ PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270823T113000Z
 DTEND:20270824T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:3aa7d46d-111e-5d32-853f-f849926fa7bb@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-23\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270826T113000Z
 DTEND:20270827T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:35d43026-fc33-50d3-91a7-ce28b92a8f58@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-26\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270829T113000Z
 DTEND:20270830T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:8a61ea49-66ec-5e60-96ea-753669ea3458@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-08-29\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nSalas 4
- \, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12\, De
- rek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟪 NS · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station 36 Assignment
 DTSTART:20270901T113000Z
 DTEND:20270902T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:a5ff65ae-fdb4-5887-aa1a-ca6e11c4c08a@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:.NS
 COLOR:darkviolet
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-01\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: .
- NS\nCode description: FD N/S Day NS
-LAST-MODIFIED:20261117T033632Z
+ t: Station 36 Assignment\nShift: A shift\nPosition: \nWork code: .NS\nCode
+  description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -2199,522 +2377,603 @@ X-ROSTER-COLOR:#5F00BF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station33 Assignment · 33-FF 5
+DTSTART:20270901T113000Z
+DTEND:20270902T113000Z
+DTSTAMP:20261120T094508Z
+UID:d84c153c-4113-5ddb-8a9d-74d0d11cd453@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:.NS
+COLOR:darkviolet
+DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-01\nUni
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: .NS
+ \nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#5F00BF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270904T113000Z
 DTEND:20270905T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:d9b2f8f0-77b0-5296-b000-54fc2a2763cf@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-04\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (ADC/LFTI
+ /LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FT
+ OPM/HM/PM/SWAT)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270907T113000Z
 DTEND:20270908T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:8ea9bb37-5848-5762-b0a2-9c9f488f070d@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-07\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270910T113000Z
 DTEND:20270911T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:53b06fd6-d82f-5b8f-91e1-4ebf3e5e91fe@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-10\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270913T113000Z
 DTEND:20270914T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:4c2129ec-b397-52cb-a379-bc8564c1b5d4@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-13\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270916T113000Z
 DTEND:20270917T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:3048fdef-a682-5ac7-a98b-40a4691b5d7c@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-16\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270919T113000Z
 DTEND:20270920T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:70705075-defb-5947-b5ab-e7516ff775e7@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-19\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270922T113000Z
 DTEND:20270923T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:f7c7568f-b11d-5621-a312-3babdeb596be@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-22\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\n
- Salas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 
- 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270925T113000Z
 DTEND:20270926T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:e36c9343-079a-5b68-a376-03af06f09935@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-25\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20270928T113000Z
 DTEND:20270929T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:e916b8bf-e9f2-5e87-838d-650df7942069@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-09-28\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271001T113000Z
 DTEND:20271002T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:e4266e97-5f01-5ebc-961e-0fdd6b42a254@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-01\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nD
+ awson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/
+ PM)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (
+ PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271004T113000Z
 DTEND:20271005T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:242a4742-1a69-5d0b-97a7-818a3eea788a@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-04\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271007T113000Z
 DTEND:20271008T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:1ce7d2b2-f0cc-55d2-86cf-f5373087b91d@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-07\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271010T113000Z
 DTEND:20271011T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:b243c8fb-30cc-5f35-8418-ffc52756f9a4@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-10\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nSalas 4
- \, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12\, De
- rek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟪 NS · Station 36 Assignment · E36-FF 2
+SUMMARY:🟪 NS · Station33 Assignment · 33-FF 5
 DTSTART:20271013T113000Z
 DTEND:20271014T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:bb401b72-83c6-5d93-9c3a-0625085199fa@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:.NS
 COLOR:darkviolet
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-13\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: .
- NS\nCode description: FD N/S Day NS
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: .NS
+ \nCode description: FD N/S Day NS
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#5F00BF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271016T113000Z
 DTEND:20271017T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:b2e8b247-61c0-59fb-b2a9-83cf3a19b04b@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-16\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nHuertas Lt-7\, Kenneth (ADC/LFTI
+ /LR/PM)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FT
+ OPM/HM/PM/SWAT)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271019T113000Z
 DTEND:20271020T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:bdf70b0e-a966-5317-b115-a900f951f9b5@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-19\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271022T113000Z
 DTEND:20271023T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:af2c25b9-06a5-5477-956b-d702412ba6c1@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-22\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\nSa
- las 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12
- \, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271025T113000Z
 DTEND:20271026T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:74247c38-14b2-5662-95b7-8b2935f15159@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-25\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271028T113000Z
 DTEND:20271029T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:c5ba22f8-5da3-5fb1-9aa1-169d8f2cca22@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-28\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271031T113000Z
 DTEND:20271101T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:7dca7874-6709-5083-8017-ff9f5e12ccf1@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-10-31\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nSalas 4
- \, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 12\, De
- rek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271103T113000Z
 DTEND:20271104T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:a3ffb20f-0716-5d71-b0c5-101a965cb3a3@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-11-03\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI)\n
- Salas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 12\, Daniel (EO/TO)\nTwardowski 
- 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271106T113000Z
 DTEND:20271107T113000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:be6b89f6-14e5-518c-8378-5045184b6ab7@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-11-06\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271109T123000Z
 DTEND:20271110T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:097f14c9-704f-517a-a580-6d328913a1d5@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-11-09\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 2
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
 DTSTART:20271112T123000Z
 DTEND:20271113T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:88cd76a4-a7d2-5c2f-9815-7c635a989e34@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-11-12\nUni
- t: Station 36 Assignment\nShift: A shift\nPosition: E36-FF 2\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDean 8\, James (AL/EO/TO/TRT)\nFazekas Lt-7\, Brian (ALR36/PM)\nIorio Lt
- -7\, Anthony (ADC/DP/HM/LFTI)\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nSwiger 1
- 2\, Daniel (EO/TO)\nTwardowski 12\, Derek (EO/PM/TO)
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station 36 Assignment
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nD
+ awson 4\, Jake (DP/FTOPM/HM/PM/SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/
+ PM)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Kyle (
+ PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
+DTSTART:20271115T123000Z
+DTEND:20271116T123000Z
+DTSTAMP:20261120T094508Z
+UID:0fe15248-7d0a-52ed-bc8d-a6033489537f@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-11-15\nUni
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nLombardo 12\, Aaron (DP/EO/HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOP
+ M/HM/PM/SWAT)\nSchlatterer 4\, Kyle (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 5
+DTSTART:20271118T123000Z
+DTEND:20271119T123000Z
+DTSTAMP:20261120T094508Z
+UID:687bfa51-eb57-58d5-b102-6b21c07dca3f@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Figari 2\, Christopher\nRoster date: 2027-11-18\nUni
+ t: Station33 Assignment\nShift: A shift\nPosition: 33-FF 5\nWork code: FDR
+ D\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nC
+ hapman Lt-5\, Stephen (ALR36/HM/LFTI/PM)\nDawson 4\, Jake (DP/FTOPM/HM/PM/
+ SWAT)\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM)\nLombardo 12\, Aaron (DP/EO
+ /HM/TO)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT)\nSchlatterer 4\, Ky
+ le (PM)\nZentz 2\, Jordyn (PM)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF

@@ -2,11 +2,11 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//TeleStaff Calendar Sync//Read-only roster subscriptions//EN
 CALSCALE:GREGORIAN
-X-WR-CALNAME:Whiteley, Aden (.PROV/.R No Driv/PROBY) — Work Roster
+X-WR-CALNAME:Whiteley, Aden — Work Roster
 REFRESH-INTERVAL;VALUE=DURATION:PT30M
 X-PUBLISHED-TTL:PT30M
 X-ROSTER-FROM:2026-11-17
-X-ROSTER-THROUGH:2027-11-12
+X-ROSTER-THROUGH:2027-11-20
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · E34 · FD Firefighter
 DTSTART:20261117T123000Z
@@ -400,18 +400,17 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 4
 DTSTART:20261229T123000Z
 DTEND:20261230T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261120T094508Z
 UID:bdbda60b-6a41-5b30-a11a-7ad1f7b38a0b@telestaff-calendar-sync
-SEQUENCE:6
+SEQUENCE:7
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Whiteley\, Aden (.PROV/.R No Driv/PROBY)\nRoster dat
  e: 2026-12-29\nUnit: Station 34 Assignment\nShift: A shift\nPosition: 34-F
  F 4\nWork code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staf
- f at Station 34:\nConte 4\, Cameron (FTOPM/PM/TRT)\nHoyer 9\, Tyler (EO/TO
- /TRT)\nMello 8\, Elisa (EO/TRT)\nOrtiz 8\, Reuben (AL/FTOPM/PM/TRT)\nWeave
- r Lt-7\, William (ADC/LFTI/TRT)
-LAST-MODIFIED:20261117T033632Z
+ f at Station 34:\nHoyer 9\, Tyler (EO/TO/TRT)\nMello 8\, Elisa (EO/TRT)\nO
+ rtiz 8\, Reuben (AL/FTOPM/PM/TRT)\nWeaver Lt-7\, William (ADC/LFTI/TRT)
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -2701,6 +2700,49 @@ DESCRIPTION:Employee: Whiteley\, Aden\nRoster date: 2027-11-12\nUnit: Stat
  O/TRT)\nOrtiz 8\, Reuben (AL/FTOPM/PM/TRT)\nWeaver Lt-7\, William (ADC/LFT
  I/TRT)
 LAST-MODIFIED:20261117T033632Z
+LOCATION:Station 34 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 4
+DTSTART:20271115T123000Z
+DTEND:20271116T123000Z
+DTSTAMP:20261120T094508Z
+UID:be1a2468-b164-55d2-97a9-9f89a0446396@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Whiteley\, Aden\nRoster date: 2027-11-15\nUnit: Stat
+ ion 34 Assignment\nShift: A shift\nPosition: 34-FF 4\nWork code: FDRD\nCod
+ e description: FD Regular Duty FDRD\n\nOther staff at Station 34:\nHoyer 9
+ \, Tyler (EO/TO/TRT)\nMello 8\, Elisa (EO/TRT)\nOrtiz 8\, Reuben (AL/FTOPM
+ /PM/TRT)\nWeaver Lt-7\, William (ADC/LFTI/TRT)
+LAST-MODIFIED:20261120T094508Z
+LOCATION:Station 34 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 4
+DTSTART:20271118T123000Z
+DTEND:20271119T123000Z
+DTSTAMP:20261120T094508Z
+UID:f2553971-d059-54bc-8f7a-6a94e857aeea@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Whiteley\, Aden\nRoster date: 2027-11-18\nUnit: Stat
+ ion 34 Assignment\nShift: A shift\nPosition: 34-FF 4\nWork code: FDRD\nCod
+ e description: FD Regular Duty FDRD\n\nOther staff at Station 34:\nConte 4
+ \, Cameron (FTOPM/PM/TRT)\nHoyer 9\, Tyler (EO/TO/TRT)\nMello 8\, Elisa (E
+ O/TRT)\nOrtiz 8\, Reuben (AL/FTOPM/PM/TRT)\nWeaver Lt-7\, William (ADC/LFT
+ I/TRT)
+LAST-MODIFIED:20261120T094508Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
