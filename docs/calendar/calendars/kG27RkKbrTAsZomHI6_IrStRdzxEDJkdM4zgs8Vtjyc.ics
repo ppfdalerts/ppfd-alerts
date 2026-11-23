@@ -2,94 +2,111 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//TeleStaff Calendar Sync//Read-only roster subscriptions//EN
 CALSCALE:GREGORIAN
-X-WR-CALNAME:Hamm 3, Christina (.PROV/PM) — Work Roster
+X-WR-CALNAME:Hamm 3, Christina (PPM) — Work Roster
 REFRESH-INTERVAL;VALUE=DURATION:PT30M
 X-PUBLISHED-TTL:PT30M
-X-ROSTER-FROM:2026-11-17
+X-ROSTER-FROM:2026-11-19
 X-ROSTER-THROUGH:2027-11-20
-BEGIN:VEVENT
-SUMMARY:⬜ FDRD · T33 · FD Firefighter
-DTSTART:20261118T123000Z
-DTEND:20261119T123000Z
-DTSTAMP:20261119T131146Z
-UID:9bec8e37-8d58-5ef0-82d1-5b3b862f6997@telestaff-calendar-sync
-SEQUENCE:5
-CATEGORIES:FDRD
-COLOR:white
-DESCRIPTION:Employee: Hamm 3\, Christina (.PROV/PM)\nRoster date: 2026-11-
- 18\nUnit: T33\nShift: B shift\nPosition: FD Firefighter\nWork code: FDRD\n
- Code description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nBaye
- s Lt-7\, Wesley (ADC/LR/PM/TRT) (11/18 07:30 EST – 11/18 07:45 EST)\nDav
- ies Lt-7\, Brian (ADC/LR/PM/SWAT/TRT) (11/18 07:30 EST – 11/18 15:30 EST
- )\nKillian 2\, Landon (PROBY) — R33 (11/18 17:30 EST – 11/19 07:30 EST
- )\nRieke 4\, Courtney (PM) — R33 (11/18 07:30 EST – 11/18 17:30 EST)\n
- Sagan 11\, Christopher (HM/PM) — R33\nBrooke Lt-7\, Timothy (ADC/ALR36/H
- M/PM) — T33\nOyer 12\, Matthew (EO/HM/TO) — T33
-LAST-MODIFIED:20261119T131146Z
-LOCATION:T33
-STATUS:CONFIRMED
-TRANSP:OPAQUE
-X-ROSTER-COLOR:#FFFFFF
-X-ROSTER-REQUEST-STATUS:APPROVED
-END:VEVENT
 BEGIN:VEVENT
 SUMMARY:🩷 VAS · Station33 Assignment · 33-FF 7
 DTSTART:20261121T123000Z
 DTEND:20261122T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261123T042006Z
 UID:7981671c-0fc3-5534-a982-90ac4fa7e0dd@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:.VAS
 COLOR:deeppink
 DESCRIPTION:Employee: Hamm 3\, Christina\nRoster date: 2026-11-21\nUnit: S
  tation33 Assignment\nShift: B shift\nPosition: 33-FF 7\nWork code: .VAS\nC
  ode description: FD Vacation - Union - Scheduled VAS
-LAST-MODIFIED:20261117T033632Z
+LAST-MODIFIED:20261123T042006Z
 LOCATION:Station33 Assignment
+STATUS:CANCELLED
+TRANSP:TRANSPARENT
+X-ROSTER-COLOR:#FF0083
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🩷 VAS · Station 36 Assignment · 36-FF 3
+DTSTART:20261121T123000Z
+DTEND:20261122T123000Z
+DTSTAMP:20261123T042006Z
+UID:ace71125-5a25-5564-a378-e7d67c0c2d3f@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:.VAS
+COLOR:deeppink
+DESCRIPTION:Employee: Hamm 3\, Christina\nRoster date: 2026-11-21\nUnit: S
+ tation 36 Assignment\nShift: B shift 11/21/2026\nPosition: 36-FF 3\nWork c
+ ode: .VAS\nCode description: FD Vacation - Union - Scheduled VAS
+LAST-MODIFIED:20261123T042006Z
+LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FF0083
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · E34 · FD Firefighter
+SUMMARY:⬜ FDRD · S36 · FD Firefighter
 DTSTART:20261124T123000Z
-DTEND:20261125T123000Z
-DTSTAMP:20261119T131146Z
+DTEND:20261124T163000Z
+DTSTAMP:20261123T042006Z
 UID:c0ee0a50-7654-5251-af6c-ae033025828a@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Hamm 3\, Christina (.PROV/PM)\nRoster date: 2026-11-
- 24\nUnit: E34\nShift: B shift\nPosition: FD Firefighter\nWork code: FDRD\n
- Code description: FD Regular Duty FDRD\n\nOther staff at Station 34:\nNest
- or Lt-5\, Jared (ALR36/LFTI/PM/SWAT/TRT) — E34\nSchultz 12\, Daniel (AL/
- EO/HM/TRT) — E34\nMurphy 4\, Sean (FTOPM/PM) — R34\nTwardowski 3\, Tat
- e (.PROV/PM) — R34
-LAST-MODIFIED:20261119T131146Z
-LOCATION:E34
+ 24\nUnit: S36\nShift: B shift\nPosition: FD Firefighter\nWork code: FDRD\n
+ Code description: FD Regular Duty FDRD\n\nOther staff at Station 36:\nDudl
+ ey 12\, Richard (AL/EO)\nHuestis Lt-4\, Michael (ADC/LFTI) — E36\nMurphy
+  4\, Sean (FTOPM/PM) — E36\nRichardson 12\, David (DP/EO/HM/TO) — E36
+ \nDavies Lt-7\, Brian (ADC/LR/PM/SWAT/TRT) — LR36\nHoughtaling 4\, Kent 
+ (EO/PM/TRT) — S36\nHuffman Lt-5\, Christopher (SWAT) — S36
+LAST-MODIFIED:20261123T042006Z
+LOCATION:S36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · T33 · FD Firefighter
-DTSTART:20261127T123000Z
-DTEND:20261128T123000Z
-DTSTAMP:20261121T020213Z
-UID:62be0ea4-59e7-5167-938d-3b0093b1d852@telestaff-calendar-sync
-SEQUENCE:6
+SUMMARY:⬜ FDRD · T33
+DTSTART:20261124T163000Z
+DTEND:20261125T123000Z
+DTSTAMP:20261123T042006Z
+UID:e33a5e1e-1da1-5f21-b6f1-576046f8e13e@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Hamm 3\, Christina (.PROV/PM)\nRoster date: 2026-11-
- 27\nUnit: T33\nShift: B shift\nPosition: FD Firefighter\nWork code: FDRD\n
- Code description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nKill
- ian 2\, Landon (PROBY) — R33\nPavao 4\, Ryan (PM/SWAT) — R33\nOyer 12
- \, Matthew (EO/HM/TO) — T33\nTeramae 9\, Zachary (AL/ALR36/DP/FTOPM/HM/P
- M/TRT) — T33
-LAST-MODIFIED:20261121T020213Z
+ 24\nUnit: T33\nShift: B shift\nPosition: \nWork code: FDRD\nCode descripti
+ on: FD Regular Duty FDRD\n\nOther staff at Station 33:\nKillian 2\, Landon
+  (PROBY) — R33\nVanderveer 4\, Tyler (FTOPM/PM) — R33\nOyer 12\, Matth
+ ew (EO/HM/TO) — T33\nTeramae 9\, Zachary (AL/ALR36/DP/FTOPM/HM/PM/TRT) 
+ — T33
+LAST-MODIFIED:20261123T042006Z
 LOCATION:T33
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · R33 · FD Firefighter
+DTSTART:20261127T123000Z
+DTEND:20261128T123000Z
+DTSTAMP:20261123T042006Z
+UID:62be0ea4-59e7-5167-938d-3b0093b1d852@telestaff-calendar-sync
+SEQUENCE:7
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Hamm 3\, Christina (.PROV/PM)\nRoster date: 2026-11-
+ 27\nUnit: R33\nShift: B shift\nPosition: FD Firefighter\nWork code: FDRD\n
+ Code description: FD Regular Duty FDRD\n\nOther staff at Station 33:\nVand
+ erveer 4\, Tyler (FTOPM/PM) — R33\nKillian 2\, Landon (PROBY) — T33\nO
+ yer 12\, Matthew (EO/HM/TO) — T33\nSagan 11\, Christopher (HM/PM) — T3
+ 3\nTeramae 9\, Zachary (AL/ALR36/DP/FTOPM/HM/PM/TRT) — T33
+LAST-MODIFIED:20261123T042006Z
+LOCATION:R33
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
@@ -145,19 +162,19 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station33 Assignment · 33-FF 7
 DTSTART:20261206T123000Z
 DTEND:20261207T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261123T042006Z
 UID:905eaedc-cc2c-50e2-b549-e2e721aeae81@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Hamm 3\, Christina (.PROV/PM)\nRoster date: 2026-12-
  06\nUnit: Station33 Assignment\nShift: B shift\nPosition: 33-FF 7\nWork co
  de: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station
   33:\nBrooke Lt-7\, Timothy (ADC/ALR36/HM/PM)\nDavies Lt-7\, Brian (ADC/LR
- /PM/SWAT/TRT)\nKillian 2\, Landon (PROBY)\nOyer 12\, Matthew (EO/HM/TO)\nP
- avao 4\, Ryan (PM/SWAT)\nSagan 11\, Christopher (HM/PM)\nVanderveer 4\, Ty
- ler (FTOPM/PM)
-LAST-MODIFIED:20261117T033632Z
+ /PM/SWAT/TRT)\nKillian 2\, Landon (PROBY)\nMelendez 12\, Ivan (EO/TO)\nOye
+ r 12\, Matthew (EO/HM/TO)\nPavao 4\, Ryan (PM/SWAT)\nVanderveer 4\, Tyler 
+ (FTOPM/PM)
+LAST-MODIFIED:20261123T042006Z
 LOCATION:Station33 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
