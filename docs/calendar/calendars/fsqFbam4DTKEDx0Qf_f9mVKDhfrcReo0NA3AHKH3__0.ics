@@ -11,15 +11,33 @@ BEGIN:VEVENT
 SUMMARY:🩷 DS36
 DTSTART:20261120T123000Z
 DTEND:20261121T123000Z
-DTSTAMP:20261120T133206Z
+DTSTAMP:20261123T183204Z
 UID:7f1e5e09-ae8b-533d-99bd-804a27fd9e88@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:^DS36
 COLOR:brown
 DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
  -11-20\nShift: A shift\nPosition: \nWork code: ^DS36\nCode description: FD
   Driver's Pay - S36 DS36
-LAST-MODIFIED:20261120T133206Z
+LAST-MODIFIED:20261123T183204Z
+STATUS:CANCELLED
+TRANSP:TRANSPARENT
+X-ROSTER-COLOR:#7F003F
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🩷 DS36
+DTSTART:20261120T123000Z
+DTEND:20261121T123000Z
+DTSTAMP:20261123T183204Z
+UID:ac80b182-c7c2-5508-a842-9264f3b252aa@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:^DS36
+COLOR:brown
+DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
+ -11-20\nShift: A shift 11/23/2026\nPosition: \nWork code: ^DS36\nCode desc
+ ription: FD Driver's Pay - S36 DS36
+LAST-MODIFIED:20261123T183204Z
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#7F003F
@@ -29,21 +47,40 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · S36 · Engine Operator
 DTSTART:20261120T123000Z
 DTEND:20261121T123000Z
-DTSTAMP:20261123T042006Z
+DTSTAMP:20261123T183204Z
 UID:cade643d-f0cc-5fd2-825b-a04f0376de87@telestaff-calendar-sync
-SEQUENCE:7
+SEQUENCE:8
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
  -11-20\nUnit: S36\nShift: A shift\nPosition: Engine Operator\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nBrown 4\, Craig (AL/EO/FTOPM/HM/PM) (11/20 08:00 EST – 11/20 14:30 EST
- )\nDouglass 7\, Matthew (EO/PM/TO) (11/20 07:30 EST – 11/20 08:00 EST)\n
- Fazekas Lt-7\, Brian (ALR36/PM) — E36\nStephens 3\, Mark (.PROV/PM) — 
- E36\nTwardowski 12\, Derek (EO/PM/TO) — E36\nHuertas Lt-7\, Kenneth (ADC
- /LFTI/LR/PM) — LR36\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI) — S36\nZent
- z 2\, Jordyn (.PROV/PM/PROBY) — S36
-LAST-MODIFIED:20261123T042006Z
+ DRD\nCode description: FD Regular Duty FDRD
+LAST-MODIFIED:20261123T183204Z
+LOCATION:S36
+STATUS:CANCELLED
+TRANSP:TRANSPARENT
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · S36 · Engine Operator
+DTSTART:20261120T123000Z
+DTEND:20261121T123000Z
+DTSTAMP:20261123T183204Z
+UID:d622b9a4-fd08-5f44-b5b8-f86ecf71f0a0@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
+ -11-20\nUnit: S36\nShift: A shift 11/23/2026\nPosition: Engine Operator\nW
+ ork code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at S
+ tation 36:\nBrown 4\, Craig (AL/EO/FTOPM/HM/PM) (11/20 08:00 EST – 11/20
+  14:30 EST)\nDouglass 7\, Matthew (EO/PM/TO) (11/20 07:30 EST – 11/20 08
+ :00 EST)\nFazekas Lt-7\, Brian (ALR36/PM) — E36\nStephens 3\, Mark (.PRO
+ V/PM) — E36\nTwardowski 12\, Derek (EO/PM/TO) — E36\nHuertas Lt-7\, Ke
+ nneth (ADC/LFTI/LR/PM) — LR36\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI) —
+  S36\nZentz 2\, Jordyn (.PROV/PM/PROBY) — S36
+LAST-MODIFIED:20261123T183204Z
 LOCATION:S36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -51,74 +88,129 @@ X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟨 DEW · E36 · Engine Operator
-DTSTART:20261122T123000Z
-DTEND:20261123T003000Z
-DTSTAMP:20261123T042006Z
-UID:a1c7faf2-f399-5002-96d0-c76fefbac241@telestaff-calendar-sync
-SEQUENCE:10
+SUMMARY:🟨 DEW · S36
+DTSTART:20261123T003000Z
+DTEND:20261123T123000Z
+DTSTAMP:20261123T183204Z
+UID:5b63f56c-11bc-57fd-b538-639e6ea6f048@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:DEW
 COLOR:yellow
 DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
- -11-22\nUnit: E36\nShift: C shift\nPosition: Engine Operator\nWork code: D
- EW\nCode description: FD Duty Exchange - Working DEW\n\nOther staff at Sta
- tion 36:\nMurphy 8\, Patrick (AL/ALR36/EO/FTOPM/PM) (11/22 07:30 EST – 1
- 1/22 07:45 EST)\nDay Lt-7\, Robert (PM) — E36\nLangley 2\, Rebekah (PROB
- Y) — E36\nCoats Lt-5\, Tyler (ADC/ALR36/PM/SWAT/TRT) — LR36\nCrabbe 12
- \, Christopher (EO/TO) — S36\nFogarty 4\, Christopher (FTOPM/PM) — S36
- \nHuestis Lt-4\, Michael (ADC/LFTI) — S36
-LAST-MODIFIED:20261123T042006Z
+ -11-22\nUnit: S36\nShift: C shift 11/23/2026\nPosition: \nWork code: DEW\n
+ Code description: FD Duty Exchange - Working DEW\n\nOther staff at Station
+  36:\nDay Lt-7\, Robert (PM) — E36\nLangley 2\, Rebekah (PROBY) — E36
+ \nWyatt 4\, Zachary (DP/EO/FTOPM/HM/PM) — E36\nCoats Lt-5\, Tyler (ADC/A
+ LR36/PM/SWAT/TRT) — LR36\nCrabbe 12\, Christopher (EO/TO) — S36\nRiley
+  Lt-7\, Christopher (ADC/HM/LFTI) — S36
+LAST-MODIFIED:20261123T183204Z
+LOCATION:S36
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFF00
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🟨 DEW · E36 · Engine Operator
+DTSTART:20261122T123000Z
+DTEND:20261123T003000Z
+DTSTAMP:20261123T183204Z
+UID:7b6393c8-6085-5d47-b939-281529e270fd@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:DEW
+COLOR:yellow
+DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
+ -11-22\nUnit: E36\nShift: C shift 11/23/2026\nPosition: Engine Operator\nW
+ ork code: DEW\nCode description: FD Duty Exchange - Working DEW\n\nOther s
+ taff at Station 36:\nMurphy 8\, Patrick (AL/ALR36/EO/FTOPM/PM) (11/22 07:3
+ 0 EST – 11/22 07:45 EST)\nDay Lt-7\, Robert (PM) — E36\nLangley 2\, Re
+ bekah (PROBY) — E36\nCoats Lt-5\, Tyler (ADC/ALR36/PM/SWAT/TRT) — LR36
+ \nCrabbe 12\, Christopher (EO/TO) — S36\nFogarty 4\, Christopher (FTOPM/
+ PM) — S36\nHuestis Lt-4\, Michael (ADC/LFTI) — S36
+LAST-MODIFIED:20261123T183204Z
 LOCATION:E36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFF00
 END:VEVENT
 BEGIN:VEVENT
+SUMMARY:🟨 DEW · E36 · Engine Operator
+DTSTART:20261122T123000Z
+DTEND:20261123T003000Z
+DTSTAMP:20261123T183204Z
+UID:a1c7faf2-f399-5002-96d0-c76fefbac241@telestaff-calendar-sync
+SEQUENCE:11
+CATEGORIES:DEW
+COLOR:yellow
+DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
+ -11-22\nUnit: E36\nShift: C shift\nPosition: Engine Operator\nWork code: D
+ EW\nCode description: FD Duty Exchange - Working DEW
+LAST-MODIFIED:20261123T183204Z
+LOCATION:E36
+STATUS:CANCELLED
+TRANSP:TRANSPARENT
+X-ROSTER-COLOR:#FFFF00
+END:VEVENT
+BEGIN:VEVENT
 SUMMARY:🟨 DEW · S36
 DTSTART:20261123T003000Z
 DTEND:20261123T123000Z
-DTSTAMP:20261123T042006Z
+DTSTAMP:20261123T183204Z
 UID:cabe9b75-36df-52a1-aa33-684a3eeebf76@telestaff-calendar-sync
-SEQUENCE:1
+SEQUENCE:2
 CATEGORIES:DEW
 COLOR:yellow
 DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
  -11-22\nUnit: S36\nShift: C shift\nPosition: \nWork code: DEW\nCode descri
- ption: FD Duty Exchange - Working DEW\n\nOther staff at Station 36:\nDay L
- t-7\, Robert (PM) — E36\nLangley 2\, Rebekah (PROBY) — E36\nWyatt 4\, 
- Zachary (DP/EO/FTOPM/HM/PM) — E36\nCoats Lt-5\, Tyler (ADC/ALR36/PM/SWAT
- /TRT) — LR36\nCrabbe 12\, Christopher (EO/TO) — S36\nRiley Lt-7\, Chri
- stopher (ADC/HM/LFTI) — S36
-LAST-MODIFIED:20261123T042006Z
+ ption: FD Duty Exchange - Working DEW
+LAST-MODIFIED:20261123T183204Z
 LOCATION:S36
-STATUS:CONFIRMED
-TRANSP:OPAQUE
+STATUS:CANCELLED
+TRANSP:TRANSPARENT
 X-ROSTER-COLOR:#FFFF00
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · S36 · FD Firefighter
 DTSTART:20261123T123000Z
 DTEND:20261124T123000Z
-DTSTAMP:20261123T180206Z
+DTSTAMP:20261123T183204Z
+UID:28a6af58-4c59-554d-aa9d-adda8916047c@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
+ -11-23\nUnit: S36\nShift: A shift 11/23/2026\nPosition: FD Firefighter\nWo
+ rk code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at St
+ ation 36:\nLangley 2\, Rebekah (PROBY) (11/23 11:30 EST – 11/23 13:30 ES
+ T)\nRichardson 12\, David (DP/EO/HM/TO) (11/23 08:00 EST – 11/23 11:30 E
+ ST)\nMcGinnis 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT) — E36 (11/23 07:30 ES
+ T – 11/23 13:00 EST\; 11/23 16:30 EST – 11/24 07:30 EST)\nRas 8\, Kase
+ y (AL/ALR36/EO/FTOPM/PM/SWAT/TO) — E36 (11/23 07:30 EST – 11/23 13:00 
+ EST\; 11/23 16:30 EST – 11/24 07:30 EST)\nTwardowski 12\, Derek (EO/PM/T
+ O) — E36\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM) — LR36\nDean 8\, Jam
+ es (AL/EO/TO/TRT) — S36\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI) — S36
+LAST-MODIFIED:20261123T183204Z
+LOCATION:S36
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · S36 · FD Firefighter
+DTSTART:20261123T123000Z
+DTEND:20261124T123000Z
+DTSTAMP:20261123T183204Z
 UID:f29e9b7a-e299-509e-ac7b-010f9c6f2e0f@telestaff-calendar-sync
-SEQUENCE:10
+SEQUENCE:11
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Salas 4\, Joshua (EO/FTOPM/HM/PM)\nRoster date: 2026
  -11-23\nUnit: S36\nShift: A shift\nPosition: FD Firefighter\nWork code: FD
- RD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:\n
- Langley 2\, Rebekah (PROBY) (11/23 11:30 EST – 11/23 13:30 EST)\nRichard
- son 12\, David (DP/EO/HM/TO) (11/23 08:00 EST – 11/23 11:30 EST)\nMcGinn
- is 5\, Levi (AL/DP/EO/FTOPM/HM/PM/SWAT) — E36 (11/23 07:30 EST – 11/23
-  13:00 EST\; 11/23 16:30 EST – 11/24 07:30 EST)\nRas 8\, Kasey (AL/ALR36
- /EO/FTOPM/PM/SWAT/TO) — E36 (11/23 07:30 EST – 11/23 13:00 EST\; 11/23
-  16:30 EST – 11/24 07:30 EST)\nTwardowski 12\, Derek (EO/PM/TO) — E36
- \nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM) — LR36\nDean 8\, James (AL/EO/
- TO/TRT) — S36\nIorio Lt-7\, Anthony (ADC/DP/HM/LFTI) — S36
-LAST-MODIFIED:20261123T180206Z
+ RD\nCode description: FD Regular Duty FDRD
+LAST-MODIFIED:20261123T183204Z
 LOCATION:S36
-STATUS:CONFIRMED
-TRANSP:OPAQUE
+STATUS:CANCELLED
+TRANSP:TRANSPARENT
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
