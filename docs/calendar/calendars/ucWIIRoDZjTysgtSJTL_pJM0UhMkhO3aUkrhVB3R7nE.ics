@@ -2,11 +2,11 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//TeleStaff Calendar Sync//Read-only roster subscriptions//EN
 CALSCALE:GREGORIAN
-X-WR-CALNAME:Whiteley, Aden (.PROV/.R No Driv/PROBY) — Work Roster
+X-WR-CALNAME:Whiteley, Aden — Work Roster
 REFRESH-INTERVAL;VALUE=DURATION:PT30M
 X-PUBLISHED-TTL:PT30M
 X-ROSTER-FROM:2026-11-21
-X-ROSTER-THROUGH:2027-11-23
+X-ROSTER-THROUGH:2027-11-24
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · E34 · FD Firefighter
 DTSTART:20261123T123000Z
@@ -357,19 +357,19 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · E36 · Firefighter
 DTSTART:20261229T123000Z
 DTEND:20261230T123000Z
-DTSTAMP:20261123T094435Z
+DTSTAMP:20261124T094839Z
 UID:bdbda60b-6a41-5b30-a11a-7ad1f7b38a0b@telestaff-calendar-sync
-SEQUENCE:8
+SEQUENCE:9
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Whiteley\, Aden (.PROV/.R No Driv/PROBY)\nRoster dat
  e: 2026-12-29\nUnit: E36\nShift: A shift\nPosition: Firefighter\nWork code
  : FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 3
- 6:\nFazekas Lt-7\, Brian (ALR36/PM) — E36\nTwardowski 12\, Derek (EO/PM/
- TO) — E36\nHuertas Lt-7\, Kenneth (ADC/LFTI/LR/PM) — LR36\nDean 8\, Ja
- mes (AL/EO/TO/TRT) — S36\nKatsiyiannis 4\, Joseph (PM) — S36\nSwiger 1
- 2\, Daniel (EO/TO) — S36
-LAST-MODIFIED:20261123T094435Z
+ 6:\nSalas 4\, Joshua (EO/FTOPM/HM/PM)\nFazekas Lt-7\, Brian (ALR36/PM) —
+  E36\nTwardowski 12\, Derek (EO/PM/TO) — E36\nHuertas Lt-7\, Kenneth (AD
+ C/LFTI/LR/PM) — LR36\nDean 8\, James (AL/EO/TO/TRT) — S36\nKatsiyianni
+ s 4\, Joseph (PM) — S36\nSwiger 12\, Daniel (EO/TO) — S36
+LAST-MODIFIED:20261124T094839Z
 LOCATION:E36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -2724,6 +2724,28 @@ DESCRIPTION:Employee: Whiteley\, Aden\nRoster date: 2027-11-21\nUnit: Stat
  O/TRT)\nOrtiz 8\, Reuben (AL/FTOPM/PM/TRT)\nWeaver Lt-7\, William (ADC/LFT
  I/TRT)
 LAST-MODIFIED:20261123T094435Z
+LOCATION:Station 34 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 4
+DTSTART:20271124T123000Z
+DTEND:20271125T123000Z
+DTSTAMP:20261124T094839Z
+UID:668d7d13-bbd7-57e5-8d6b-4d4df705046f@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Whiteley\, Aden\nRoster date: 2027-11-24\nUnit: Stat
+ ion 34 Assignment\nShift: A shift\nPosition: 34-FF 4\nWork code: FDRD\nCod
+ e description: FD Regular Duty FDRD\n\nOther staff at Station 34:\nConte 4
+ \, Cameron (FTOPM/PM/TRT)\nHoyer 9\, Tyler (EO/TO/TRT)\nMello 8\, Elisa (E
+ O/TRT)\nOrtiz 8\, Reuben (AL/FTOPM/PM/TRT)\nWeaver Lt-7\, William (ADC/LFT
+ I/TRT)
+LAST-MODIFIED:20261124T094839Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
