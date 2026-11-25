@@ -5,7 +5,7 @@ CALSCALE:GREGORIAN
 X-WR-CALNAME:Riley Lt-7, Christopher (ADC/HM/LFTI) — Work Roster
 REFRESH-INTERVAL;VALUE=DURATION:PT30M
 X-PUBLISHED-TTL:PT30M
-X-ROSTER-FROM:2026-11-21
+X-ROSTER-FROM:2026-11-22
 X-ROSTER-THROUGH:2027-11-24
 BEGIN:VEVENT
 SUMMARY:⬛ OTF4V2 · S36
@@ -133,39 +133,15 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · S36 · Lieutenant
 DTSTART:20261125T123000Z
 DTEND:20261126T123000Z
-DTSTAMP:20261123T183204Z
+DTSTAMP:20261125T205921Z
 UID:2a9c8c82-87cc-575d-8099-31e588ff244b@telestaff-calendar-sync
-SEQUENCE:0
+SEQUENCE:1
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Riley Lt-7\, Christopher (ADC/HM/LFTI)\nRoster date:
   2026-11-25\nUnit: S36\nShift: C shift 11/23/2026\nPosition: Lieutenant\nW
- ork code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at S
- tation 36:\nMurphy 8\, Patrick (AL/ALR36/EO/PM) (11/25 09:00 EST – 11/25
-  18:00 EST)\nCampbell 4\, Jonathan (DP/EO/HM/PM/SWAT) — E36\nDay Lt-7\, 
- Robert (PM) — E36\nLangley 2\, Rebekah (PROBY) — E36\nBayes Lt-7\, Wes
- ley (ADC/LR/PM/TRT) — LR36\nCrabbe 12\, Christopher (EO/TO) — S36\nMur
- phy 4\, Sean (FTOPM/PM) — S36
-LAST-MODIFIED:20261123T183204Z
-LOCATION:S36
-STATUS:CONFIRMED
-TRANSP:OPAQUE
-X-ROSTER-COLOR:#FFFFFF
-X-ROSTER-REQUEST-STATUS:APPROVED
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:⬜ FDRD · S36 · Lieutenant
-DTSTART:20261125T123000Z
-DTEND:20261126T123000Z
-DTSTAMP:20261123T183204Z
-UID:e44967c9-316e-50d6-9487-123123663d37@telestaff-calendar-sync
-SEQUENCE:6
-CATEGORIES:FDRD
-COLOR:white
-DESCRIPTION:Employee: Riley Lt-7\, Christopher (ADC/HM/LFTI)\nRoster date:
-  2026-11-25\nUnit: S36\nShift: C shift\nPosition: Lieutenant\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD
-LAST-MODIFIED:20261123T183204Z
+ ork code: FDRD\nCode description: FD Regular Duty FDRD
+LAST-MODIFIED:20261125T205921Z
 LOCATION:S36
 STATUS:CANCELLED
 TRANSP:TRANSPARENT
@@ -173,46 +149,63 @@ X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · S36 · Lieutenant
+SUMMARY:🟩 SINE · Station 36 Assignment · LT-S36
+DTSTART:20261125T123000Z
+DTEND:20261126T123000Z
+DTSTAMP:20261125T205921Z
+UID:e44967c9-316e-50d6-9487-123123663d37@telestaff-calendar-sync
+SEQUENCE:7
+CATEGORIES:.SINE
+COLOR:chartreuse
+DESCRIPTION:Employee: Riley Lt-7\, Christopher (ADC/HM/LFTI)\nRoster date:
+  2026-11-25\nUnit: Station 36 Assignment\nShift: C shift\nPosition: LT-S36
+ \nWork code: .SINE\nCode description: FD Sick Union/Non Exempt SINE
+LAST-MODIFIED:20261125T205921Z
+LOCATION:Station 36 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#7FFF00
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · T33 · Lieutenant
 DTSTART:20261128T123000Z
 DTEND:20261129T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261125T205921Z
 UID:5e6270f8-cf78-54c3-8ef0-119a06ae779c@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Riley Lt-7\, Christopher (ADC/HM/LFTI)\nRoster date:
-  2026-11-28\nUnit: S36\nShift: C shift\nPosition: Lieutenant\nWork code: F
- DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nDay Lt-7\, Robert (PM) — E36\nLangley 2\, Rebekah (PROBY) — E36\nWya
- tt 4\, Zachary (DP/EO/FTOPM/HM/PM) — E36\nBayes Lt-7\, Wesley (ADC/LR/PM
- /TRT) — LR36\nCrabbe 12\, Christopher (EO/TO) — S36\nFogarty 4\, Chris
- topher (FTOPM/PM) — S36
-LAST-MODIFIED:20261117T033632Z
-LOCATION:S36
+  2026-11-28\nUnit: T33\nShift: C shift\nPosition: Lieutenant\nWork code: F
+ DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 33:
+ \nCapobianco 4\, Sydney (PM) — R33\nRehse 3\, Sean (HM) — R33\nKillian
+  12\, Timothy (AL/EO/TO/TRT) — T33\nSchlatterer 4\, Kyle (PM) — T33
+LAST-MODIFIED:20261125T205921Z
+LOCATION:T33
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · LT-S36
+SUMMARY:⬜ FDRD · S36 · Lieutenant
 DTSTART:20261201T123000Z
 DTEND:20261202T123000Z
-DTSTAMP:20261119T131146Z
+DTSTAMP:20261125T205921Z
 UID:97e5a7ff-0eed-5b7b-aa04-3e6466cc99f3@telestaff-calendar-sync
-SEQUENCE:5
+SEQUENCE:6
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Riley Lt-7\, Christopher (ADC/HM/LFTI)\nRoster date:
-  2026-12-01\nUnit: Station 36 Assignment\nShift: C shift\nPosition: LT-S36
- \nWork code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff a
- t Station 36:\nBrown 4\, Craig (AL/EO/FTOPM/HM/PM)\nCrabbe 12\, Christophe
- r (EO/TO)\nDay Lt-7\, Robert (PM)\nDouglass 7\, Matthew (EO/PM/TO)\nFogart
- y 4\, Christopher (FTOPM/PM)\nLangley 2\, Rebekah (PROBY)\nDavies Lt-7\, B
- rian (ADC/LR/PM/SWAT/TRT) — LR36
-LAST-MODIFIED:20261119T131146Z
-LOCATION:Station 36 Assignment
+  2026-12-01\nUnit: S36\nShift: C shift\nPosition: Lieutenant\nWork code: F
+ DRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
+ \nBrown 4\, Craig (AL/EO/FTOPM/HM/PM) — E36\nDay Lt-7\, Robert (PM) — 
+ E36\nLangley 2\, Rebekah (PROBY) — E36\nDavies Lt-7\, Brian (ADC/LR/PM/S
+ WAT/TRT) — LR36\nCrabbe 12\, Christopher (EO/TO) — S36\nFogarty 4\, Ch
+ ristopher (FTOPM/PM) — S36
+LAST-MODIFIED:20261125T205921Z
+LOCATION:S36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
@@ -241,18 +234,17 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 36 Assignment · LT-S36
 DTSTART:20261207T123000Z
 DTEND:20261208T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261125T205921Z
 UID:deb9ab8b-22b3-5e85-8654-55b8c096bc80@telestaff-calendar-sync
-SEQUENCE:4
+SEQUENCE:5
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Riley Lt-7\, Christopher (ADC/HM/LFTI)\nRoster date:
   2026-12-07\nUnit: Station 36 Assignment\nShift: C shift\nPosition: LT-S36
  \nWork code: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff a
  t Station 36:\nBrown 4\, Craig (AL/EO/FTOPM/HM/PM)\nCrabbe 12\, Christophe
- r (EO/TO)\nDay Lt-7\, Robert (PM)\nDouglass 7\, Matthew (EO/PM/TO)\nLangle
- y 2\, Rebekah (PROBY)
-LAST-MODIFIED:20261117T033632Z
+ r (EO/TO)\nDay Lt-7\, Robert (PM)\nDouglass 7\, Matthew (EO/PM/TO)
+LAST-MODIFIED:20261125T205921Z
 LOCATION:Station 36 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE

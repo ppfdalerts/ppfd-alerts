@@ -2,10 +2,10 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//TeleStaff Calendar Sync//Read-only roster subscriptions//EN
 CALSCALE:GREGORIAN
-X-WR-CALNAME:Langley 2, Rebekah — Work Roster
+X-WR-CALNAME:Langley 2, Rebekah (PROBY) — Work Roster
 REFRESH-INTERVAL;VALUE=DURATION:PT30M
 X-PUBLISHED-TTL:PT30M
-X-ROSTER-FROM:2026-11-21
+X-ROSTER-FROM:2026-11-22
 X-ROSTER-THROUGH:2027-11-24
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · E36 · Firefighter
@@ -103,15 +103,41 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · E36 · Firefighter
 DTSTART:20261125T123000Z
 DTEND:20261126T123000Z
-DTSTAMP:20261123T183204Z
+DTSTAMP:20261125T205921Z
 UID:1cc8129d-6573-50ff-b15a-3b8047818657@telestaff-calendar-sync
-SEQUENCE:7
+SEQUENCE:8
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Langley 2\, Rebekah (PROBY)\nRoster date: 2026-11-25
  \nUnit: E36\nShift: C shift\nPosition: Firefighter\nWork code: FDRD\nCode 
- description: FD Regular Duty FDRD
-LAST-MODIFIED:20261123T183204Z
+ description: FD Regular Duty FDRD\n\nOther staff at Station 36:\nHuestis L
+ t-4\, Michael (ADC/LFTI) (11/25 07:30 EST – 11/25 08:00 EST)\nMurphy 8\,
+  Patrick (AL/ALR36/EO/PM) (11/25 09:00 EST – 11/25 18:00 EST)\nRichardso
+ n 12\, David (DP/EO/HM/TO) (11/25 07:30 EST – 11/25 08:00 EST)\nCampbell
+  4\, Jonathan (DP/EO/HM/PM/SWAT) — E36\nDay Lt-7\, Robert (PM) — E36\n
+ Bayes Lt-7\, Wesley (ADC/LR/PM/TRT) — LR36\nCrabbe 12\, Christopher (EO/
+ TO) — S36\nMurphy 4\, Sean (FTOPM/PM) — S36\nPickett 12\, Jason (AL/AL
+ R36/EO/FTOPM/HM/PM/TO) — S36
+LAST-MODIFIED:20261125T205921Z
+LOCATION:E36
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · E36 · Firefighter
+DTSTART:20261125T123000Z
+DTEND:20261126T123000Z
+DTSTAMP:20261125T205921Z
+UID:e8ee8ad7-cf09-5088-8e89-6bc769d4346d@telestaff-calendar-sync
+SEQUENCE:1
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Langley 2\, Rebekah (PROBY)\nRoster date: 2026-11-25
+ \nUnit: E36\nShift: C shift 11/23/2026\nPosition: Firefighter\nWork code: 
+ FDRD\nCode description: FD Regular Duty FDRD
+LAST-MODIFIED:20261125T205921Z
 LOCATION:E36
 STATUS:CANCELLED
 TRANSP:TRANSPARENT
@@ -120,22 +146,20 @@ X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · E36 · Firefighter
-DTSTART:20261125T123000Z
-DTEND:20261126T123000Z
-DTSTAMP:20261123T183204Z
-UID:e8ee8ad7-cf09-5088-8e89-6bc769d4346d@telestaff-calendar-sync
-SEQUENCE:0
+DTSTART:20261128T123000Z
+DTEND:20261129T123000Z
+DTSTAMP:20261125T205921Z
+UID:8dcc6061-cfa0-5563-811e-2cb9d6fa8136@telestaff-calendar-sync
+SEQUENCE:7
 CATEGORIES:FDRD
 COLOR:white
-DESCRIPTION:Employee: Langley 2\, Rebekah (PROBY)\nRoster date: 2026-11-25
- \nUnit: E36\nShift: C shift 11/23/2026\nPosition: Firefighter\nWork code: 
- FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station 36:
- \nMurphy 8\, Patrick (AL/ALR36/EO/PM) (11/25 09:00 EST – 11/25 18:00 EST
- )\nCampbell 4\, Jonathan (DP/EO/HM/PM/SWAT) — E36\nDay Lt-7\, Robert (PM
- ) — E36\nBayes Lt-7\, Wesley (ADC/LR/PM/TRT) — LR36\nCrabbe 12\, Chris
- topher (EO/TO) — S36\nMurphy 4\, Sean (FTOPM/PM) — S36\nRiley Lt-7\, C
- hristopher (ADC/HM/LFTI) — S36
-LAST-MODIFIED:20261123T183204Z
+DESCRIPTION:Employee: Langley 2\, Rebekah (PROBY)\nRoster date: 2026-11-28
+ \nUnit: E36\nShift: C shift\nPosition: Firefighter\nWork code: FDRD\nCode 
+ description: FD Regular Duty FDRD\n\nOther staff at Station 36:\nCampbell 
+ 4\, Jonathan (DP/EO/HM/PM/SWAT) — E36\nDay Lt-7\, Robert (PM) — E36\nB
+ ayes Lt-7\, Wesley (ADC/LR/PM/TRT) — LR36\nCrabbe 12\, Christopher (EO/T
+ O) — S36\nFogarty 4\, Christopher (FTOPM/PM) — S36
+LAST-MODIFIED:20261125T205921Z
 LOCATION:E36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -144,45 +168,22 @@ X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · E36 · Firefighter
-DTSTART:20261128T123000Z
-DTEND:20261129T123000Z
-DTSTAMP:20261117T033632Z
-UID:8dcc6061-cfa0-5563-811e-2cb9d6fa8136@telestaff-calendar-sync
-SEQUENCE:6
-CATEGORIES:FDRD
-COLOR:white
-DESCRIPTION:Employee: Langley 2\, Rebekah (PROBY)\nRoster date: 2026-11-28
- \nUnit: E36\nShift: C shift\nPosition: Firefighter\nWork code: FDRD\nCode 
- description: FD Regular Duty FDRD\n\nOther staff at Station 36:\nDay Lt-7
- \, Robert (PM) — E36\nWyatt 4\, Zachary (DP/EO/FTOPM/HM/PM) — E36\nBay
- es Lt-7\, Wesley (ADC/LR/PM/TRT) — LR36\nCrabbe 12\, Christopher (EO/TO)
-  — S36\nFogarty 4\, Christopher (FTOPM/PM) — S36\nRiley Lt-7\, Christo
- pher (ADC/HM/LFTI) — S36
-LAST-MODIFIED:20261117T033632Z
-LOCATION:E36
-STATUS:CONFIRMED
-TRANSP:OPAQUE
-X-ROSTER-COLOR:#FFFFFF
-X-ROSTER-REQUEST-STATUS:APPROVED
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 3
 DTSTART:20261201T123000Z
 DTEND:20261202T123000Z
-DTSTAMP:20261119T131146Z
+DTSTAMP:20261125T205921Z
 UID:129a947b-7424-58f5-8454-a379a4a3d06e@telestaff-calendar-sync
-SEQUENCE:7
+SEQUENCE:8
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Langley 2\, Rebekah (PROBY)\nRoster date: 2026-12-01
- \nUnit: Station 36 Assignment\nShift: C shift\nPosition: E36-FF 3\nWork co
- de: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station
-  36:\nBrown 4\, Craig (AL/EO/FTOPM/HM/PM)\nCrabbe 12\, Christopher (EO/TO)
- \nDay Lt-7\, Robert (PM)\nDouglass 7\, Matthew (EO/PM/TO)\nFogarty 4\, Chr
- istopher (FTOPM/PM)\nRiley Lt-7\, Christopher (ADC/HM/LFTI)\nDavies Lt-7\,
-  Brian (ADC/LR/PM/SWAT/TRT) — LR36
-LAST-MODIFIED:20261119T131146Z
-LOCATION:Station 36 Assignment
+ \nUnit: E36\nShift: C shift\nPosition: Firefighter\nWork code: FDRD\nCode 
+ description: FD Regular Duty FDRD\n\nOther staff at Station 36:\nBrown 4\,
+  Craig (AL/EO/FTOPM/HM/PM) — E36\nDay Lt-7\, Robert (PM) — E36\nDavies
+  Lt-7\, Brian (ADC/LR/PM/SWAT/TRT) — LR36\nCrabbe 12\, Christopher (EO/T
+ O) — S36\nFogarty 4\, Christopher (FTOPM/PM) — S36\nRiley Lt-7\, Chris
+ topher (ADC/HM/LFTI) — S36
+LAST-MODIFIED:20261125T205921Z
+LOCATION:E36
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
@@ -228,44 +229,41 @@ X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:🟦 MLTNE · Station33 Assignment · 33-FF 5
+SUMMARY:🟦 MLTNE · Station 36 Assignment · E36-FF 3
 DTSTART:20261207T123000Z
 DTEND:20261208T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261125T205921Z
 UID:046ed99d-1791-55d9-8654-be5c3629535f@telestaff-calendar-sync
-SEQUENCE:6
+SEQUENCE:7
 CATEGORIES:.MLTNE
 COLOR:darkcyan
 DESCRIPTION:Employee: Langley 2\, Rebekah (PROBY)\nRoster date: 2026-12-07
- \nUnit: Station33 Assignment\nShift: C shift\nPosition: 33-FF 5\nWork code
- : .MLTNE\nCode description: FD Military Leave Train Union/Non Exempt MLTNE
- \nRequest status: Pending approval
-LAST-MODIFIED:20261117T033632Z
-LOCATION:Station33 Assignment
-STATUS:TENTATIVE
+ \nUnit: Station 36 Assignment\nShift: C shift\nPosition: E36-FF 3\nWork co
+ de: .MLTNE\nCode description: FD Military Leave Train Union/Non Exempt MLT
+ NE
+LAST-MODIFIED:20261125T205921Z
+LOCATION:Station 36 Assignment
+STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#005FBF
-X-ROSTER-REQUEST-STATUS:APPROVAL_PENDING
+X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 36 Assignment · E36-FF 3
 DTSTART:20261207T123000Z
 DTEND:20261208T123000Z
-DTSTAMP:20261117T033632Z
+DTSTAMP:20261125T205921Z
 UID:ef581436-2cd5-5879-87e3-c90a650fe7e4@telestaff-calendar-sync
-SEQUENCE:6
+SEQUENCE:7
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Langley 2\, Rebekah (PROBY)\nRoster date: 2026-12-07
  \nUnit: Station 36 Assignment\nShift: C shift\nPosition: E36-FF 3\nWork co
- de: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station
-  36:\nBrown 4\, Craig (AL/EO/FTOPM/HM/PM)\nCrabbe 12\, Christopher (EO/TO)
- \nDay Lt-7\, Robert (PM)\nDouglass 7\, Matthew (EO/PM/TO)\nRiley Lt-7\, Ch
- ristopher (ADC/HM/LFTI)
-LAST-MODIFIED:20261117T033632Z
+ de: FDRD\nCode description: FD Regular Duty FDRD
+LAST-MODIFIED:20261125T205921Z
 LOCATION:Station 36 Assignment
-STATUS:CONFIRMED
-TRANSP:OPAQUE
+STATUS:CANCELLED
+TRANSP:TRANSPARENT
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
