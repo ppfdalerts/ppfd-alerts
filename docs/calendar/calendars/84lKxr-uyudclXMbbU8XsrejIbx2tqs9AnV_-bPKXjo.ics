@@ -2,11 +2,11 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//TeleStaff Calendar Sync//Read-only roster subscriptions//EN
 CALSCALE:GREGORIAN
-X-WR-CALNAME:Stephens 3, Mark — Work Roster
+X-WR-CALNAME:Stephens 3, Mark (.PROV/PM) — Work Roster
 REFRESH-INTERVAL;VALUE=DURATION:PT30M
 X-PUBLISHED-TTL:PT30M
 X-ROSTER-FROM:2026-11-23
-X-ROSTER-THROUGH:2027-11-24
+X-ROSTER-THROUGH:2027-11-26
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · T33 · FD Firefighter
 DTSTART:20261125T123000Z
@@ -1247,9 +1247,9 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
 DTSTART:20270331T113000Z
 DTEND:20270401T113000Z
-DTSTAMP:20261117T033632Z
-UID:748c1ad7-020e-56d4-a564-32927e3af2f2@telestaff-calendar-sync
-SEQUENCE:6
+DTSTAMP:20261126T094434Z
+UID:019fb8a7-50a0-5ee4-bb24-9c20b8658a6b@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-03-3
@@ -1257,12 +1257,32 @@ DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-03-3
  de: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station
   34:\nChagoya 4\, Celsojulian (PM)\nCinko 4\, Zachery (FTOPM/PM)\nGrigsby 
  4\, Brandon (EO/PM/TRT)\nKillian 12\, Timothy (AL/EO/TO/TRT)
-LAST-MODIFIED:20261117T033632Z
+LAST-MODIFIED:20261126T094434Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🩷 VAS · Station 34 Assignment
+DTSTART:20270331T113000Z
+DTEND:20270401T113000Z
+DTSTAMP:20261126T094434Z
+UID:748c1ad7-020e-56d4-a564-32927e3af2f2@telestaff-calendar-sync
+SEQUENCE:7
+CATEGORIES:.VAS
+COLOR:deeppink
+DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-03-3
+ 1\nUnit: Station 34 Assignment\nShift: C shift\nPosition: \nWork code: .VA
+ S\nCode description: FD Vacation - Union - Scheduled VAS\nRequest status: 
+ Pending approval
+LAST-MODIFIED:20261126T094434Z
+LOCATION:Station 34 Assignment
+STATUS:TENTATIVE
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FF0083
+X-ROSTER-REQUEST-STATUS:APPROVAL_PENDING
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
@@ -1386,12 +1406,32 @@ X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
 END:VEVENT
 BEGIN:VEVENT
+SUMMARY:🩷 VAS · Station 34 Assignment
+DTSTART:20270412T113000Z
+DTEND:20270413T113000Z
+DTSTAMP:20261126T094434Z
+UID:199a43ca-3721-5075-b082-162b77b72aa6@telestaff-calendar-sync
+SEQUENCE:7
+CATEGORIES:.VAS
+COLOR:deeppink
+DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-1
+ 2\nUnit: Station 34 Assignment\nShift: C shift\nPosition: \nWork code: .VA
+ S\nCode description: FD Vacation - Union - Scheduled VAS\nRequest status: 
+ Pending approval
+LAST-MODIFIED:20261126T094434Z
+LOCATION:Station 34 Assignment
+STATUS:TENTATIVE
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FF0083
+X-ROSTER-REQUEST-STATUS:APPROVAL_PENDING
+END:VEVENT
+BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
 DTSTART:20270412T113000Z
 DTEND:20270413T113000Z
-DTSTAMP:20261117T033632Z
-UID:199a43ca-3721-5075-b082-162b77b72aa6@telestaff-calendar-sync
-SEQUENCE:6
+DTSTAMP:20261126T094434Z
+UID:c0771bdf-b733-5bab-a18f-ae94a97bcab9@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-1
@@ -1399,7 +1439,7 @@ DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-1
  de: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station
   34:\nChagoya 4\, Celsojulian (PM)\nConnolly Lt-7\, Christopher (ADC/TRT)
  \nGrigsby 4\, Brandon (EO/PM/TRT)\nKillian 12\, Timothy (AL/EO/TO/TRT)
-LAST-MODIFIED:20261117T033632Z
+LAST-MODIFIED:20261126T094434Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -1410,9 +1450,9 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
 DTSTART:20270415T113000Z
 DTEND:20270416T113000Z
-DTSTAMP:20261117T033632Z
-UID:e1e6b74d-8489-5ff1-8019-108f3a9f86da@telestaff-calendar-sync
-SEQUENCE:6
+DTSTAMP:20261126T094434Z
+UID:29a59161-eeae-552f-918e-ccee07bb5a25@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-1
@@ -1420,12 +1460,32 @@ DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-1
  de: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station
   34:\nChagoya 4\, Celsojulian (PM)\nCinko 4\, Zachery (FTOPM/PM)\nConnolly
   Lt-7\, Christopher (ADC/TRT)\nKillian 12\, Timothy (AL/EO/TO/TRT)
-LAST-MODIFIED:20261117T033632Z
+LAST-MODIFIED:20261126T094434Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🩷 VAS · Station 34 Assignment
+DTSTART:20270415T113000Z
+DTEND:20270416T113000Z
+DTSTAMP:20261126T094434Z
+UID:e1e6b74d-8489-5ff1-8019-108f3a9f86da@telestaff-calendar-sync
+SEQUENCE:7
+CATEGORIES:.VAS
+COLOR:deeppink
+DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-1
+ 5\nUnit: Station 34 Assignment\nShift: C shift\nPosition: \nWork code: .VA
+ S\nCode description: FD Vacation - Union - Scheduled VAS\nRequest status: 
+ Pending approval
+LAST-MODIFIED:20261126T094434Z
+LOCATION:Station 34 Assignment
+STATUS:TENTATIVE
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FF0083
+X-ROSTER-REQUEST-STATUS:APPROVAL_PENDING
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
@@ -1469,12 +1529,32 @@ X-ROSTER-COLOR:#FF0083
 X-ROSTER-REQUEST-STATUS:APPROVAL_PENDING
 END:VEVENT
 BEGIN:VEVENT
+SUMMARY:🩷 VAS · Station 34 Assignment
+DTSTART:20270421T113000Z
+DTEND:20270422T113000Z
+DTSTAMP:20261126T094434Z
+UID:0f75f9e4-fc89-5081-ae02-7a06f4b05dea@telestaff-calendar-sync
+SEQUENCE:7
+CATEGORIES:.VAS
+COLOR:deeppink
+DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-2
+ 1\nUnit: Station 34 Assignment\nShift: C shift\nPosition: \nWork code: .VA
+ S\nCode description: FD Vacation - Union - Scheduled VAS\nRequest status: 
+ Pending approval
+LAST-MODIFIED:20261126T094434Z
+LOCATION:Station 34 Assignment
+STATUS:TENTATIVE
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FF0083
+X-ROSTER-REQUEST-STATUS:APPROVAL_PENDING
+END:VEVENT
+BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
 DTSTART:20270421T113000Z
 DTEND:20270422T113000Z
-DTSTAMP:20261117T033632Z
-UID:0f75f9e4-fc89-5081-ae02-7a06f4b05dea@telestaff-calendar-sync
-SEQUENCE:6
+DTSTAMP:20261126T094434Z
+UID:305f71a9-4044-5811-83e2-aa289c8efa31@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-2
@@ -1482,7 +1562,7 @@ DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-2
  de: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station
   34:\nCinko 4\, Zachery (FTOPM/PM)\nConnolly Lt-7\, Christopher (ADC/TRT)
  \nGrigsby 4\, Brandon (EO/PM/TRT)\nKillian 12\, Timothy (AL/EO/TO/TRT)
-LAST-MODIFIED:20261117T033632Z
+LAST-MODIFIED:20261126T094434Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
@@ -1493,9 +1573,9 @@ BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
 DTSTART:20270424T113000Z
 DTEND:20270425T113000Z
-DTSTAMP:20261117T033632Z
-UID:c823f2c9-71ec-582f-9e9d-c264f4c7a442@telestaff-calendar-sync
-SEQUENCE:6
+DTSTAMP:20261126T094434Z
+UID:80fbde64-aba1-5ebd-aa71-1042c4992249@telestaff-calendar-sync
+SEQUENCE:0
 CATEGORIES:FDRD
 COLOR:white
 DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-2
@@ -1504,12 +1584,32 @@ DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-2
   34:\nChagoya 4\, Celsojulian (PM)\nCinko 4\, Zachery (FTOPM/PM)\nConnolly
   Lt-7\, Christopher (ADC/TRT)\nGrigsby 4\, Brandon (EO/PM/TRT)\nKillian 12
  \, Timothy (AL/EO/TO/TRT)
-LAST-MODIFIED:20261117T033632Z
+LAST-MODIFIED:20261126T094434Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 X-ROSTER-COLOR:#FFFFFF
 X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🩷 VAS · Station 34 Assignment
+DTSTART:20270424T113000Z
+DTEND:20270425T113000Z
+DTSTAMP:20261126T094434Z
+UID:c823f2c9-71ec-582f-9e9d-c264f4c7a442@telestaff-calendar-sync
+SEQUENCE:7
+CATEGORIES:.VAS
+COLOR:deeppink
+DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-04-2
+ 4\nUnit: Station 34 Assignment\nShift: C shift\nPosition: \nWork code: .VA
+ S\nCode description: FD Vacation - Union - Scheduled VAS\nRequest status: 
+ Pending approval
+LAST-MODIFIED:20261126T094434Z
+LOCATION:Station 34 Assignment
+STATUS:TENTATIVE
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FF0083
+X-ROSTER-REQUEST-STATUS:APPROVAL_PENDING
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
@@ -3458,6 +3558,28 @@ DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-11-2
   Lt-7\, Christopher (ADC/TRT)\nGrigsby 4\, Brandon (EO/PM/TRT)\nKillian 12
  \, Timothy (AL/EO/TO/TRT)
 LAST-MODIFIED:20261123T094435Z
+LOCATION:Station 34 Assignment
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+X-ROSTER-COLOR:#FFFFFF
+X-ROSTER-REQUEST-STATUS:APPROVED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⬜ FDRD · Station 34 Assignment · 34-FF 3
+DTSTART:20271126T123000Z
+DTEND:20271127T123000Z
+DTSTAMP:20261126T094434Z
+UID:0ceaaf44-505f-5ce8-9cdc-2a209ab60b3b@telestaff-calendar-sync
+SEQUENCE:0
+CATEGORIES:FDRD
+COLOR:white
+DESCRIPTION:Employee: Stephens 3\, Mark (.PROV/PM)\nRoster date: 2027-11-2
+ 6\nUnit: Station 34 Assignment\nShift: C shift\nPosition: 34-FF 3\nWork co
+ de: FDRD\nCode description: FD Regular Duty FDRD\n\nOther staff at Station
+  34:\nChagoya 4\, Celsojulian (PM)\nCinko 4\, Zachery (FTOPM/PM)\nConnolly
+  Lt-7\, Christopher (ADC/TRT)\nGrigsby 4\, Brandon (EO/PM/TRT)\nKillian 12
+ \, Timothy (AL/EO/TO/TRT)
+LAST-MODIFIED:20261126T094434Z
 LOCATION:Station 34 Assignment
 STATUS:CONFIRMED
 TRANSP:OPAQUE
